@@ -1,0 +1,22 @@
+.cache/
+coverage/
+dist/*
+!dist/index.html
+node_modules/
+*.log
+
+# https://next.yarnpkg.com/advanced/qa#which-files-should-be-gitignored
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+.pnp.*
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
