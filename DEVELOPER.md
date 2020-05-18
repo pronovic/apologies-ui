@@ -55,7 +55,34 @@ On MacOS, it's easiest to use [Homebrew](https://brew.sh/) to install Yarn:
 $ brew install yarn
 ```
 
-As of this writing, this technically installs "classic" Yarn 1, which is enough
-to bootstrap the project-specific version of Yarn 2 that is configured for the
-project.
+This installs "classic" Yarn 1.22.x, which is used to bootstrap the
+project-specific version of Yarn 2 that is configured for the project.
 
+
+### Debian
+
+On Debian, you have to jump through some hoops, because the packaged
+version of `yarn` (in `yarnpkg`) is not new enough to support the package
+format we use for this repo. 
+
+First, install `npm`:
+
+```
+$ sudo apt-get install npm
+```
+
+Then, install `yarn`:
+
+```
+$ sudo npm install -g yarn
+```
+
+Finally, add the `npm`-installed version of `yarn` to your `$PATH`:
+
+```
+$ export $PATH="/usr/local/bin:$PATH"
+```
+
+At this point, you have a working version of "classic" Yarn v1.22.x, which is
+used to bootstrap the project-specific version of Yarn 2 that is configured for
+the project.
