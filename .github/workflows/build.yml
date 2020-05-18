@@ -28,7 +28,7 @@ jobs:
         yarn --version
         yarn
     - name: Run Checks
-      run: 
+      run: |
         yarn install
         yarn check
         yarn build
