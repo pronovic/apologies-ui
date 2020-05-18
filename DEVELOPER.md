@@ -3,7 +3,9 @@
 ## Development Environment
 
 My primary development environment MacOS, but the code and the development
-process should be portable. I've tested on Windows 10 and on Debian buster.
+process should be portable to Linux (I've tested on Debian buster).  As of now,
+I do not do any software development on Windows and the development process
+(code checks & formatting, etc.) may or may not work as expected there. 
 
 ## Packaging and Dependencies
 
@@ -37,10 +39,8 @@ in [`package.json`](package.json).  The following scripts are available:
 ## Prequisites
 
 Nearly all prerequisites are managed by Yarn. All you need to do is make sure
-that you have Yarn itself installed.  There are notes below for for the MacOS,
-Debian, and Windows 10 platforms.
-
-Once you have Yarn installed, set up your development environment like this:
+that you have Yarn itself installed (see below).  Once you have Yarn installed,
+set up your development environment like this:
 
 ```
 $ yarn 
