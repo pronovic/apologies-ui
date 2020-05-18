@@ -11,8 +11,8 @@
         "check": "eslint '**/*.js'",
         "checks": "eslint '**/*.js'",
         "format": "eslint --fix '**/*.js'",
-        "build": "parcel build src/index.html",
-        "clean": "rm dist/bundle.js"
+        "clean": "rm -rf 'dist/*'",
+        "build": "yarn clean && parcel build src/index.html --no-source-maps"
     },
     "husky": {
         "hooks": {
@@ -20,6 +20,7 @@
         }
     },
     "devDependencies": {
+        "babel-types": "^6.26.0",
         "eslint": "^7.0.0",
         "eslint-config-prettier": "^6.11.0",
         "eslint-config-standard": "^14.1.1",

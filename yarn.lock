@@ -1349,6 +1349,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "apologies-ui@workspace:."
   dependencies:
+    babel-types: ^6.26.0
     eslint: ^7.0.0
     eslint-config-prettier: ^6.11.0
     eslint-config-standard: ^14.1.1
@@ -1559,7 +1560,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-types@npm:^6.15.0":
+"babel-types@npm:^6.15.0, babel-types@npm:^6.26.0":
   version: 6.26.0
   resolution: "babel-types@npm:6.26.0"
   dependencies:
