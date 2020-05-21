@@ -68,7 +68,7 @@ have no idea how I'll actually do this, but it'll be a learning process.
 
 This is a list of things I need to accomplish, in no particular order:
 
-- [ ] Add an application dependency on babel, now that I'm not using Typescript?
+- [x] Add an application dependency on babel, now that I'm not using Typescript?
 - [ ] Go through the Vue.js tutorial, which is supposed to take around a day.
 - [ ] Figure out how to save state (specifically, handle and player id) to HTML 5 local storage.
 - [ ] Connect Atmosphere to the websockets server.  Understand how to handle automatic reconnects, etc.

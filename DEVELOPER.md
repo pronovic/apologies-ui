@@ -9,9 +9,9 @@ I do not do any software development on Windows and the development process
 
 ## Packaging and Dependencies
 
-This project uses [Yarn 2](https://yarnpkg.com/) and [Parcel](https://parceljs.org/) to manage packaging and dependencies. Most day-to-day tasks are orchestrated through Yarn. 
+This project uses [Yarn 2](https://yarnpkg.com/) and [Parcel](https://parceljs.org/) to manage packaging and dependencies. Most day-to-day tasks are orchestrated through Yarn.  Initial project configuration was bootstraped via [createapp.dev](https://createapp.dev/parcel).
 
-A coding standard is enforced using [ESLint](https://eslint.org/) in conjunction with [StandardJS](https://standardjs.com/) and [Prettier](https://prettier.io/).  Instead of using the `standard` and `prettier` tools directly, we follow Prettier's [recommended configuration](https://prettier.io/docs/en/integrating-with-linters.html#recommended-configuration) and use [eslint-config-standard](https://github.com/standard/eslint-config-standard), [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier), and [eslint-plugin-prettier](https://github.com/prettier/eslint-plugin-prettier).
+A coding standard is enforced using [ESLint](https://eslint.org/) in conjunction with [StandardJS](https://standardjs.com/) and [Prettier](https://prettier.io/).  Instead of using the `standard` and `prettier` tools directly, we follow Prettier's [recommended configuration](https://prettier.io/docs/en/integrating-with-linters.html#recommended-configuration) to avoid conflcits between the two tools, and use a combination of [eslint-config-standard](https://github.com/standard/eslint-config-standard), [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier), and [eslint-plugin-prettier](https://github.com/prettier/eslint-plugin-prettier).
 
 ## Pre-Commit Hooks
 
@@ -84,5 +84,4 @@ $ export $PATH="/usr/local/bin:$PATH"
 ```
 
 At this point, you have a working version of "classic" Yarn v1.22.x, which is
-used to bootstrap the project-specific version of Yarn 2 that is configured for
-the project.
+used to bootstrap the version of Yarn 2 that is configured for the project.
