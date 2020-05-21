@@ -22,12 +22,16 @@ straightforward to wire its callbacks into varius UI handlers.
 ### Frontend Layout
 
 My intent is to use [Vue.js](https://vuejs.org/v2) for the frontend layout,
-probably with [BootstrapVue](https://bootstrap-vue.org/) for styling and
-widgets.  I chose Vue.js based on their [comparison](https://vuejs.org/v2/guide/comparison.html) document, 
-based on the assumption that it will be easier to learn and deal with for a
-relatively small application like this.  Vue.js is supposed to have relatively
-good documentation and a good getting started guide that someone can get
-through in a day of study.
+probably with either [BootstrapVue](https://bootstrap-vue.org/) or
+[Vuetify](https://vuetifyjs.com/en/) for styling and widgets.  I chose Vue.js
+based on their [comparison](https://vuejs.org/v2/guide/comparison.html)
+document, under the assumption that it will be easier to learn and deal with
+for a relatively small application like this.  Vue.js is supposed to have
+relatively good documentation and a good getting started guide that someone can
+get through in a day of study.  Both Vuetify and BootstrapVue have a good
+reputation.  Bootstrap is perhaps more flexible, but requires things like
+jquery.  Vuetify provides a very strict Material Design result with very few
+options.
 
 ### Rendering the Game Board
 

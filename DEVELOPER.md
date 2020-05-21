@@ -9,7 +9,7 @@ I do not do any software development on Windows and the development process
 
 ## Packaging and Dependencies
 
-This project uses [Yarn 2](https://yarnpkg.com/) and [Parcel](https://parceljs.org/) to manage packaging and dependencies. Most day-to-day tasks are orchestrated through Yarn.  Initial project configuration was bootstraped via [createapp.dev](https://createapp.dev/parcel).
+This project uses "classic" [Yarn v1](https://yarnpkg.com/) and [Parcel](https://parceljs.org/) to manage packaging and dependencies. Most day-to-day tasks are orchestrated through Yarn.  Initial project configuration was bootstraped via [createapp.dev](https://createapp.dev/parcel).  (Yarn v2 has been released, but I ran into problems and decided to stay with the classic version.)
 
 A coding standard is enforced using [ESLint](https://eslint.org/) in conjunction with [StandardJS](https://standardjs.com/) and [Prettier](https://prettier.io/).  Instead of using the `standard` and `prettier` tools directly, we follow Prettier's [recommended configuration](https://prettier.io/docs/en/integrating-with-linters.html#recommended-configuration) to avoid conflcits between the two tools, and use a combination of [eslint-config-standard](https://github.com/standard/eslint-config-standard), [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier), and [eslint-plugin-prettier](https://github.com/prettier/eslint-plugin-prettier).
 
@@ -29,12 +29,11 @@ checks, so the build will fail.
 The most common developer tasks are managed with `yarn` via the `scripts` list
 in [`package.json`](package.json).  The following scripts are available:
 
-- `yarn start` - Start the development server in hot module reloading mode
-- `yarn checks` - Run the StandardJS and Prettier source code checks
+- `yarn check` - Run the StandardJS and Prettier source code checks
 - `yarn format` - Reformat code based on the StandardJS and Prettier checks
-- `yarn build` - Build the production bundle in `dist/bundle.js`
+- `yarn serve` - Start the development server in hot module reloading mode
 - `yarn clean` - Remove the production bundle in `dist/bundle.js`
-
+- `yarn build` - Build the production bundle in `dist/bundle.js`
 
 ## Prequisites
 
@@ -55,8 +54,9 @@ On MacOS, it's easiest to use [Homebrew](https://brew.sh/) to install Yarn:
 $ brew install yarn
 ```
 
-This installs "classic" Yarn 1.22.x, which is used to bootstrap the
-project-specific version of Yarn 2 that is configured for the project.
+This installs "classic" Yarn 1.22.x, which is what we're using right now.
+In the future, we may upgrade to Yarn 2, and having yarn installed this
+way will support that transition.
 
 
 ### Debian
@@ -83,5 +83,6 @@ Finally, add the `npm`-installed version of `yarn` to your `$PATH`:
 $ export $PATH="/usr/local/bin:$PATH"
 ```
 
-At this point, you have a working version of "classic" Yarn v1.22.x, which is
-used to bootstrap the version of Yarn 2 that is configured for the project.
+At this point, you have a working version of "classic" Yarn 1.22.x, which is
+what we're using right now.  In the future, we may upgrade to Yarn 2, and
+having yarn installed this way will support that transition.
