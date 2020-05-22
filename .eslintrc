@@ -1,7 +1,0 @@
-{
-  "ignorePatterns": ["dist/**"],
-  "extends": [
-    "standard",
-    "plugin:prettier/recommended"
-  ]
-}

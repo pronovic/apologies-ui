@@ -13,6 +13,11 @@ This project uses "classic" [Yarn v1](https://yarnpkg.com/) and [Parcel](https:/
 
 A coding standard is enforced using [ESLint](https://eslint.org/) in conjunction with [StandardJS](https://standardjs.com/) and [Prettier](https://prettier.io/).  Instead of using the `standard` and `prettier` tools directly, we follow Prettier's [recommended configuration](https://prettier.io/docs/en/integrating-with-linters.html#recommended-configuration) to avoid conflcits between the two tools, and use a combination of [eslint-config-standard](https://github.com/standard/eslint-config-standard), [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier), and [eslint-plugin-prettier](https://github.com/prettier/eslint-plugin-prettier).
 
+_Note:_ A consequence of using Parcel instead of Webpack is that not everything
+works exactly the same.  For instance, Parcel does not allow the `@` alias that
+Vue usually uses for the `src` directory.  Rather than using `@/components`, we
+simply have an alias for `components`.
+
 ## Pre-Commit Hooks
 
 We rely on pre-commit hooks to ensure that the code is properly-formatted and
@@ -29,7 +34,7 @@ checks, so the build will fail.
 The most common developer tasks are managed with `yarn` via the `scripts` list
 in [`package.json`](package.json).  The following scripts are available:
 
-- `yarn check` - Run the StandardJS and Prettier source code checks
+- `yarn checks` - Run the StandardJS and Prettier source code checks (note: `checks`, not `check`)
 - `yarn format` - Reformat code based on the StandardJS and Prettier checks
 - `yarn serve` - Start the development server in hot module reloading mode
 - `yarn clean` - Remove the production bundle in `dist/bundle.js`
