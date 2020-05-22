@@ -22,8 +22,9 @@ simply have an alias for `components`.
 
 We rely on pre-commit hooks to ensure that the code is properly-formatted and
 clean when it's checked in.  Pre-commit hooks are implemented using
-[Husky](https://github.com/typicode/husky), which is configured in
-`package.json` to run the `yarn checks` command.
+[Husky](https://github.com/typicode/husky), which is configured 
+using [lint-staged](https://www.npmjs.com/package/lint-staged) to run
+the eslint checks on staged code.
 
 If necessary, you can temporarily disable a hook using Git's `--no-verify`
 switch.  However, keep in mind that the CI build on GitHub enforces these
