@@ -52,6 +52,7 @@
     },
     "dependencies": {
         "atmosphere.js": "^3.0.0",
+        "bootstrap-vue": "^2.15.0",
         "components": "^0.1.0",
         "core-js": "^3.6.5",
         "phaser": "^3.23.0",
