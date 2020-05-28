@@ -27,17 +27,17 @@
 
             <p>
                 All of the source code is released under the
-                <b-link href="https://opensource.org/licenses/Apache-2.0"
+                <b-link :href="this.$store.state.config.LICENSE_APACHE_2"
                     >Apache v2.0</b-link
                 >
                 license. You can find the source code at GitHub. See
-                <b-link href="https://github.com/pronovic/apologies"
+                <b-link :href="this.$store.state.config.GITHUB_APOLOGIES"
                     >apologies</b-link
                 >,
-                <b-link href="https://github.com/pronovic/apologies-server"
+                <b-link :href="this.$store.state.config.GITHUB_APOLOGIES_SERVER"
                     >apologies-server</b-link
                 >, and
-                <b-link href="https://github.com/pronovic/apologies-ui"
+                <b-link :href="this.$store.state.config.GITHUB_APOLOGIES_UI"
                     >apologies-ui</b-link
                 >.
             </p>
