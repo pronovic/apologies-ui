@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
+// eslint-disable-next-line no-unused-vars
+import babelPolyfill from 'babel-polyfill' // this is a required to get certain async features working
+
 import App from './App.vue'
 import router from './router'
 import store from './store'
