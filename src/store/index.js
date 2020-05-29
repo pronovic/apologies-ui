@@ -6,7 +6,7 @@ Vue.use(Vuex)
 
 const game = {
     bannerText:
-        'Hint: click the hamburger menu in the top right to start or join a game!',
+        'Hint: click the hamburger menu in the top right to start or join a game!', // TODO: seems like this should be a default somewhere, so it's what happens when we clear the text?
     showBell: false,
 }
 
