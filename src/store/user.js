@@ -7,6 +7,7 @@ const UserLoadStatus = {
 const user = {
     loadStatus: UserLoadStatus.NOT_LOADED,
     registered: false,
+    player: null,
 }
 
 export { UserLoadStatus, user }

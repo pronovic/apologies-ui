@@ -1553,10 +1553,10 @@ asynckit@^0.4.0:
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
   integrity sha1-x57Zf380y48robyXkLzDZkdLS3k=
 
-atmosphere.js@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/atmosphere.js/-/atmosphere.js-3.0.0.tgz#e88fd5453c9b958d26f0186ef8c63d29c404f422"
-  integrity sha512-jaXpiOEJXI6NlZDrqfBltGdI1TdbBA6SR23gF9yoSkwFK5pYq6RlsnfI942UcLxXPdyhHfkkptohlGhunPyQWA==
+atmosphere.js@^3.0.4:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/atmosphere.js/-/atmosphere.js-3.0.4.tgz#78d0dc5917d7cb86f3134971026b3480dedc225a"
+  integrity sha512-0apVw8VlqENQzNOWt/rZrTaRtKsrpipUu2Q9wfokzTL+cjQyx2ymfFh+jJlFDFLpiZaz+02XMi45UfEQ5KjK5A==
   dependencies:
     eventsource "^1.0.7"
     ws "^6.1.0"

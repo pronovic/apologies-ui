@@ -11,12 +11,17 @@ function requireRegistered(to, from, next) {
 
 function loadAndRedirect(redirect, to, from, next) {
     console.log('Checking user registration enroute to ' + to.path)
-    if (store.getters.userLoadStatus === UserLoadStatus.LOADED) {
+    if (store.getters.isUserLoaded) {
         console.log('User is already loaded, passing off to redirect function')
         redirect(to, from, next)
     } else {
         console.log('User is not yet loaded; loading now')
         store.dispatch('loadUser')
+        // TODO: I guess I need some sort of timeout here, so I can give up if
+        //       the login action doesn't succeed after a certain amount of time?
+        //       But how do I cancel/interrupt the work happening in loadUser?
+        //       I'd want to give up on it.   There is an unwatch returned by watch().
+        //       But this all seems wrong, like I should be able to do it asynchronously.
         store.watch(
             () => store.getters.userLoadStatus,
             (userLoadStatus) => {

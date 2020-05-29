@@ -52,7 +52,7 @@
         "vue-template-compiler": "^2.6.11"
     },
     "dependencies": {
-        "atmosphere.js": "^3.0.0",
+        "atmosphere.js": "^3.0.4",
         "bootstrap-vue": "^2.15.0",
         "components": "^0.1.0",
         "core-js": "^3.6.5",

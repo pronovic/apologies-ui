@@ -3,7 +3,7 @@
         <b-navbar toggleable="lg" type="dark" variant="secondary">
             <b-navbar-brand href="#">Apologies</b-navbar-brand>
             <b-navbar-nav class="ml-auto">
-                <b-button variant="primary">Register</b-button>
+                <RegisterHandleButton id="register1" />
             </b-navbar-nav>
         </b-navbar>
 
@@ -42,14 +42,24 @@
                 >.
             </p>
 
-            <b-button variant="primary">Register</b-button>
+            <RegisterHandleButton id="register2" />
         </b-jumbotron>
     </div>
 </template>
 
 <script>
+import RegisterHandleButton from '../components/RegisterHandleButton.vue'
+
 export default {
     name: 'Landing',
-    components: {},
+    components: { RegisterHandleButton: RegisterHandleButton },
+    created: function () {
+        this.$store.subscribe((mutation, state) => {
+            if (mutation.type === 'markPlayerRegistered') {
+                console.log('Player is registered; redirecting to game page')
+                this.$router.push({ name: 'Game' })
+            }
+        })
+    },
 }
 </script>
