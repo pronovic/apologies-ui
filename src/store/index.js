@@ -1,21 +1,20 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import config from '../config'
+import { config } from './config.js'
+import { game } from './game.js'
+import { user } from './user.js'
 
 Vue.use(Vuex)
 
-const game = {
-    bannerText:
-        'Hint: click the hamburger menu in the top right to start or join a game!', // TODO: seems like this should be a default somewhere, so it's what happens when we clear the text?
-    showBell: false,
-}
-
-export default new Vuex.Store({
+const store = new Vuex.Store({
     state: {
         config: config,
         game: game,
+        user: user,
     },
     mutations: {},
     actions: {},
     modules: {},
 })
+
+export default store

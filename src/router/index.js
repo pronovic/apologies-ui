@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+
 import Landing from '../views/Landing.vue'
 import Game from '../views/Game.vue'
 
