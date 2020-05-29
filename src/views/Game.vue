@@ -3,12 +3,8 @@
         <b-navbar toggleable="lg" type="dark" variant="secondary">
             <b-navbar-brand>Apologies</b-navbar-brand>
             <b-navbar-nav class="ml-auto">
-                <b-nav-text
-                    :v-if="this.$store.state.user.player"
-                    this.class="text-white"
-                    ><em>{{
-                        this.$store.state.user.player.handle
-                    }}</em></b-nav-text
+                <b-nav-text this.class="text-white"
+                    ><em>{{ this.$store.getters.playerHandle }}</em></b-nav-text
                 >
                 <b-button size="lg" variant="secondary" class="p-1">
                     <b-icon
@@ -66,10 +62,12 @@ export default {
     created: function () {
         this.$store.subscribe((mutation, state) => {
             if (mutation.type === 'markPlayerNotRegistered') {
-                console.log(
-                    'Player not registered; redirecting to landing page'
-                )
-                this.$router.push({ name: 'Landing' })
+                if (this.$route.name !== 'Landing') {
+                    console.log(
+                        'Player not registered; redirecting to landing page'
+                    )
+                    this.$router.push({ name: 'Landing' })
+                }
             }
         })
     },

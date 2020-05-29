@@ -56,8 +56,12 @@ export default {
     created: function () {
         this.$store.subscribe((mutation, state) => {
             if (mutation.type === 'markPlayerRegistered') {
-                console.log('Player is registered; redirecting to game page')
-                this.$router.push({ name: 'Game' })
+                if (this.$route.name !== 'Game') {
+                    console.log(
+                        'Player is registered; redirecting to game page'
+                    )
+                    this.$router.push({ name: 'Game' })
+                }
             }
         })
     },

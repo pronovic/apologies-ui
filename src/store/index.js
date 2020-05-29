@@ -13,6 +13,9 @@ const store = new Vuex.Store({
         user: user,
     },
     getters: {
+        playerHandle: (state) => {
+            return state.user.player == null ? '' : state.user.player.handle
+        },
         userLoadStatus: (state) => {
             return state.user.loadStatus
         },
@@ -47,36 +50,47 @@ const store = new Vuex.Store({
             var player = {
                 handle: handle,
                 playerId: null,
-                gameId: null,
             }
-            localStorage.setItem('player', player)
+            localStorage.setItem('player', JSON.stringify(player))
             Vue.nextTick().then(() => {
                 commit('markPlayerRegistered', player)
             })
         },
         unregisterPlayer({ commit }) {
             console.log('unregisterPlayer')
-            // TODO: replace with websockets code of some sort - to unregister the player
+            // TODO: replace with websockets code of some sort - to unregister the handle
             localStorage.removeItem('player')
             Vue.nextTick().then(() => {
                 commit('markPlayerNotRegistered')
             })
         },
         loadUser({ commit }) {
-            var player = localStorage.getItem('player')
-            if (player == null) {
+            var stored = localStorage.getItem('player')
+            if (stored == null) {
                 console.log('loadUser did not find a player in local storage')
                 Vue.nextTick().then(() => {
                     commit('markPlayerNotRegistered')
                 })
             } else {
-                console.log(
-                    'loadUser found player in local storage: ' + player.handle
-                )
-                // TODO: replace with websockets code of some sort - to check whether player id is valid
-                Vue.nextTick().then(() => {
-                    commit('markPlayerRegistered', player)
-                })
+                try {
+                    var player = JSON.parse(stored)
+                    console.log(
+                        'loadUser found player in local storage: ' + stored
+                    )
+                    // TODO: replace with websockets code of some sort - to check whether player id is valid
+                    Vue.nextTick().then(() => {
+                        commit('markPlayerRegistered', player)
+                    })
+                } catch (e) {
+                    console.log(
+                        'loadUser failed to parse data from local storage:' +
+                            stored
+                    )
+                    console.log(e)
+                    Vue.nextTick().then(() => {
+                        commit('markPlayerNotRegistered')
+                    })
+                }
             }
         },
     },
