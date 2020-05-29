@@ -2,10 +2,10 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import { requireRegistered, requireUnregistered } from './user.js'
 
-import Landing from '../views/Landing.vue'
-import Game from '../views/Game.vue'
-import Error from '../views/Error.vue'
-import NotFound from '../views/NotFound.vue'
+const Landing = () => import('../views/Landing.vue')
+const Game = () => import('../views/Game.vue')
+const Error = () => import('../views/Error.vue')
+const NotFound = () => import('../views/NotFound.vue')
 
 Vue.use(VueRouter)
 
