@@ -15,7 +15,7 @@
                     :state="handleState"
                     label="Handle"
                     label-for="handle-input"
-                    invalid-feedback="Handle is required"
+                    invalid-feedback="Enter a handle (2-20 characters)"
                 >
                     <b-form-input
                         id="handle-input"
@@ -41,8 +41,9 @@ export default {
     methods: {
         checkFormValidity() {
             const valid = this.$refs.form.checkValidity()
-            this.handleState = valid
-            return valid
+            this.handleState =
+                valid && this.handle.length >= 2 && this.handle.length <= 20
+            return this.handleState
         },
         resetModal() {
             this.handle = ''
