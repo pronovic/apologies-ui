@@ -5,6 +5,7 @@ const UserLoadStatus = {
     ERROR: 'Error',
 }
 
+// TODO: should probably be a true Javascript class?
 const user = {
     loadStatus: UserLoadStatus.NOT_LOADED,
     registered: false,

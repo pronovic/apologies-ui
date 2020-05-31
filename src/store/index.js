@@ -51,7 +51,7 @@ const store = new Vuex.Store({
     actions: {
         registerHandle({ commit }, handle) {
             console.log('registerHandle for handle: ' + handle)
-            // TODO: replace with websockets code of some sort - to register the handle
+            // TODO: replace with websockets code of some sort - to register the handle (the websockets code will do this mutation based on messages received)
             var player = {
                 handle: handle,
                 playerId: null,
@@ -63,7 +63,7 @@ const store = new Vuex.Store({
         },
         unregisterHandle({ commit }) {
             console.log('unregisterHandle')
-            // TODO: replace with websockets code of some sort - to unregister the handle
+            // TODO: replace with websockets code of some sort - to unregister the handle (the websockets code will do this mutation based on messages received)
             localStorage.removeItem('player')
             Vue.nextTick().then(() => {
                 commit('markPlayerNotRegistered')
@@ -87,7 +87,7 @@ const store = new Vuex.Store({
                     console.log(
                         'loadUser found player in local storage: ' + stored
                     )
-                    // TODO: replace with websockets code of some sort - to check whether player id is valid
+                    // TODO: replace with websockets code of some sort - to check whether player id is valid  (the websockets code will do this mutation based on messages received)
                     Vue.nextTick().then(() => {
                         commit('markPlayerRegistered', player)
                     })
