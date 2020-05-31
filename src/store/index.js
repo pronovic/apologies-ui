@@ -37,8 +37,13 @@ const store = new Vuex.Store({
             state.user.registered = false
             state.user.player = null
         },
-        markPlayerFailed(state) {
-            state.user.loadStatus = UserLoadStatus.FAILED
+        markPlayerHandleUnavailable(state) {
+            state.user.loadStatus = UserLoadStatus.UNAVAILABLE
+            state.user.registered = false
+            state.user.player = null
+        },
+        markPlayerError(state) {
+            state.user.loadStatus = UserLoadStatus.ERROR
             state.user.registered = false
             state.user.player = null
         },
@@ -53,7 +58,7 @@ const store = new Vuex.Store({
             }
             localStorage.setItem('player', JSON.stringify(player))
             Vue.nextTick().then(() => {
-                commit('markPlayerRegistered', player)
+                commit('markPlayerRegistered', player) // might eventually also go to markPlayerHandleUnavailable
             })
         },
         unregisterPlayer({ commit }) {
@@ -64,7 +69,12 @@ const store = new Vuex.Store({
                 commit('markPlayerNotRegistered')
             })
         },
+        cancelLoadUser({ commit }) {
+            console.log('cancelLoadUser')
+            // TODO: do something to close the socket and interrupt its work; whatever is going on, it's not working
+        },
         loadUser({ commit }) {
+            console.log('Loading user')
             var stored = localStorage.getItem('player')
             if (stored == null) {
                 console.log('loadUser did not find a player in local storage')

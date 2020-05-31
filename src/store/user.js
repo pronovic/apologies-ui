@@ -1,7 +1,8 @@
 const UserLoadStatus = {
     NOT_LOADED: 'Not Loaded',
     LOADED: 'Loaded',
-    FAILED: 'Failed',
+    UNAVAILABLE: 'Handle Unavailable',
+    ERROR: 'Error',
 }
 
 const user = {

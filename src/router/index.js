@@ -5,7 +5,8 @@ import { requireRegistered, requireUnregistered } from './user.js'
 const Landing = () => import('../views/Landing.vue')
 const Game = () => import('../views/Game.vue')
 const Error = () => import('../views/Error.vue')
-const Wait = () => import('../views/Wait.vue')
+const LoadUser = () => import('../views/LoadUser.vue')
+const HandleUnavailable = () => import('../views/HandleUnavailable.vue')
 const NotFound = () => import('../views/NotFound.vue')
 
 Vue.use(VueRouter)
@@ -29,9 +30,14 @@ const routes = [
         component: Error,
     },
     {
-        path: '/wait',
-        name: 'Wait',
-        component: Wait,
+        path: '/load',
+        name: 'LoadUser',
+        component: LoadUser,
+    },
+    {
+        path: '/duplicate',
+        name: 'HandleUnavailable',
+        component: HandleUnavailable,
     },
     {
         path: '*',
