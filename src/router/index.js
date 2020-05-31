@@ -5,6 +5,7 @@ import { requireRegistered, requireUnregistered } from './user.js'
 const Landing = () => import('../views/Landing.vue')
 const Game = () => import('../views/Game.vue')
 const Error = () => import('../views/Error.vue')
+const Wait = () => import('../views/Wait.vue')
 const NotFound = () => import('../views/NotFound.vue')
 
 Vue.use(VueRouter)
@@ -26,6 +27,11 @@ const routes = [
         path: '/error',
         name: 'Error',
         component: Error,
+    },
+    {
+        path: '/wait',
+        name: 'Wait',
+        component: Wait,
     },
     {
         path: '*',
