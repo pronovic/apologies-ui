@@ -58,10 +58,12 @@ export default {
                 return
             }
 
-            this.$store.dispatch('registerPlayer', this.handle)
-
             this.$nextTick(() => {
                 this.$bvModal.hide(this.id)
+                this.$router.push({
+                    name: 'RegisterHandle',
+                    params: { handle: this.handle },
+                })
             })
         },
     },

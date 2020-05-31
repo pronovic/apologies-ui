@@ -49,8 +49,8 @@ const store = new Vuex.Store({
         },
     },
     actions: {
-        registerPlayer({ commit }, handle) {
-            console.log('registerPlayer for handle: ' + handle)
+        registerHandle({ commit }, handle) {
+            console.log('registerHandle for handle: ' + handle)
             // TODO: replace with websockets code of some sort - to register the handle
             var player = {
                 handle: handle,
@@ -61,16 +61,16 @@ const store = new Vuex.Store({
                 commit('markPlayerRegistered', player) // might eventually also go to markPlayerHandleUnavailable
             })
         },
-        unregisterPlayer({ commit }) {
-            console.log('unregisterPlayer')
+        unregisterHandle({ commit }) {
+            console.log('unregisterHandle')
             // TODO: replace with websockets code of some sort - to unregister the handle
             localStorage.removeItem('player')
             Vue.nextTick().then(() => {
                 commit('markPlayerNotRegistered')
             })
         },
-        cancelLoadUser({ commit }) {
-            console.log('cancelLoadUser')
+        disconnectSocket({ commit }) {
+            console.log('disconnectSocket')
             // TODO: do something to close the socket and interrupt its work; whatever is going on, it's not working
         },
         loadUser({ commit }) {

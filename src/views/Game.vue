@@ -56,20 +56,8 @@ export default {
     components: {},
     methods: {
         unregister() {
-            this.$store.dispatch('unregisterPlayer')
+            this.$router.push({ name: 'UnregisterHandle' })
         },
-    },
-    created: function () {
-        this.$store.subscribe((mutation, state) => {
-            if (mutation.type === 'markPlayerNotRegistered') {
-                if (this.$route.name !== 'Landing') {
-                    console.log(
-                        'Player not registered; redirecting to landing page'
-                    )
-                    this.$router.push({ name: 'Landing' })
-                }
-            }
-        })
     },
 }
 </script>

@@ -6,6 +6,8 @@ const Landing = () => import('../views/Landing.vue')
 const Game = () => import('../views/Game.vue')
 const Error = () => import('../views/Error.vue')
 const LoadUser = () => import('../views/LoadUser.vue')
+const RegisterHandle = () => import('../views/RegisterHandle.vue')
+const UnregisterHandle = () => import('../views/UnregisterHandle.vue')
 const HandleUnavailable = () => import('../views/HandleUnavailable.vue')
 const NotFound = () => import('../views/NotFound.vue')
 
@@ -33,6 +35,16 @@ const routes = [
         path: '/load',
         name: 'LoadUser',
         component: LoadUser,
+    },
+    {
+        path: '/register/:handle',
+        name: 'RegisterHandle',
+        component: RegisterHandle,
+    },
+    {
+        path: '/unregister',
+        name: 'UnregisterHandle',
+        component: UnregisterHandle,
     },
     {
         path: '/duplicate',

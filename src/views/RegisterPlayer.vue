@@ -15,7 +15,7 @@
             ></template>
 
             <template v-slot:lead>
-                Please wait while we load your existing user registration.
+                Please wait while your handle is registered.
             </template>
         </b-jumbotron>
     </div>
@@ -41,13 +41,6 @@ export default {
                     )
                     this.$router.push({ name: 'Game' })
                 }
-            } else if (mutation.type === 'markPlayerNotRegistered') {
-                if (this.$route.name !== 'Landing') {
-                    console.log(
-                        'Player not registered; redirecting to landing page'
-                    )
-                    this.$router.push({ name: 'Landing' })
-                }
             } else if (mutation.type === 'markPlayerHandleUnavailable') {
                 if (this.$route.name !== 'HandleUnavailable') {
                     console.log(
@@ -63,18 +56,16 @@ export default {
             }
         })
 
-        this.$store.dispatch('loadUser')
+        this.$store.dispatch('registerUser')
     },
     beforeDestroy() {
         clearInterval(this.timer)
     },
     methods: {
         timeout() {
-            console.log(
-                'Failed to load user after 15000ms; disconnecting socket'
-            )
+            console.log('Failed to load user after 15000ms; cancelling load')
             clearInterval(this.timer)
-            this.$store.dispatch('disconnectSocket')
+            this.$store.dispatch('cancelLoadUser')
             this.$router.push({ name: 'Error' })
         },
     },
