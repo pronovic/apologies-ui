@@ -12,4 +12,25 @@ const user = {
     player: null,
 }
 
-export { UserLoadStatus, user }
+function clearPlayer() {
+    localStorage.removeItem('player')
+}
+
+function persistPlayer(player) {
+    localStorage.setItem('player', JSON.stringify(player))
+}
+
+function loadPlayer() {
+    var stored = localStorage.getItem('player')
+    if (stored == null) {
+        return null
+    } else {
+        try {
+            return JSON.parse(stored)
+        } catch (e) {
+            return null
+        }
+    }
+}
+
+export { UserLoadStatus, user, clearPlayer, persistPlayer, loadPlayer }

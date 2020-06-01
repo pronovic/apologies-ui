@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import disconnectSocket from '../utils/client.js'
+
 export default {
     name: 'LoadUser',
     components: {},
@@ -74,7 +76,7 @@ export default {
                 'Failed to load user after 15000ms; disconnecting socket'
             )
             clearInterval(this.timer)
-            this.$store.dispatch('disconnectSocket')
+            disconnectSocket()
             this.$router.push({ name: 'Error' })
         },
     },

@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import disconnectSocket from '../utils/client.js'
+
 export default {
     name: 'RegisterHandle',
     components: {},
@@ -56,7 +58,7 @@ export default {
                 'Failed to unregister handle after 15000ms; disconnecting socket'
             )
             clearInterval(this.timer)
-            this.$store.dispatch('disconnectSocket')
+            disconnectSocket()
             this.$router.push({ name: 'Error' })
         },
     },

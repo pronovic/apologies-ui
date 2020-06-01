@@ -69,10 +69,6 @@ const store = new Vuex.Store({
                 commit('markPlayerNotRegistered')
             })
         },
-        disconnectSocket({ commit }) {
-            console.log('disconnectSocket')
-            // TODO: do something to close the socket and interrupt its work; whatever is going on, it's not working
-        },
         loadUser({ commit }) {
             console.log('Loading user')
             var stored = localStorage.getItem('player')
