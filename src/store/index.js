@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { config } from './config.js'
-import { game } from './game.js'
-import { user, UserLoadStatus } from './user.js'
+import { config } from '../utils/config.js'
+import { game } from '../utils/game.js'
+import { user, UserLoadStatus } from '../utils/user.js'
 
 Vue.use(Vuex)
 
