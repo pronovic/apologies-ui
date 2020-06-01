@@ -1,20 +1,57 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { config } from '../utils/config.js'
-import { game } from '../utils/game.js'
-import { user, UserLoadStatus } from '../utils/user.js'
+import {
+    UserLoadStatus,
+    ServerStatus,
+    GameStatus,
+    GameBanners,
+} from '../utils/constants.js'
 
 Vue.use(Vuex)
+
+const user = {
+    loadStatus: UserLoadStatus.NOT_LOADED,
+    registered: false,
+    handle: null,
+    playerId: null,
+}
+
+const server = {
+    latestFailure: null,
+    registeredPlayers: [],
+    availableGames: [],
+    messages: [],
+    advertisedGame: null,
+    invitations: [],
+}
+
+const game = {
+    id: null,
+    status: null,
+    comment: null,
+    players: [],
+    history: [],
+    playerState: null,
+    opponentState: null,
+    drawnCard: null,
+    playerMoves: null,
+    banner: GameBanners.ACTION_HINT,
+}
 
 const store = new Vuex.Store({
     state: {
         config: config,
-        game: game,
         user: user,
+        server: server,
+        game: game,
     },
     getters: {
         playerHandle: (state) => {
-            return state.user.player == null ? '' : state.user.player.handle
+            return state.user.handle == null ? '' : state.user.handle
+        },
+        playerId: (state) => {
+            return state.user.playerId
         },
         userLoadStatus: (state) => {
             return state.user.loadStatus
@@ -25,82 +62,152 @@ const store = new Vuex.Store({
         isUserRegistered: (state) => {
             return state.user.registered
         },
+        gameBanner: (state) => {
+            return state.game.banner == null ? '' : state.game.banner
+        },
     },
     mutations: {
-        markPlayerRegistered(state, player) {
+        trackFailure(state, context) {
+            state.server.latestFailure = context
+        },
+        trackLatestStatus(state, status) {
+            state.server.latestStatus = status
+        },
+        trackRegisteredPlayers(state, context) {
+            state.server.registeredPlayers = context.players
+        },
+        trackAvailableGames(state, context) {
+            state.server.availableGames = context.games
+        },
+        trackPlayerRegistered(state, handle, playerId) {
             state.user.loadStatus = UserLoadStatus.LOADED
             state.user.registered = true
-            state.user.player = player
+            state.user.handle = handle
+            state.user.playerId = playerId
         },
-        markPlayerNotRegistered(state) {
+        trackPlayerNotRegistered(state) {
             state.user.loadStatus = UserLoadStatus.LOADED
             state.user.registered = false
-            state.user.player = null
+            state.user.handle = null
+            state.user.playerId = null
         },
-        markPlayerHandleUnavailable(state) {
-            state.user.loadStatus = UserLoadStatus.UNAVAILABLE
-            state.user.registered = false
-            state.user.player = null
+        trackReceivedMessage(state, context) {
+            state.server.messages.push(context)
         },
-        markPlayerError(state) {
-            state.user.loadStatus = UserLoadStatus.ERROR
-            state.user.registered = false
-            state.user.player = null
+        trackAdvertisedGame(state, context) {
+            state.server.advertisedGame = context
+        },
+        trackGameInvitation(state, context) {
+            state.server.invitations.push(context)
+        },
+        trackGameStatus(state, status, gameId) {
+            state.game.id = gameId
+            state.game.status = status
+        },
+        trackGamePlayers(state, context) {
+            state.game.comment = context.comment
+            state.game.players = context.players
+        },
+        trackGameState(state, context) {
+            state.game.history = context.recent_history
+            state.game.playerState = context.player
+            state.game.opponentState = context.opponents
+        },
+        trackPlayerTurn(state, context) {
+            state.game.drawnCard = context.drawn_card
+            state.game.playerMoves = context.moves
+        },
+        clearGame(state) {
+            state.game.id = null
+            state.game.status = null
+            state.game.comment = null
+            state.game.players = []
+            state.game.history = []
+            state.game.playerState = null
+            state.game.opponentState = null
+            state.game.drawnCard = null
+            state.game.playerMoves = null
         },
     },
     actions: {
-        registerHandle({ commit }, handle) {
-            console.log('registerHandle for handle: ' + handle)
-            // TODO: replace with websockets code of some sort - to register the handle (the websockets code will do this mutation based on messages received)
-            var player = {
-                handle: handle,
-                playerId: null,
-            }
-            localStorage.setItem('player', JSON.stringify(player))
-            Vue.nextTick().then(() => {
-                commit('markPlayerRegistered', player) // might eventually also go to markPlayerHandleUnavailable
-            })
+        handleRequestFailed({ commit }, context) {
+            commit('trackFailure', context)
         },
-        unregisterHandle({ commit }) {
-            console.log('unregisterHandle')
-            // TODO: replace with websockets code of some sort - to unregister the handle (the websockets code will do this mutation based on messages received)
-            localStorage.removeItem('player')
-            Vue.nextTick().then(() => {
-                commit('markPlayerNotRegistered')
-            })
+        handleServerShutdown({ commit }) {
+            commit('trackLatestStatus', ServerStatus.SERVER_SHUTDOWN)
         },
-        loadUser({ commit }) {
-            console.log('Loading user')
-            var stored = localStorage.getItem('player')
-            if (stored == null) {
-                console.log('loadUser did not find a player in local storage')
-                Vue.nextTick().then(() => {
-                    commit('markPlayerNotRegistered')
-                })
-            } else {
-                try {
-                    var player = JSON.parse(stored)
-                    console.log(
-                        'loadUser found player in local storage: ' + stored
-                    )
-                    // TODO: replace with websockets code of some sort - to check whether player id is valid  (the websockets code will do this mutation based on messages received)
-                    Vue.nextTick().then(() => {
-                        commit('markPlayerRegistered', player)
-                    })
-                } catch (e) {
-                    console.log(
-                        'loadUser failed to parse data from local storage:' +
-                            stored
-                    )
-                    console.log(e)
-                    Vue.nextTick().then(() => {
-                        commit('markPlayerNotRegistered')
-                    })
-                }
-            }
+        handleWebsocketIdle({ commit }) {
+            commit('trackLatestStatus', ServerStatus.WEBSOCKET_IDLE)
+        },
+        handleWebsocketInactive({ commit }) {
+            commit('trackLatestStatus', ServerStatus.WEBSOCKET_INACTIVE)
+        },
+        handleRegisteredPlayers({ commit }, context) {
+            commit('trackRegisteredPlayers', context)
+        },
+        handleAvailableGames({ commit }, context) {
+            commit('trackAvailableGames', context)
+        },
+        handlePlayerRegistered({ commit }, handle, playerId) {
+            commit('trackRegisteredPlayer', handle, playerId)
+        },
+        handlePlayerIdle({ commit }) {
+            commit('trackLatestStatus', ServerStatus.PLAYER_IDLE)
+        },
+        handlePlayerInactive({ commit }) {
+            commit('trackLatestStatus', ServerStatus.PLAYER_INACTIVE)
+        },
+        handlePlayerMessageReceived({ commit }, context) {
+            commit('trackReceivedMessage', context)
+        },
+        handleGameAdvertised({ commit }, context) {
+            commit('trackAdvertisedGame', context)
+        },
+        handleGameInvitation({ commit }, context) {
+            commit('trackGameInvitation', context)
+        },
+        handleGameJoined({ commit }, context) {
+            commit('trackGameStatus', GameStatus.GAME_JOINED, context.game_id)
+        },
+        handleGameStarted({ commit }, context) {
+            commit('trackGameStatus', GameStatus.GAME_STARTED, context.game_id)
+        },
+        handleGameCancelled({ commit }, context) {
+            commit(
+                'trackGameStatus',
+                GameStatus.GAME_CANCELLED,
+                context.game_id
+            )
+        },
+        handleGameCompleted({ commit }, context) {
+            commit(
+                'trackGameStatus',
+                GameStatus.GAME_COMPLETED,
+                context.game_id
+            )
+        },
+        handleGameIdle({ commit }, context) {
+            commit('trackGameStatus', GameStatus.GAME_IDLE, context.game_id)
+        },
+        handleGameInactive({ commit }, context) {
+            commit('trackGameStatus', GameStatus.GAME_INACTIVE, context.game_id)
+        },
+        handleGamePlayerQuit({ commit }, context) {
+            commit('trackLatestStatus', GameStatus.PLAYER_QUIT, context.game_id)
+        },
+        handleGamePlayerChange({ commit }, context) {
+            commit('trackGamePlayers', context)
+        },
+        handleGameStateChange({ commit }, context) {
+            commit('trackGameState', context)
+        },
+        handleGamePlayerTurn({ commit }, context) {
+            commit('trackPlayerTurn', context)
+        },
+        handleGameClear({ commit }) {
+            commit('clearGame')
         },
     },
-    modules: {},
 })
 
 export default store

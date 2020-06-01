@@ -27,19 +27,11 @@
 
             <p>
                 All of the source code is released under the
-                <b-link :href="this.$store.state.config.LICENSE_APACHE_2"
-                    >Apache v2.0</b-link
-                >
+                <b-link :href="licenseUrl">Apache v2.0</b-link>
                 license. You can find the source code at GitHub. See
-                <b-link :href="this.$store.state.config.GITHUB_APOLOGIES"
-                    >apologies</b-link
-                >,
-                <b-link :href="this.$store.state.config.GITHUB_APOLOGIES_SERVER"
-                    >apologies-server</b-link
-                >, and
-                <b-link :href="this.$store.state.config.GITHUB_APOLOGIES_UI"
-                    >apologies-ui</b-link
-                >.
+                <b-link :href="apologiesUrl">apologies</b-link>,
+                <b-link :href="apologiesServerUrl">apologies-server</b-link>,
+                and <b-link :href="apologiesUiUrl">apologies-ui</b-link>.
             </p>
 
             <RegisterHandleButton id="register2" />
@@ -53,5 +45,19 @@ import RegisterHandleButton from '../components/RegisterHandleButton.vue'
 export default {
     name: 'Landing',
     components: { RegisterHandleButton: RegisterHandleButton },
+    computed: {
+        licenseUrl() {
+            return this.$store.state.config.LICENSE_APACHE_2
+        },
+        apologiesUrl() {
+            return this.$store.state.config.GITHUB_APOLOGIES
+        },
+        apologiesServerUrl() {
+            return this.$store.state.config.GITHUB_APOLOGIES_SERVER
+        },
+        apologiesUiUrl() {
+            return this.$store.state.config.GITHUB_APOLOGIES_UI
+        },
+    },
 }
 </script>
