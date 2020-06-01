@@ -15,15 +15,15 @@
             ></template>
 
             <template v-slot:lead>
-                Please wait while we register your handle <em>{{ handle }}</em
-                >.
+                Please wait while your handle <em>{{ handle }}</em> is
+                registered.
             </template>
         </b-jumbotron>
     </div>
 </template>
 
 <script>
-import disconnectSocket from '../utils/client.js'
+import { registerHandle, disconnectSocket } from '../utils/client.js'
 
 export default {
     name: 'RegisterHandle',
@@ -35,44 +35,23 @@ export default {
         }
     },
     created: function () {
+        // The action below will eventually transition away from this page.
+        // If that doesn't happen fast enough, the timeout will be triggered.
         this.handle = this.$route.params.handle
-
-        this.timer = setInterval(this.timeout, 15000)
-
-        // TODO: see notes in LoadUser
-        this.$store.subscribe((mutation, state) => {
-            if (mutation.type === 'markPlayerRegistered') {
-                if (this.$route.name !== 'Game') {
-                    console.log(
-                        'Player is registered; redirecting to game page'
-                    )
-                    this.$router.push({ name: 'Game' })
-                }
-            } else if (mutation.type === 'markPlayerHandleUnavailable') {
-                if (this.$route.name !== 'HandleUnavailable') {
-                    console.log(
-                        'Failed to register player: handle is not available'
-                    )
-                    this.$router.push({ name: 'HandleUnavailable' })
-                }
-            } else if (mutation.type === 'markPlayerError') {
-                if (this.$route.name !== 'Error') {
-                    console.log('Failed to register player: general error')
-                    this.$router.push({ name: 'Error' })
-                }
-            }
-        })
-
-        this.$store.dispatch('registerHandle', this.handle)
+        this.timer = setInterval(this.timeout, this.serverTimeoutMs)
+        registerHandle(this.handle)
     },
     beforeDestroy() {
         clearInterval(this.timer)
     },
+    computed: {
+        serverTimeoutMs() {
+            return this.$store.state.config.SERVER_TIMEOUT_MS
+        },
+    },
     methods: {
         timeout() {
-            console.log(
-                'Failed to register handle after 15000ms; disconnecting socket'
-            )
+            console.log('Timed out waiting to register handle')
             clearInterval(this.timer)
             disconnectSocket()
             this.$router.push({ name: 'Error' })

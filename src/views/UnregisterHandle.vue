@@ -15,49 +15,40 @@
             ></template>
 
             <template v-slot:lead>
-                Please wait while we unregister your handle.
+                Please wait while your handle is unregistered.
             </template>
         </b-jumbotron>
     </div>
 </template>
 
 <script>
-import disconnectSocket from '../utils/client.js'
+import { unregisterHandle, disconnectSocket } from '../utils/client.js'
 
 export default {
-    name: 'RegisterHandle',
+    name: 'UnregisterHandle',
     components: {},
     data() {
         return {
-            handle: null,
             timer: null,
         }
     },
     created: function () {
-        this.timer = setInterval(this.timeout, 15000)
-
-        // TODO: see notes in LoadUser
-        this.$store.subscribe((mutation, state) => {
-            if (mutation.type === 'markPlayerNotRegistered') {
-                if (this.$route.name !== 'Landing') {
-                    console.log(
-                        'Player not registered; redirecting to landing page'
-                    )
-                    this.$router.push({ name: 'Landing' })
-                }
-            }
-        })
-
-        this.$store.dispatch('unregisterHandle')
+        // The action below will eventually transition away from this page.
+        // If that doesn't happen fast enough, the timeout will be triggered.
+        this.timer = setInterval(this.timeout, this.serverTimeoutMs)
+        unregisterHandle(this.handle)
     },
     beforeDestroy() {
         clearInterval(this.timer)
     },
+    computed: {
+        serverTimeoutMs() {
+            return this.$store.state.config.SERVER_TIMEOUT_MS
+        },
+    },
     methods: {
         timeout() {
-            console.log(
-                'Failed to unregister handle after 15000ms; disconnecting socket'
-            )
+            console.log('Timed out waiting to unregister handle')
             clearInterval(this.timer)
             disconnectSocket()
             this.$router.push({ name: 'Error' })

@@ -1,3 +1,5 @@
+// Callers should access configuration through the store, not directly from here.
+//
 // Although parcel loads process.env for us based on the .env file, that variable
 // is not available to Vue components.  We need to map the process.env variables
 // into something that is available to Vue.  This is repetitive, but seems to be
@@ -11,6 +13,7 @@ const config = {
     GITHUB_APOLOGIES: process.env.GITHUB_APOLOGIES,
     GITHUB_APOLOGIES_SERVER: process.env.GITHUB_APOLOGIES_SERVER,
     GITHUB_APOLOGIES_UI: process.env.GITHUB_APOLOGIES_UI,
+    SERVER_TIMEOUT_MS: parseInt(process.env.SERVER_TIMEOUT_MS, 10),
 }
 
 export { config }

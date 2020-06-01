@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import { requireRegistered, requireUnregistered } from './user.js'
+import store from '../store'
 
 const Landing = () => import('../views/Landing.vue')
 const Game = () => import('../views/Game.vue')
@@ -18,13 +18,11 @@ const routes = [
         path: '/',
         name: 'Landing',
         component: Landing,
-        beforeEnter: requireUnregistered,
     },
     {
         path: '/game',
         name: 'Game',
         component: Game,
-        beforeEnter: requireRegistered,
     },
     {
         path: '/error',
@@ -62,6 +60,17 @@ const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
     routes,
+})
+
+router.beforeEach((to, from, next) => {
+    if (to.name !== 'LoadUser' && to.name !== 'Error') {
+        if (!store.getters.isUserLoaded) {
+            console.log('User is not yet loaded, redirecting to load user page')
+            next({ name: 'LoadUser' })
+        }
+    }
+
+    next()
 })
 
 export default router

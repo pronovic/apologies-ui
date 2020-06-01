@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { config } from '../utils/config.js'
+import { config } from './config.js'
+import { clearPlayer, persistPlayer } from '../utils/storage.js'
 import {
     UserLoadStatus,
     ServerStatus,
@@ -149,7 +150,12 @@ const store = new Vuex.Store({
             commit('trackAvailableGames', context)
         },
         handlePlayerRegistered({ commit }, handle, playerId) {
-            commit('trackRegisteredPlayer', handle, playerId)
+            persistPlayer(handle, playerId)
+            commit('trackPlayerRegistered', handle, playerId)
+        },
+        handlePlayerNotRegistered({ commit }) {
+            clearPlayer()
+            commit('trackPlayerNotRegistered')
         },
         handlePlayerIdle({ commit }) {
             commit('trackLatestStatus', ServerStatus.PLAYER_IDLE)
