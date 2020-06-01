@@ -39,6 +39,7 @@ export default {
 
         this.timer = setInterval(this.timeout, 15000)
 
+        // TODO: see notes in LoadUser
         this.$store.subscribe((mutation, state) => {
             if (mutation.type === 'markPlayerRegistered') {
                 if (this.$route.name !== 'Game') {

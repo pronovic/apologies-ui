@@ -36,6 +36,7 @@ export default {
     created: function () {
         this.timer = setInterval(this.timeout, 15000)
 
+        // TODO: see notes in LoadUser
         this.$store.subscribe((mutation, state) => {
             if (mutation.type === 'markPlayerNotRegistered') {
                 if (this.$route.name !== 'Landing') {
