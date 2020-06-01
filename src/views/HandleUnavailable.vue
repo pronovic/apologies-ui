@@ -8,7 +8,8 @@
             <template v-slot:header>Handle Unavailable</template>
 
             <template v-slot:lead>
-                Sorry, the handle you chose was already in use.
+                Sorry, the handle you chose (<em>{{ handle }}</em
+                >) was already in use.
             </template>
 
             <p>
@@ -25,6 +26,13 @@
 <script>
 export default {
     name: 'HandleUnavailable',
-    components: {},
+    data() {
+        return {
+            handle: null,
+        }
+    },
+    created: function () {
+        this.handle = this.$route.params.handle
+    },
 }
 </script>

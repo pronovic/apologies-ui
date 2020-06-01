@@ -143,6 +143,9 @@ const store = new Vuex.Store({
         handleWebsocketInactive({ commit }) {
             commit('trackLatestStatus', ServerStatus.WEBSOCKET_INACTIVE)
         },
+        handleWebsocketError({ commit }) {
+            commit('trackLatestStatus', ServerStatus.WEBSOCKET_ERROR)
+        },
         handleRegisteredPlayers({ commit }, context) {
             commit('trackRegisteredPlayers', context)
         },

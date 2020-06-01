@@ -9,6 +9,7 @@ const ServerStatus = {
     SERVER_SHUTDOWN: 'Server Shutdown',
     WEBSOCKET_IDLE: 'Websocket Idle',
     WEBSOCKET_INACTIVE: 'Websocket Inactive',
+    WEBSOCKET_ERROR: 'Websocket Error',
     PLAYER_IDLE: 'Player Idle',
     PLAYER_INACTIVE: 'PlayerInactive',
 }

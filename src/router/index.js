@@ -45,7 +45,7 @@ const routes = [
         component: UnregisterHandle,
     },
     {
-        path: '/duplicate',
+        path: '/unavailable/:handle',
         name: 'HandleUnavailable',
         component: HandleUnavailable,
     },
