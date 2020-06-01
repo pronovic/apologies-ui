@@ -1,4 +1,5 @@
 import store from '../store'
+import router from '../router'
 
 function disconnectSocket() {
     // TODO: implement actual socket behavior here; this is stubbed
@@ -11,7 +12,11 @@ function registerHandle(handle) {
     console.log(
         'Registered handle ' + handle + ' tied to player id ' + playerId
     )
-    store.dispatch('handlePlayerRegistered', handle, playerId)
+    store.dispatch('handlePlayerRegistered', {
+        handle: handle,
+        playerId: playerId,
+    })
+    router.push({ name: 'Game' })
 }
 
 function reregisterHandle(handle, playerId) {
@@ -20,16 +25,20 @@ function reregisterHandle(handle, playerId) {
     console.log(
         'Reregistered handle ' + handle + ' tied to player id ' + playerId
     )
-    store.dispatch('handlePlayerRegistered', handle, 'playerId')
+    store.dispatch('handlePlayerRegistered', {
+        handle: handle,
+        playerId: playerId,
+    })
+    router.push({ name: 'Game' })
 }
 
 function unregisterHandle() {
     // TODO: implement actual socket behavior here; this is stubbed to just do the state transition
+    // TODO: not quite sure how we'll handle disconnect; probably done elsewhere?  no point in keeping socket open if they're not registered?
     console.log('Unregistered handle')
-    store.dispatch('handlePlayerNotRegistered').then(() => {
-        // TODO: not quite sure how we'll handle this; probably done elsewhere?  no point in keeping socket open if they're
-        disconnectSocket()
-    })
+    disconnectSocket()
+    store.dispatch('handlePlayerNotRegistered')
+    router.push({ name: 'Landing' })
 }
 
 export { disconnectSocket, registerHandle, reregisterHandle, unregisterHandle }

@@ -80,11 +80,11 @@ const store = new Vuex.Store({
         trackAvailableGames(state, context) {
             state.server.availableGames = context.games
         },
-        trackPlayerRegistered(state, handle, playerId) {
+        trackPlayerRegistered(state, player) {
             state.user.loadStatus = UserLoadStatus.LOADED
             state.user.registered = true
-            state.user.handle = handle
-            state.user.playerId = playerId
+            state.user.handle = player.handle
+            state.user.playerId = player.playerId
         },
         trackPlayerNotRegistered(state) {
             state.user.loadStatus = UserLoadStatus.LOADED
@@ -149,9 +149,9 @@ const store = new Vuex.Store({
         handleAvailableGames({ commit }, context) {
             commit('trackAvailableGames', context)
         },
-        handlePlayerRegistered({ commit }, handle, playerId) {
-            persistPlayer(handle, playerId)
-            commit('trackPlayerRegistered', handle, playerId)
+        handlePlayerRegistered({ commit }, player) {
+            persistPlayer(player.handle, player.playerId)
+            commit('trackPlayerRegistered', player)
         },
         handlePlayerNotRegistered({ commit }) {
             clearPlayer()
