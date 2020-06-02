@@ -31,6 +31,7 @@
 
 <script>
 export default {
+    name: 'RegisterHandleButton',
     props: ['id'],
     data() {
         return {
