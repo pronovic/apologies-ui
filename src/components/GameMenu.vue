@@ -111,6 +111,7 @@ export default {
                         this.$router.push({ name: 'UnregisterHandle' })
                     }
                 })
+                .catch((err) => {}) /* eslint handle-callback-err: "off" */
         },
         handleJoin() {
             // TODO: this should be a dialog of some sort
@@ -132,6 +133,7 @@ export default {
                         quitGame()
                     }
                 })
+                .catch((err) => {}) /* eslint handle-callback-err: "off" */
         },
         handleCancel() {
             this.$bvModal
@@ -144,6 +146,7 @@ export default {
                         cancelGame()
                     }
                 })
+                .catch((err) => {}) /* eslint handle-callback-err: "off" */
         },
         handleClear() {
             this.$bvModal
@@ -156,6 +159,7 @@ export default {
                         this.$store.dispatch('handleGameClear')
                     }
                 })
+                .catch((err) => {}) /* eslint handle-callback-err: "off" */
         },
     },
 }
