@@ -5,6 +5,7 @@ import atmosphere from 'atmosphere.js'
 var socket = atmosphere
 var subsocket = null
 var open = false
+var closeRequested = false
 
 function handleRequestFailed(message) {
     const reason = message.context.reason
@@ -13,15 +14,27 @@ function handleRequestFailed(message) {
         case 'INVALID_PLAYER':
         case 'DUPLICATE_USER':
             console.log('Handle is not available: ' + handle)
+            disconnectSocket()
             store.dispatch('handlePlayerNotRegistered')
-            router.push({
-                name: 'HandleUnavailable',
-                params: { handle: handle },
-            })
+            if (router.currentRoute.name !== 'HandleUnavailable') {
+                router.push({
+                    name: 'HandleUnavailable',
+                    params: { handle: handle },
+                })
+            }
             break
         default:
+            console.log(
+                'Request failed: ' +
+                    message.context.reason +
+                    ', ' +
+                    message.context.comment
+            )
+            disconnectSocket()
             store.dispatch('handleRequestFailed', message.context)
-            router.push({ name: 'Error' })
+            if (router.currentRoute.name !== 'Error') {
+                router.push({ name: 'Error' })
+            }
             break
     }
 }
@@ -40,20 +53,27 @@ function handlePlayerRegistered(message) {
     const handle = message.context.handle
     const playerId = message.player_id
     console.log(
-        'Registered handle ' + handle + ' tied to player id ' + playerId
+        'Completed registering handle ' +
+            handle +
+            ' tied to player id ' +
+            playerId
     )
     store.dispatch('handlePlayerRegistered', {
         handle: handle,
         playerId: playerId,
     })
-    router.push({ name: 'Game' })
+    if (router.currentRoute.name !== 'Game') {
+        router.push({ name: 'Game' })
+    }
 }
 
 function handlePlayerUnregistered(message) {
-    console.log('Unregistered handle')
+    console.log('Completed unregistering handle')
     disconnectSocket()
     store.dispatch('handlePlayerNotRegistered')
-    router.push({ name: 'Landing' })
+    if (router.currentRoute.name !== 'Landing') {
+        router.push({ name: 'Landing' })
+    }
 }
 
 function handlePlayerIdle(message) {}
@@ -95,6 +115,14 @@ function onClose(response) {
     )
     subsocket = null
     open = false
+    if (closeRequested) {
+        closeRequested = false
+    } else {
+        console.log('Close was unexpected.  Reconnecting.')
+        const handle = store.getters.playerHandle
+        const playerId = store.getters.playerId
+        reregisterHandle(handle, playerId)
+    }
 }
 
 function onError(response) {
@@ -106,21 +134,18 @@ function onError(response) {
             ', ' +
             response.error
     )
-    store.dispatch('handleWebsocketError')
-    router.push({ name: 'Error' })
 }
 
 function onTransportFailure(errorMsg, request) {
+    // the two settings prevent the stupid client from falling back to HTTP when the websocket disconnects
     console.log('Websocket transport failure: ' + errorMsg)
     request.transport = 'websocket'
     request.fallbackTransport = 'websocket'
 }
 
-// TODO: I think I need to do something here so I attempt to reconnect if dropped
-// but I'm not sure what.  I think that the onOpen() is screwed up (because it
-// won't necessarily know how to re-register), so I would have to fix that - if
-// this even gets called.
 function onReconnect(request, response) {
+    // in theory, this never gets called, because we had to turn off auto-reconnect to make things work
+    // the two settings prevent the stupid client from falling back to HTTP when the websocket disconnects
     console.log(
         'Websocket connection is reconnecting: ' +
             response.status +
@@ -252,7 +277,20 @@ function connectSocket(onOpen) {
 
 function disconnectSocket() {
     console.log('Closing websocket connection')
+    closeRequested = true
     socket.unsubscribe()
+}
+
+function connectAndSend(request) {
+    connectSocket((response) => {
+        if (!open) {
+            // The stupid library sometimes triggers duplicate onOpen events
+            console.log('Connection is open, sending request')
+            sendRequest(request) // send the request once the socket is open
+            open = true
+            closeRequested = false
+        }
+    })
 }
 
 function registerHandle(handle) {
@@ -265,14 +303,7 @@ function registerHandle(handle) {
         },
     }
 
-    connectSocket((response) => {
-        if (!open) {
-            // The stupid library sometimes triggers duplicate onOpen events
-            console.log('Connection is open, sending register request')
-            sendRequest(request) // send the request once the socket is open
-            open = true
-        }
-    })
+    connectAndSend(request)
 }
 
 function reregisterHandle(handle, playerId) {
@@ -291,14 +322,7 @@ function reregisterHandle(handle, playerId) {
         },
     }
 
-    connectSocket((response) => {
-        if (!open) {
-            // The stupid library sometimes triggers duplicate onOpen events
-            console.log('Connection is open, sending reregister request')
-            sendRequest(request) // send the request once the socket is open
-            open = true
-        }
-    })
+    connectAndSend(request)
 }
 
 function unregisterHandle() {
