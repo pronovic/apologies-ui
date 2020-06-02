@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { registerHandle, disconnectSocket } from '../utils/client.js'
+import { registerHandle } from '../utils/client.js'
 
 export default {
     name: 'RegisterHandle',
@@ -31,31 +31,12 @@ export default {
     data() {
         return {
             handle: null,
-            timer: null,
         }
     },
     created: function () {
-        // The action below will eventually transition away from this page.
-        // If that doesn't happen fast enough, the timeout will be triggered.
+        // This will either transition away from this page or time out
         this.handle = this.$route.params.handle
-        this.timer = setInterval(this.timeout, this.serverTimeoutMs)
         registerHandle(this.handle)
-    },
-    beforeDestroy() {
-        clearInterval(this.timer)
-    },
-    computed: {
-        serverTimeoutMs() {
-            return this.$store.state.config.SERVER_TIMEOUT_MS
-        },
-    },
-    methods: {
-        timeout() {
-            console.log('Timed out waiting to register handle')
-            clearInterval(this.timer)
-            disconnectSocket()
-            this.$router.push({ name: 'Error' })
-        },
     },
 }
 </script>

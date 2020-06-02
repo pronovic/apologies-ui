@@ -22,37 +22,14 @@
 </template>
 
 <script>
-import { unregisterHandle, disconnectSocket } from '../utils/client.js'
+import { unregisterHandle } from '../utils/client.js'
 
 export default {
     name: 'UnregisterHandle',
     components: {},
-    data() {
-        return {
-            timer: null,
-        }
-    },
     created: function () {
-        // The action below will eventually transition away from this page.
-        // If that doesn't happen fast enough, the timeout will be triggered.
-        this.timer = setInterval(this.timeout, this.serverTimeoutMs)
+        // This will either transition away from this page or time out
         unregisterHandle()
-    },
-    beforeDestroy() {
-        clearInterval(this.timer)
-    },
-    computed: {
-        serverTimeoutMs() {
-            return this.$store.state.config.SERVER_TIMEOUT_MS
-        },
-    },
-    methods: {
-        timeout() {
-            console.log('Timed out waiting to unregister handle')
-            clearInterval(this.timer)
-            disconnectSocket()
-            this.$router.push({ name: 'Error' })
-        },
     },
 }
 </script>

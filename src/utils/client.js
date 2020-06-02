@@ -6,10 +6,16 @@ import { EventBus } from './eventbus.js'
 var socket = atmosphere
 var subsocket = null
 var open = false
+
 var closeRequested = false
-var reconnectDelayMs = store.state.config.INITIAL_RECONNECT_DELAY_MS
-var reconnectDelayFactor = store.state.config.RECONNECT_DECAY_FACTOR
+var retryDurationMs = 0
+var reconnectDelayMs = 0
 var pending = null
+
+var serverTimeoutMs = store.state.config.SERVER_TIMEOUT_MS
+var initialReconnectDelayMs = store.state.config.INITIAL_RECONNECT_DELAY_MS
+var maxReconnectDelayMs = store.state.config.MAX_RECONNECT_DELAY_MS
+var reconnectDelayFactor = store.state.config.RECONNECT_DECAY_FACTOR
 
 function handleRequestFailed(message) {
     const reason = message.context.reason
@@ -36,6 +42,7 @@ function handleRequestFailed(message) {
             )
             disconnectSocket()
             store.dispatch('handleRequestFailed', message.context)
+            store.dispatch('handlePlayerNotRegistered')
             if (router.currentRoute.name !== 'Error') {
                 router.push({ name: 'Error' })
             }
@@ -44,8 +51,9 @@ function handleRequestFailed(message) {
 }
 
 function handleServerShutdown(message) {
-    store.dispatch('handleServerShutdown')
     disconnectSocket()
+    store.dispatch('handleServerShutdown')
+    store.dispatch('handlePlayerNotRegistered')
     if (router.currentRoute.name !== 'ServerShutdown') {
         router.push({ name: 'ServerShutdown' })
     }
@@ -54,7 +62,7 @@ function handleServerShutdown(message) {
 function handleWebsocketIdle(message) {
     EventBus.$emit(
         'client-toast',
-        'You are idle; after a little while, you will be disconnected'
+        'You are idle; you will be disconnected in a little while'
     )
     store.dispatch('handleWebsocketIdle')
 }
@@ -76,6 +84,8 @@ function handleAvailableGames(message) {
 }
 
 function handlePlayerRegistered(message) {
+    EventBus.$emit('client-toast', 'Completed registering your handle.')
+
     const handle = message.context.handle
     const playerId = message.player_id
     console.log(
@@ -95,6 +105,7 @@ function handlePlayerRegistered(message) {
 }
 
 function handlePlayerUnregistered(message) {
+    EventBus.$emit('client-toast', 'Completed unregistering your handle.')
     console.log('Completed unregistering handle')
     disconnectSocket()
     store.dispatch('handlePlayerNotRegistered')
@@ -106,7 +117,7 @@ function handlePlayerUnregistered(message) {
 function handlePlayerIdle(message) {
     EventBus.$emit(
         'client-toast',
-        'You are idle; after a little while, you will be disconnected'
+        'You are idle; you will be disconnected in a little while'
     )
     store.dispatch('handlePlayerIdle')
 }
@@ -161,7 +172,7 @@ function handleGameCompleted(message) {
 function handleGameIdle(message) {
     EventBus.$emit(
         'client-toast',
-        'The game is idle; after a little while, it will be cancelled'
+        'The game is idle; it will be cancelled in a little while'
     )
     store.dispatch('handleGameIdle', message.context)
 }
@@ -201,17 +212,47 @@ async function onClose(response) {
     subsocket = null
     open = false
     if (closeRequested) {
-        // nothing more to do; this is expected
+        console.log('Close was expected; no more action needs to be taken')
         closeRequested = false
     } else {
-        console.log(
-            'Close was unexpected; will reconnect after ' +
-                reconnectDelayMs +
-                'ms'
-        )
+        console.log('Close was unexpected; entering recovery/retry')
 
+        retryDurationMs += reconnectDelayMs
+        if (retryDurationMs > serverTimeoutMs) {
+            console.log(
+                'Retry duration exceeded: ' +
+                    retryDurationMs +
+                    'ms > ' +
+                    serverTimeoutMs +
+                    'ms'
+            )
+
+            retryDurationMs = 0
+            reconnectDelayMs = 0
+            pending = null
+
+            store.dispatch('handlePlayerNotRegistered')
+
+            if (router.currentRoute.name !== 'Error') {
+                router.push({ name: 'Error' })
+            }
+
+            return // give up
+        }
+
+        if (reconnectDelayMs === 0) {
+            reconnectDelayMs = initialReconnectDelayMs
+        } else {
+            // decay off our reconnect attempts
+            reconnectDelayMs *= reconnectDelayFactor
+            if (reconnectDelayMs > maxReconnectDelayMs) {
+                reconnectDelayMs = maxReconnectDelayMs
+            }
+        }
+
+        console.log('Will reconnect after ' + reconnectDelayMs + 'ms')
         await new Promise((resolve) => setTimeout(resolve, reconnectDelayMs))
-        reconnectDelayMs *= reconnectDelayFactor // decay off our reconnect attempts
+        EventBus.$emit('client-toast', 'Server connection lost; retrying now.')
 
         if (pending) {
             if (pending.playerId) {
@@ -381,7 +422,8 @@ function disconnectSocket() {
     console.log('Closing websocket connection')
     closeRequested = true
     socket.unsubscribe()
-    reconnectDelayMs = store.state.config.INITIAL_RECONNECT_DELAY_MS
+    retryDurationMs = 0
+    reconnectDelayMs = 0
 }
 
 function connectAndSend(request) {
@@ -392,7 +434,8 @@ function connectAndSend(request) {
             sendRequest(request) // send the request once the socket is open
             open = true
             closeRequested = false
-            reconnectDelayMs = store.state.config.INITIAL_RECONNECT_DELAY_MS
+            retryDurationMs = 0
+            reconnectDelayMs = 0
         }
     })
 }

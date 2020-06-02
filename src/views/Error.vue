@@ -12,8 +12,7 @@
             </template>
 
             <p>
-                An error occurred processing your request. You can try returning
-                to the
+                An unrecoverable error occurred. You can try returning to the
                 <b-link @click="$router.push({ name: 'Landing' })"
                     >landing page</b-link
                 >. If that doesn't work, please try again later.

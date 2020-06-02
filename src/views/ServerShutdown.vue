@@ -8,7 +8,8 @@
             <template v-slot:header>Server Shutdown</template>
 
             <template v-slot:lead>
-                Sorry, the backend server has shutdown.
+                Sorry, the backend server has shut down and is no longer
+                available.
             </template>
 
             <p>

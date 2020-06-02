@@ -17,6 +17,7 @@ const config = {
     INITIAL_RECONNECT_DELAY_MS: parseInt(
         process.env.INITIAL_RECONNECT_DELAY_MS
     ),
+    MAX_RECONNECT_DELAY_MS: parseInt(process.env.MAX_RECONNECT_DELAY_MS),
     RECONNECT_DECAY_FACTOR: parseFloat(process.env.RECONNECT_DECAY_FACTOR),
 }
 

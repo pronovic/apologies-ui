@@ -23,47 +23,22 @@
 
 <script>
 import { loadPlayer } from '../utils/storage.js'
-import { reregisterHandle, disconnectSocket } from '../utils/client.js'
+import { reregisterHandle } from '../utils/client.js'
 
 export default {
     name: 'LoadUser',
     components: {},
-    data() {
-        return {
-            timer: null,
-        }
-    },
     created: function () {
         const player = loadPlayer()
         if (player == null) {
-            console.log(
-                'No player in local storage, redirecting to landing page'
-            )
+            console.log('No player in local storage')
             this.$store.dispatch('handlePlayerNotRegistered')
             this.$router.push({ name: 'Landing' })
         } else {
-            // The action below will eventually transition away from this page.
-            // If that doesn't happen fast enough, the timeout will be triggered.
+            // This will either transition away from this page or time out
             console.log('Reregistering player from local storage')
-            this.timer = setInterval(this.timeout, this.serverTimeoutMs)
             reregisterHandle(player)
         }
-    },
-    beforeDestroy() {
-        clearInterval(this.timer)
-    },
-    computed: {
-        serverTimeoutMs() {
-            return this.$store.state.config.SERVER_TIMEOUT_MS
-        },
-    },
-    methods: {
-        timeout() {
-            console.log('Timed out waiting to reregister user')
-            clearInterval(this.timer)
-            disconnectSocket()
-            this.$router.push({ name: 'Error' })
-        },
     },
 }
 </script>
