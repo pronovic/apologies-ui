@@ -94,11 +94,13 @@ function handlePlayerRegistered(message) {
             ' tied to player id ' +
             playerId
     )
+
     pending = null
     store.dispatch('handlePlayerRegistered', {
         handle: handle,
         playerId: playerId,
     })
+
     if (router.currentRoute.name !== 'Game') {
         router.push({ name: 'Game' })
     }
@@ -230,7 +232,6 @@ async function onClose(response) {
             retryDurationMs = 0
             reconnectDelayMs = 0
             pending = null
-
             store.dispatch('handlePlayerNotRegistered')
 
             if (router.currentRoute.name !== 'Error') {
