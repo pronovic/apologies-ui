@@ -9,6 +9,7 @@ const LoadUser = () => import('../views/LoadUser.vue')
 const RegisterHandle = () => import('../views/RegisterHandle.vue')
 const UnregisterHandle = () => import('../views/UnregisterHandle.vue')
 const HandleUnavailable = () => import('../views/HandleUnavailable.vue')
+const ServerShutdown = () => import('../views/ServerShutdown.vue')
 const NotFound = () => import('../views/NotFound.vue')
 
 Vue.use(VueRouter)
@@ -48,6 +49,11 @@ const routes = [
         path: '/unavailable/:handle',
         name: 'HandleUnavailable',
         component: HandleUnavailable,
+    },
+    {
+        path: '/shutdown',
+        name: 'ServerShutdown',
+        component: ServerShutdown,
     },
     {
         path: '*',

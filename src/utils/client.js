@@ -2,7 +2,6 @@ import store from '../store'
 import router from '../router'
 import atmosphere from 'atmosphere.js'
 import { EventBus } from './eventbus.js'
-import { loadPlayer } from './storage'
 
 var socket = atmosphere
 var subsocket = null
@@ -10,6 +9,7 @@ var open = false
 var closeRequested = false
 var reconnectDelayMs = store.state.config.INITIAL_RECONNECT_DELAY_MS
 var reconnectDelayFactor = store.state.config.RECONNECT_DECAY_FACTOR
+var pending = null
 
 function handleRequestFailed(message) {
     const reason = message.context.reason
@@ -44,8 +44,11 @@ function handleRequestFailed(message) {
 }
 
 function handleServerShutdown(message) {
-    EventBus.$emit('client-toast', 'Websocket server shutdown indicated')
     store.dispatch('handleServerShutdown')
+    disconnectSocket()
+    if (router.currentRoute.name !== 'ServerShutdown') {
+        router.push({ name: 'ServerShutdown' })
+    }
 }
 
 function handleWebsocketIdle(message) {
@@ -81,6 +84,7 @@ function handlePlayerRegistered(message) {
             ' tied to player id ' +
             playerId
     )
+    pending = null
     store.dispatch('handlePlayerRegistered', {
         handle: handle,
         playerId: playerId,
@@ -197,6 +201,7 @@ async function onClose(response) {
     subsocket = null
     open = false
     if (closeRequested) {
+        // nothing more to do; this is expected
         closeRequested = false
     } else {
         console.log(
@@ -204,9 +209,21 @@ async function onClose(response) {
                 reconnectDelayMs +
                 'ms'
         )
+
         await new Promise((resolve) => setTimeout(resolve, reconnectDelayMs))
         reconnectDelayMs *= reconnectDelayFactor // decay off our reconnect attempts
-        reregisterHandle()
+
+        if (pending) {
+            if (pending.playerId) {
+                reregisterHandle(pending)
+            } else {
+                registerHandle(pending.handle)
+            }
+        } else {
+            const handle = store.getters.playerHandle
+            const playerId = store.getters.playerId
+            reregisterHandle({ handle: handle, playerId: playerId })
+        }
     }
 }
 
@@ -381,6 +398,8 @@ function connectAndSend(request) {
 }
 
 function registerHandle(handle) {
+    pending = { handle: handle, playerId: null }
+
     console.log('Client is registering handle: ' + handle)
 
     const request = {
@@ -393,35 +412,25 @@ function registerHandle(handle) {
     connectAndSend(request)
 }
 
-function reregisterHandle() {
-    // We go against local storage here, otherwise it's virtually
-    // impossible to retry a failed connection.  State doesn't get
-    // updated until after the connection has been established, so
-    // we get the handle and player id from the store.
+function reregisterHandle(player) {
+    pending = player
 
-    const player = loadPlayer()
-    if (player == null) {
-        console.log('No player in local storage, redirecting to landing page')
-        store.dispatch('handlePlayerNotRegistered')
-        router.push({ name: 'Landing' })
-    } else {
-        console.log(
-            'Client is reregistering handle from local storage: ' +
-                player.handle +
-                ' with player id ' +
-                player.playerId
-        )
+    console.log(
+        'Client is reregistering handle: ' +
+            player.handle +
+            ' with player id ' +
+            player.playerId
+    )
 
-        const request = {
-            message: 'REREGISTER_PLAYER',
-            player_id: player.playerId,
-            context: {
-                handle: player.handle,
-            },
-        }
-
-        connectAndSend(request)
+    const request = {
+        message: 'REREGISTER_PLAYER',
+        player_id: player.playerId,
+        context: {
+            handle: player.handle,
+        },
     }
+
+    connectAndSend(request)
 }
 
 function unregisterHandle() {

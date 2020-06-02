@@ -4,7 +4,7 @@
             <b-navbar-brand href="#">Apologies</b-navbar-brand>
         </b-navbar>
 
-        <b-jumbotron class="w-50 mx-auto">
+        <b-jumbotron class="w-50 mx-auto" bg-variant="white">
             <template v-slot:header>Not Found</template>
 
             <template v-slot:lead>

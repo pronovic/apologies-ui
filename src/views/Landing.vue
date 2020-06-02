@@ -7,7 +7,7 @@
             </b-navbar-nav>
         </b-navbar>
 
-        <b-jumbotron class="w-50 mx-auto">
+        <b-jumbotron class="w-50 mx-auto" bg-variant="white">
             <template v-slot:header>Apologies</template>
 
             <template v-slot:lead>
