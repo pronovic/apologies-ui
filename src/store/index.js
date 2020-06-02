@@ -113,11 +113,11 @@ const store = new Vuex.Store({
         trackGameInvitation(state, context) {
             state.server.invitations.push(context)
         },
-        trackGameStatus(state, status, gameId) {
+        trackGameId(state, gameId) {
+            state.game.id = gameId
+        },
+        trackGameStatus(state, status) {
             state.game.status = status
-            if (gameId != null) {
-                state.game.id = gameId
-            }
         },
         trackGamePlayers(state, context) {
             state.game.comment = context.comment
@@ -174,6 +174,7 @@ const store = new Vuex.Store({
         handlePlayerNotRegistered({ commit }) {
             clearPlayer()
             commit('trackPlayerNotRegistered')
+            commit('clearGame')
         },
         handlePlayerIdle({ commit }) {
             commit('trackLatestStatus', ServerStatus.PLAYER_IDLE)
@@ -191,36 +192,29 @@ const store = new Vuex.Store({
             commit('trackGameInvitation', context)
         },
         handleGameJoined({ commit }, context) {
-            commit('trackGameStatus', GameStatus.GAME_JOINED, context.game_id)
+            commit('trackGameId', context.game_id)
+            commit('trackGameStatus', GameStatus.GAME_JOINED)
         },
         handleGameStarted({ commit }) {
-            commit('trackGameStatus', GameStatus.GAME_STARTED, null)
+            commit('trackGameStatus', GameStatus.GAME_STARTED)
         },
         handleGameDisconnected({ commit }) {
-            commit('trackGameStatus', GameStatus.DISCONNECTED, null)
+            commit('trackGameStatus', GameStatus.DISCONNECTED)
         },
-        handleGameCancelled({ commit }, context) {
-            commit(
-                'trackGameStatus',
-                GameStatus.GAME_CANCELLED,
-                context.game_id
-            )
+        handleGameCancelled({ commit }) {
+            commit('trackGameStatus', GameStatus.GAME_CANCELLED)
         },
-        handleGameCompleted({ commit }, context) {
-            commit(
-                'trackGameStatus',
-                GameStatus.GAME_COMPLETED,
-                context.game_id
-            )
+        handleGameCompleted({ commit }) {
+            commit('trackGameStatus', GameStatus.GAME_COMPLETED)
         },
         handleGameIdle({ commit }) {
-            commit('trackGameStatus', GameStatus.GAME_IDLE, null)
+            commit('trackGameStatus', GameStatus.GAME_IDLE)
         },
         handleGameInactive({ commit }) {
-            commit('trackGameStatus', GameStatus.GAME_INACTIVE, null)
+            commit('trackGameStatus', GameStatus.GAME_INACTIVE)
         },
         handleGamePlayerQuit({ commit }) {
-            commit('trackGameStatus', GameStatus.PLAYER_QUIT, null)
+            commit('trackGameStatus', GameStatus.PLAYER_QUIT)
         },
         handleGamePlayerChange({ commit }, context) {
             commit('trackGamePlayers', context)

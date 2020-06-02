@@ -15,11 +15,14 @@ export default {
     methods: {
         handleClick() {
             var addendum = ''
-            if (this.cancelVisible) {
-                addendum = '  This will also cancel your game.'
-            } else if (this.quitVisible) {
-                addendum = '  This will also quit your game.'
+            if (!this.$store.getters.isGameCompleted) {
+                if (this.$store.getters.isGameAdvertised) {
+                    addendum = '  This will also cancel your game.'
+                } else if (this.$store.getters.isGameJoined) {
+                    addendum = '  This will also quit your game.'
+                }
             }
+
             this.$bvModal
                 .msgBoxConfirm(
                     'Are you sure you want to unregister?' + addendum,

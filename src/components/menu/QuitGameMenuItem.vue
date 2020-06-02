@@ -20,7 +20,7 @@ export default {
             return (
                 this.$store.getters.isGameJoined &&
                 !this.$store.getters.isGameAdvertised &&
-                !this.store.getters.isGameCompleted
+                !this.$store.getters.isGameCompleted
             )
         },
     },

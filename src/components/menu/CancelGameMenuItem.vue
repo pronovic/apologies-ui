@@ -4,7 +4,7 @@
             v-if="visible"
             v-b-tooltip.hover.left
             title="Cancel the in-progress game"
-            @click="handleCancel"
+            @click="handleClick"
             >Cancel Game</b-dropdown-item
         >
     </div>

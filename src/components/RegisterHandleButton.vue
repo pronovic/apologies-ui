@@ -41,9 +41,10 @@ export default {
     },
     methods: {
         checkFormValidity() {
-            const valid = this.$refs.form.checkValidity()
             this.handleState =
-                valid && this.handle.length >= 2 && this.handle.length <= 20
+                this.$refs.form.checkValidity() &&
+                this.handle.length >= 2 &&
+                this.handle.length <= 20
             return this.handleState
         },
         resetModal() {

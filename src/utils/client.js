@@ -158,16 +158,11 @@ function handleGameStarted(message) {
 
 function handleGameCancelled(message) {
     EventBus.$emit('client-toast', 'The game has been cancelled')
-    EventBus.$emit(
-        'client-toast',
-        message.context.reason + ' - ' + message.context.comment
-    )
     store.dispatch('handleGameCancelled')
 }
 
 function handleGameCompleted(message) {
     EventBus.$emit('client-toast', 'The game has been completed')
-    EventBus.$emit('client-toast', message.context.comment)
     store.dispatch('handleGameCompleted')
 }
 
