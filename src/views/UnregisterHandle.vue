@@ -36,7 +36,7 @@ export default {
         // The action below will eventually transition away from this page.
         // If that doesn't happen fast enough, the timeout will be triggered.
         this.timer = setInterval(this.timeout, this.serverTimeoutMs)
-        unregisterHandle(this.handle)
+        unregisterHandle()
     },
     beforeDestroy() {
         clearInterval(this.timer)

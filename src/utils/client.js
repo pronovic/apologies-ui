@@ -1,11 +1,15 @@
 import store from '../store'
 import router from '../router'
 import atmosphere from 'atmosphere.js'
+import { EventBus } from './eventbus.js'
+import { loadPlayer } from './storage'
 
 var socket = atmosphere
 var subsocket = null
 var open = false
 var closeRequested = false
+var reconnectDelayMs = store.state.config.INITIAL_RECONNECT_DELAY_MS
+var reconnectDelayFactor = store.state.config.RECONNECT_DECAY_FACTOR
 
 function handleRequestFailed(message) {
     const reason = message.context.reason
@@ -39,15 +43,34 @@ function handleRequestFailed(message) {
     }
 }
 
-function handleServerShutdown(message) {}
+function handleServerShutdown(message) {
+    EventBus.$emit('client-toast', 'Websocket server shutdown indicated')
+    store.dispatch('handleServerShutdown')
+}
 
-function handleWebsocketIdle(message) {}
+function handleWebsocketIdle(message) {
+    EventBus.$emit(
+        'client-toast',
+        'You are idle; after a little while, you will be disconnected'
+    )
+    store.dispatch('handleWebsocketIdle')
+}
 
-function handleWebsocketInactive(message) {}
+function handleWebsocketInactive(message) {
+    EventBus.$emit(
+        'client-toast',
+        'You are inactive; expect a disconnect momentarily'
+    )
+    store.dispatch('handleWebsocketInactive')
+}
 
-function handleRegisteredPlayers(message) {}
+function handleRegisteredPlayers(message) {
+    store.dispatch('handleRegisteredPlayers', message.context)
+}
 
-function handleAvailableGames(message) {}
+function handleAvailableGames(message) {
+    store.dispatch('handleAvailableGames', message.context)
+}
 
 function handlePlayerRegistered(message) {
     const handle = message.context.handle
@@ -76,37 +99,95 @@ function handlePlayerUnregistered(message) {
     }
 }
 
-function handlePlayerIdle(message) {}
+function handlePlayerIdle(message) {
+    EventBus.$emit(
+        'client-toast',
+        'You are idle; after a little while, you will be disconnected'
+    )
+    store.dispatch('handlePlayerIdle')
+}
 
-function handlePlayerInactive(message) {}
+function handlePlayerInactive(message) {
+    EventBus.$emit(
+        'client-toast',
+        'You are inactive; expect a disconnect momentarily'
+    )
+    store.dispatch('handlePlayerInactive')
+}
 
-function handlePlayerMessageReceived(message) {}
+function handlePlayerMessageReceived(message) {
+    store.dispatch('handlePlayerMessageReceived', message.context)
+}
 
-function handleGameAdvertised(message) {}
+function handleGameAdvertised(message) {
+    EventBus.$emit('client-toast', 'Your game has been advertised')
+    store.dispatch('handleGameAdvertised', message.context)
+}
 
-function handleGameInvitation(message) {}
+function handleGameInvitation(message) {
+    EventBus.$emit('client-toast', 'You have been invited to a game')
+    store.dispatch('handleGameInvitation', message.context)
+}
 
-function handleGameJoined(message) {}
+function handleGameJoined(message) {
+    EventBus.$emit('client-toast', 'You have joined the game')
+    store.dispatch('handleGameJoined', message.context)
+}
 
-function handleGameStarted(message) {}
+function handleGameStarted(message) {
+    EventBus.$emit('client-toast', 'The game has started')
+    store.dispatch('handleGameStarted', message.context)
+}
 
-function handleGameCancelled(message) {}
+function handleGameCancelled(message) {
+    EventBus.$emit('client-toast', 'The game has been cancelled')
+    EventBus.$emit(
+        'client-toast',
+        message.context.reason + ' - ' + message.context.comment
+    )
+    store.dispatch('handleGameCancelled', message.context)
+}
 
-function handleGameCompleted(message) {}
+function handleGameCompleted(message) {
+    EventBus.$emit('client-toast', 'The game has been completed')
+    EventBus.$emit('client-toast', message.context.comment)
+    store.dispatch('handleGameCompleted', message.context)
+}
 
-function handleGameIdle(message) {}
+function handleGameIdle(message) {
+    EventBus.$emit(
+        'client-toast',
+        'The game is idle; after a little while, it will be cancelled'
+    )
+    store.dispatch('handleGameIdle', message.context)
+}
 
-function handleGameInactive(message) {}
+function handleGameInactive(message) {
+    EventBus.$emit(
+        'client-toast',
+        'The game is inactive; expect it to be cancelled momentarily'
+    )
+    store.dispatch('handleGameInactive', message.context)
+}
 
-function handleGamePlayerQuit(message) {}
+function handleGamePlayerQuit(message) {
+    EventBus.$emit('client-toast', 'You have quit the game')
+    store.dispatch('handleGamePlayerQuit', message.context)
+}
 
-function handleGamePlayerChange(message) {}
+function handleGamePlayerChange(message) {
+    store.dispatch('handleGamePlayerChange', message.context)
+}
 
-function handleGameStateChange(message) {}
+function handleGameStateChange(message) {
+    store.dispatch('handleGameStateChange', message.context)
+}
 
-function handleGamePlayerTurn(message) {}
+function handleGamePlayerTurn(message) {
+    store.dispatch('handleGamePlayerTurn', message.context)
+}
 
-function onClose(response) {
+async function onClose(response) {
     console.log(
         'Websocket connection is closed: ' +
             response.status +
@@ -118,10 +199,14 @@ function onClose(response) {
     if (closeRequested) {
         closeRequested = false
     } else {
-        console.log('Close was unexpected.  Reconnecting.')
-        const handle = store.getters.playerHandle
-        const playerId = store.getters.playerId
-        reregisterHandle(handle, playerId)
+        console.log(
+            'Close was unexpected; will reconnect after ' +
+                reconnectDelayMs +
+                'ms'
+        )
+        await new Promise((resolve) => setTimeout(resolve, reconnectDelayMs))
+        reconnectDelayMs *= reconnectDelayFactor // decay off our reconnect attempts
+        reregisterHandle()
     }
 }
 
@@ -279,6 +364,7 @@ function disconnectSocket() {
     console.log('Closing websocket connection')
     closeRequested = true
     socket.unsubscribe()
+    reconnectDelayMs = store.state.config.INITIAL_RECONNECT_DELAY_MS
 }
 
 function connectAndSend(request) {
@@ -289,6 +375,7 @@ function connectAndSend(request) {
             sendRequest(request) // send the request once the socket is open
             open = true
             closeRequested = false
+            reconnectDelayMs = store.state.config.INITIAL_RECONNECT_DELAY_MS
         }
     })
 }
@@ -306,23 +393,35 @@ function registerHandle(handle) {
     connectAndSend(request)
 }
 
-function reregisterHandle(handle, playerId) {
-    console.log(
-        'Client is registering handle: ' +
-            handle +
-            ' with player id ' +
-            playerId
-    )
+function reregisterHandle() {
+    // We go against local storage here, otherwise it's virtually
+    // impossible to retry a failed connection.  State doesn't get
+    // updated until after the connection has been established, so
+    // we get the handle and player id from the store.
 
-    const request = {
-        message: 'REREGISTER_PLAYER',
-        player_id: playerId,
-        context: {
-            handle: handle,
-        },
+    const player = loadPlayer()
+    if (player == null) {
+        console.log('No player in local storage, redirecting to landing page')
+        store.dispatch('handlePlayerNotRegistered')
+        router.push({ name: 'Landing' })
+    } else {
+        console.log(
+            'Client is reregistering handle from local storage: ' +
+                player.handle +
+                ' with player id ' +
+                player.playerId
+        )
+
+        const request = {
+            message: 'REREGISTER_PLAYER',
+            player_id: player.playerId,
+            context: {
+                handle: player.handle,
+            },
+        }
+
+        connectAndSend(request)
     }
-
-    connectAndSend(request)
 }
 
 function unregisterHandle() {

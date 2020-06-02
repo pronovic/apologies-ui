@@ -24,9 +24,4 @@ const GameStatus = {
     PLAYER_QUIT: 'Player Quit',
 }
 
-const GameBanners = {
-    ACTION_HINT:
-        'Hint: click the hamburger menu in the top right to start or join a game!',
-}
-
-export { UserLoadStatus, ServerStatus, GameStatus, GameBanners }
+export { UserLoadStatus, ServerStatus, GameStatus }

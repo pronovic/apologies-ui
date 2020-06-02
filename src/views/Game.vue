@@ -22,33 +22,31 @@
                 </b-dropdown>
             </b-navbar-nav>
         </b-navbar>
-        <b-navbar
-            toggleable="sm"
-            type="dark"
-            variant="secondary"
-            fixed="bottom"
-        >
-            <b-navbar-nav class="flex-fill justify-content-center text-white">
-                <small
-                    ><em>{{ banner }}</em></small
-                >
-            </b-navbar-nav>
-        </b-navbar>
     </div>
 </template>
 
 <script>
+import { EventBus } from '../utils/eventbus.js'
 import UnregisterHandleItem from '../components/UnregisterHandleItem.vue'
 
 export default {
     name: 'Game',
     components: { UnregisterHandleItem: UnregisterHandleItem },
+    created: function () {
+        EventBus.$on('client-toast', (message) => {
+            this.$bvToast.toast(message, {
+                title: null,
+                toaster: 'b-toaster-top-left',
+                autoHideDelay: 5000,
+                appendToast: false,
+                noCloseButton: true,
+                variant: 'info',
+            })
+        })
+    },
     computed: {
         playerHandle() {
             return this.$store.getters.playerHandle
-        },
-        banner() {
-            return this.$store.getters.banner
         },
     },
 }

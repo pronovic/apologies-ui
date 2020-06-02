@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import { loadPlayer } from '../utils/storage.js'
 import { reregisterHandle, disconnectSocket } from '../utils/client.js'
 
 export default {
@@ -34,20 +33,10 @@ export default {
         }
     },
     created: function () {
-        const player = loadPlayer()
-        if (player == null) {
-            console.log(
-                'No player in local storage, redirecting to landing page'
-            )
-            this.$store.dispatch('handlePlayerNotRegistered')
-            this.$router.push({ name: 'Landing' })
-        } else {
-            // The action below will eventually transition away from this page.
-            // If that doesn't happen fast enough, the timeout will be triggered.
-            console.log('Reregistering player found in local storage')
-            this.timer = setInterval(this.timeout, this.serverTimeoutMs)
-            reregisterHandle(player.handle, player.playerId)
-        }
+        // The action below will eventually transition away from this page.
+        // If that doesn't happen fast enough, the timeout will be triggered.
+        this.timer = setInterval(this.timeout, this.serverTimeoutMs)
+        reregisterHandle() // loads data from local storage as needed
     },
     beforeDestroy() {
         clearInterval(this.timer)

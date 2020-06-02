@@ -2,12 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { config } from './config.js'
 import { clearPlayer, persistPlayer } from '../utils/storage.js'
-import {
-    UserLoadStatus,
-    ServerStatus,
-    GameStatus,
-    GameBanners,
-} from '../utils/constants.js'
+import { UserLoadStatus, ServerStatus, GameStatus } from '../utils/constants.js'
 
 Vue.use(Vuex)
 
@@ -37,7 +32,6 @@ const game = {
     opponentState: null,
     drawnCard: null,
     playerMoves: null,
-    banner: GameBanners.ACTION_HINT,
 }
 
 const store = new Vuex.Store({
@@ -62,9 +56,6 @@ const store = new Vuex.Store({
         },
         isUserRegistered: (state) => {
             return state.user.registered
-        },
-        gameBanner: (state) => {
-            return state.game.banner == null ? '' : state.game.banner
         },
     },
     mutations: {
