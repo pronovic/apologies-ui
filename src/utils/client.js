@@ -499,4 +499,58 @@ function unregisterHandle() {
     sendRequest(request)
 }
 
-export { disconnectSocket, registerHandle, reregisterHandle, unregisterHandle }
+function quitGame() {
+    console.log('Quitting active game')
+
+    const request = {
+        message: 'QUIT_GAME',
+        player_id: store.getters.playerId,
+    }
+
+    sendRequest(request)
+}
+
+function cancelGame() {
+    console.log('Cancelling active game')
+
+    const request = {
+        message: 'CANCEL_GAME',
+        player_id: store.getters.playerId,
+    }
+
+    sendRequest(request)
+}
+
+function listAvailableGames() {
+    console.log('Listing available games')
+
+    const request = {
+        message: 'LIST_AVAILABLE_GAMES',
+        player_id: store.getters.playerId,
+    }
+
+    sendRequest(request)
+}
+
+function advertiseGame(advertised) {
+    console.log('Advertising new game')
+
+    const request = {
+        message: 'ADVERTISE_GAME',
+        player_id: store.getters.playerId,
+        context: advertised,
+    }
+
+    sendRequest(request)
+}
+
+export {
+    disconnectSocket,
+    registerHandle,
+    reregisterHandle,
+    unregisterHandle,
+    quitGame,
+    cancelGame,
+    listAvailableGames,
+    advertiseGame,
+}

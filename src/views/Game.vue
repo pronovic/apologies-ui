@@ -6,20 +6,7 @@
                 <b-nav-text this.class="text-white"
                     ><em>{{ playerHandle }}</em></b-nav-text
                 >
-                <b-dropdown
-                    size="sm"
-                    id="dropdown-1"
-                    no-caret
-                    right
-                    class="p-0"
-                >
-                    <template v-slot:button-content>
-                        <b-button size="md" variant="secondary" class="p-1">
-                            <b-icon icon="list" aria-label="Menu"></b-icon>
-                        </b-button>
-                    </template>
-                    <UnregisterHandleItem />
-                </b-dropdown>
+                <GameMenu></GameMenu>
             </b-navbar-nav>
         </b-navbar>
     </div>
@@ -27,12 +14,12 @@
 
 <script>
 import { EventBus } from '../utils/eventbus.js'
-import UnregisterHandleItem from '../components/UnregisterHandleItem.vue'
+import GameMenu from '../components/GameMenu.vue'
 
 export default {
     name: 'Game',
-    components: { UnregisterHandleItem: UnregisterHandleItem },
-    created: function () {
+    components: { GameMenu: GameMenu },
+    beforeMount: function () {
         EventBus.$on('client-toast', (message) => {
             this.$bvToast.toast(message, {
                 title: null,
@@ -43,6 +30,9 @@ export default {
                 variant: 'info',
             })
         })
+    },
+    beforeDestroy: function () {
+        EventBus.$off('client-toast')
     },
     computed: {
         playerHandle() {

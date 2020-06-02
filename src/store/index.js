@@ -48,6 +48,9 @@ const store = new Vuex.Store({
         playerId: (state) => {
             return state.user.playerId
         },
+        gameId: (state) => {
+            return state.game.id
+        },
         userLoadStatus: (state) => {
             return state.user.loadStatus
         },
@@ -56,6 +59,24 @@ const store = new Vuex.Store({
         },
         isUserRegistered: (state) => {
             return state.user.registered
+        },
+        isGameJoined: (state) => {
+            return state.game.id != null
+        },
+        isGameAdvertised: (state) => {
+            return state.server.advertisedGame != null
+        },
+        isGameCompleted: (state) => {
+            switch (state.game.status) {
+                case GameStatus.GAME_CANCELLED:
+                case GameStatus.GAME_COMPLETED:
+                case GameStatus.GAME_INACTIVE:
+                case GameStatus.PLAYER_QUIT:
+                case GameStatus.DISCONNECTED:
+                    return true
+                default:
+                    return false
+            }
         },
     },
     mutations: {
@@ -112,6 +133,7 @@ const store = new Vuex.Store({
             state.game.playerMoves = context.moves
         },
         clearGame(state) {
+            state.server.advertisedGame = null
             state.game.id = null
             state.game.status = null
             state.game.comment = null
