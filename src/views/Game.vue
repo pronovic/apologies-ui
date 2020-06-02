@@ -14,7 +14,7 @@
                     class="p-0"
                 >
                     <template v-slot:button-content>
-                        <b-button size="md" variant="secondary" class="p-0">
+                        <b-button size="md" variant="secondary" class="p-1">
                             <b-icon icon="list" aria-label="Menu"></b-icon>
                         </b-button>
                     </template>
