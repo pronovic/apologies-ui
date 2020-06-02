@@ -77,24 +77,24 @@ have no idea how I'll actually do this, but it'll be a learning process.
 This is a list of things I need to accomplish, in no particular order:
 
 - [x] Add an application dependency on babel, now that I'm not using Typescript?
-- [ ] Go through the Vue.js tutorial, which is supposed to take around a day.
-- [ ] Figure out how to save state (specifically, handle and player id) to HTML 5 local storage.
-- [ ] Connect Atmosphere to the websockets server.  Understand how to handle automatic reconnects, etc.
-- [ ] Consider whether it should be possible to reconnect to a game after being disconnected from it.
+- [x] Go through the Vue.js tutorial, which is supposed to take around a day.
+- [x] Figure out how to save state (specifically, handle and player id) to HTML 5 local storage.
+- [x] Connect Atmosphere to the websockets server.  Understand how to handle automatic reconnects, etc.
+- [x] Consider whether it should be possible to reconnect to a game after being disconnected from it
 - [ ] Lay out a simple UI.  Needs at least the following:
-   - [ ] Some sort of landing page to advertise what the game is, with a "register now" link
-   - [ ] Some sort of main page for the user once logged in (very spare - with menus and space in the middle for canvas)
-   - [ ] A way to register a handle (or to tell that a handle is still registered, via integration with local storage)
-   - [ ] Notification for game invitations (could be as simple as "you have an invitition, check game list")
-   - [ ] Notification for other import events (you were disconnected, player joined/left, game cancelled, etc.)
-   - [ ] A way to see which games can be joined, and to choose one off a the list
+   - [x] Some sort of landing page to advertise what the game is, with a "register now" link
+   - [x] Some sort of main page for the user once logged in (very spare - with menus and space in the middle for canvas)
+   - [x] A way to register a handle (or to tell that a handle is still registered, via integration with local storage)
+   - [x] Notification for game invitations (could be as simple as "you have an invitition, check game list")
+   - [x] Notification for other import events (you were disconnected, player joined/left, game cancelled, etc.)
+   - [ ] A way to see which games can be joined, and to choose one off the list
    - [ ] Some sort of visible hint that a game has been joined, the game state (started, etc.), and a way to quit it
-   - [ ] A way to advertise a game, and start and cancel it it once advertised (the advertiser has slightly different options)
+   - [ ] A way to advertise a game, and start and cancel it once advertised (the advertiser has slightly different options)
    - [ ] A rudimentary way to view game state and choose a move before the Phaser game board is written
-   - [ ] Figure out test patterns and implement tests
-      - [ ] Unit tests for individual Vue.js components
-      - [ ] Integration tests for component interations (maybe?) 
-      - [ ] Some sort of E2E functional test suite to cover the entire application (which isn't really that large)
+- [ ] Figure out test patterns and implement tests
+   - [ ] Unit tests for individual Vue.js components
+   - [ ] Integration tests for component interations (maybe?) 
+   - [ ] Some sort of E2E functional test suite to cover the entire application (which isn't really that large)
 - [ ] Implement the Phaser game canvas
    - [ ] Figure out what size the board will be (use the Chromebook as an example of moderate size screen)
    - [ ] Render the player's hand of cards
