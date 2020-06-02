@@ -22,6 +22,7 @@ const GameStatus = {
     GAME_IDLE: 'Game Idle',
     GAME_INACTIVE: 'Game Inactive',
     PLAYER_QUIT: 'Player Quit',
+    DISCONNECTED: 'Disconnected',
 }
 
 export { UserLoadStatus, ServerStatus, GameStatus }

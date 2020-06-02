@@ -93,8 +93,10 @@ const store = new Vuex.Store({
             state.server.invitations.push(context)
         },
         trackGameStatus(state, status, gameId) {
-            state.game.id = gameId
             state.game.status = status
+            if (gameId != null) {
+                state.game.id = gameId
+            }
         },
         trackGamePlayers(state, context) {
             state.game.comment = context.comment
@@ -169,8 +171,11 @@ const store = new Vuex.Store({
         handleGameJoined({ commit }, context) {
             commit('trackGameStatus', GameStatus.GAME_JOINED, context.game_id)
         },
-        handleGameStarted({ commit }, context) {
-            commit('trackGameStatus', GameStatus.GAME_STARTED, context.game_id)
+        handleGameStarted({ commit }) {
+            commit('trackGameStatus', GameStatus.GAME_STARTED, null)
+        },
+        handleGameDisconnected({ commit }) {
+            commit('trackGameStatus', GameStatus.DISCONNECTED, null)
         },
         handleGameCancelled({ commit }, context) {
             commit(
@@ -186,14 +191,14 @@ const store = new Vuex.Store({
                 context.game_id
             )
         },
-        handleGameIdle({ commit }, context) {
-            commit('trackGameStatus', GameStatus.GAME_IDLE, context.game_id)
+        handleGameIdle({ commit }) {
+            commit('trackGameStatus', GameStatus.GAME_IDLE, null)
         },
-        handleGameInactive({ commit }, context) {
-            commit('trackGameStatus', GameStatus.GAME_INACTIVE, context.game_id)
+        handleGameInactive({ commit }) {
+            commit('trackGameStatus', GameStatus.GAME_INACTIVE, null)
         },
-        handleGamePlayerQuit({ commit }, context) {
-            commit('trackLatestStatus', GameStatus.PLAYER_QUIT, context.game_id)
+        handleGamePlayerQuit({ commit }) {
+            commit('trackGameStatus', GameStatus.PLAYER_QUIT, null)
         },
         handleGamePlayerChange({ commit }, context) {
             commit('trackGamePlayers', context)

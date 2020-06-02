@@ -153,7 +153,7 @@ function handleGameJoined(message) {
 
 function handleGameStarted(message) {
     EventBus.$emit('client-toast', 'The game has started')
-    store.dispatch('handleGameStarted', message.context)
+    store.dispatch('handleGameStarted')
 }
 
 function handleGameCancelled(message) {
@@ -162,13 +162,13 @@ function handleGameCancelled(message) {
         'client-toast',
         message.context.reason + ' - ' + message.context.comment
     )
-    store.dispatch('handleGameCancelled', message.context)
+    store.dispatch('handleGameCancelled')
 }
 
 function handleGameCompleted(message) {
     EventBus.$emit('client-toast', 'The game has been completed')
     EventBus.$emit('client-toast', message.context.comment)
-    store.dispatch('handleGameCompleted', message.context)
+    store.dispatch('handleGameCompleted')
 }
 
 function handleGameIdle(message) {
@@ -176,7 +176,7 @@ function handleGameIdle(message) {
         'client-toast',
         'The game is idle; it will be cancelled in a little while'
     )
-    store.dispatch('handleGameIdle', message.context)
+    store.dispatch('handleGameIdle')
 }
 
 function handleGameInactive(message) {
@@ -184,12 +184,12 @@ function handleGameInactive(message) {
         'client-toast',
         'The game is inactive; expect it to be cancelled momentarily'
     )
-    store.dispatch('handleGameInactive', message.context)
+    store.dispatch('handleGameInactive')
 }
 
 function handleGamePlayerQuit(message) {
     EventBus.$emit('client-toast', 'You have quit the game')
-    store.dispatch('handleGamePlayerQuit', message.context)
+    store.dispatch('handleGamePlayerQuit')
 }
 
 function handleGamePlayerChange(message) {
@@ -211,8 +211,11 @@ async function onClose(response) {
             ', ' +
             response.state
     )
+
     subsocket = null
     open = false
+    store.dispatch('handleGameDisconnected') // once disconnected, you can't rejoin
+
     if (closeRequested) {
         console.log('Close was expected; no more action needs to be taken')
         closeRequested = false
