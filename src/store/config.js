@@ -13,7 +13,7 @@ const config = {
     GITHUB_APOLOGIES: process.env.GITHUB_APOLOGIES,
     GITHUB_APOLOGIES_SERVER: process.env.GITHUB_APOLOGIES_SERVER,
     GITHUB_APOLOGIES_UI: process.env.GITHUB_APOLOGIES_UI,
-    SERVER_TIMEOUT_MS: parseInt(process.env.SERVER_TIMEOUT_MS, 10),
+    SERVER_TIMEOUT_MS: parseInt(process.env.SERVER_TIMEOUT_MS),
     INITIAL_RECONNECT_DELAY_MS: parseInt(
         process.env.INITIAL_RECONNECT_DELAY_MS
     ),
