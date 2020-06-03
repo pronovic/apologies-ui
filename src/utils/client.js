@@ -516,6 +516,20 @@ function cancelGame() {
     sendRequest(request)
 }
 
+function joinGame(gameId) {
+    console.log('Joining game: ' + gameId)
+
+    const request = {
+        message: 'JOIN_GAME',
+        player_id: store.getters.playerId,
+        context: {
+            game_id: gameId,
+        },
+    }
+
+    sendRequest(request)
+}
+
 function listAvailableGames() {
     console.log('Listing available games')
 
@@ -546,6 +560,7 @@ export {
     unregisterHandle,
     quitGame,
     cancelGame,
+    joinGame,
     listAvailableGames,
     advertiseGame,
 }

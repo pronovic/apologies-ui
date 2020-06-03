@@ -29,9 +29,9 @@ const game = {
     players: [],
     history: [],
     playerState: null,
-    opponentState: null,
+    opponentStates: [],
     drawnCard: null,
-    playerMoves: null,
+    playerMoves: [],
 }
 
 const store = new Vuex.Store({
@@ -50,6 +50,9 @@ const store = new Vuex.Store({
         },
         gameId: (state) => {
             return state.game.id
+        },
+        availableGames: (state) => {
+            return state.server.availableGames
         },
         userLoadStatus: (state) => {
             return state.user.loadStatus
@@ -87,10 +90,10 @@ const store = new Vuex.Store({
             state.server.latestStatus = status
         },
         trackRegisteredPlayers(state, context) {
-            state.server.registeredPlayers = context.players
+            Vue.set(state.server, 'registeredPlayers', context.players)
         },
         trackAvailableGames(state, context) {
-            state.server.availableGames = context.games
+            Vue.set(state.server, 'availableGames', context.games)
         },
         trackPlayerRegistered(state, player) {
             state.user.loadStatus = UserLoadStatus.LOADED
@@ -121,28 +124,28 @@ const store = new Vuex.Store({
         },
         trackGamePlayers(state, context) {
             state.game.comment = context.comment
-            state.game.players = context.players
+            Vue.set(state.game, 'players', context.players)
         },
         trackGameState(state, context) {
-            state.game.history = context.recent_history
+            Vue.set(state.game, 'history', context.recent_history)
             state.game.playerState = context.player
-            state.game.opponentState = context.opponents
+            Vue.set(state.game, 'opponentStates', context.opponents)
         },
         trackPlayerTurn(state, context) {
             state.game.drawnCard = context.drawn_card
-            state.game.playerMoves = context.moves
+            Vue.set(state.game, 'playerMoves', context.moves)
         },
         clearGame(state) {
             state.server.advertisedGame = null
             state.game.id = null
             state.game.status = null
             state.game.comment = null
-            state.game.players = []
-            state.game.history = []
+            Vue.set(state.game, 'players', [])
+            Vue.set(state.game, 'history', [])
             state.game.playerState = null
-            state.game.opponentState = null
+            Vue.set(state.game, 'opponentStates', [])
             state.game.drawnCard = null
-            state.game.playerMoves = null
+            Vue.set(state.game, 'playerMoves', [])
         },
     },
     actions: {
