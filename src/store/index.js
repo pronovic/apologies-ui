@@ -69,6 +69,9 @@ const store = new Vuex.Store({
         isGameAdvertised: (state) => {
             return state.server.advertisedGame != null
         },
+        isGameStarted: (state) => {
+            return state.game.status === GameStatus.GAME_STARTED
+        },
         isGameCompleted: (state) => {
             switch (state.game.status) {
                 case GameStatus.GAME_CANCELLED:

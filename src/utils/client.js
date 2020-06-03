@@ -530,6 +530,17 @@ function joinGame(gameId) {
     sendRequest(request)
 }
 
+function startGame(gameId) {
+    console.log('Starting game: ' + gameId)
+
+    const request = {
+        message: 'START_GAME',
+        player_id: store.getters.playerId,
+    }
+
+    sendRequest(request)
+}
+
 function listAvailableGames() {
     console.log('Listing available games')
 
@@ -561,6 +572,7 @@ export {
     quitGame,
     cancelGame,
     joinGame,
+    startGame,
     listAvailableGames,
     advertiseGame,
 }

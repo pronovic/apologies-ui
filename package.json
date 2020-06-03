@@ -11,7 +11,7 @@
         "format": "eslint --fix --max-warnings=0 '**/*.js' '**/*.vue'",
         "clean": "rm -rf 'dist/*'",
         "build": "yarn clean && parcel build src/index.html",
-        "serve": "parcel serve src/index.html"
+        "server": "parcel serve src/index.html"
     },
     "husky": {
         "hooks": {
