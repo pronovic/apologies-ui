@@ -15,7 +15,7 @@
                     :state="handleState"
                     label="Handle"
                     label-for="handle-input"
-                    invalid-feedback="Enter a handle (2-20 characters)"
+                    invalid-feedback="Enter a handle (2-20 characters), alphanumeric and dash/underscore only"
                 >
                     <b-form-input
                         id="handle-input"
@@ -44,7 +44,8 @@ export default {
             this.handleState =
                 this.$refs.form.checkValidity() &&
                 this.handle.length >= 2 &&
-                this.handle.length <= 20
+                this.handle.length <= 20 &&
+                /^[a-zA-Z0-9_-]+$/.test(this.handle)
             return this.handleState
         },
         resetModal() {
