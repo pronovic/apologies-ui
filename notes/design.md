@@ -87,8 +87,8 @@ This is a list of things I need to accomplish, in no particular order:
    - [x] A way to register a handle (or to tell that a handle is still registered, via integration with local storage)
    - [x] Notification for game invitations (could be as simple as "you have an invitition, check game list")
    - [x] Notification for other import events (you were disconnected, player joined/left, game cancelled, etc.)
-   - [ ] A way to see which games can be joined, and to choose one off the list
-   - [ ] Some sort of visible hint that a game has been joined, the game state (started, etc.), and a way to quit it
+   - [x] A way to see which games can be joined, and to choose one off the list
+   - [x] Some sort of visible hint that a game has been joined, the game state (started, etc.), and a way to quit it
    - [x] A way to advertise a game, and start and cancel it once advertised (the advertiser has slightly different options)
    - [ ] A rudimentary way to view game state and choose a move before the Phaser game board is written
 - [ ] Figure out test patterns and implement tests
