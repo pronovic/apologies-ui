@@ -531,7 +531,7 @@ function joinGame(gameId) {
 }
 
 function startGame(gameId) {
-    console.log('Starting game: ' + gameId)
+    console.log('Starting game')
 
     const request = {
         message: 'START_GAME',

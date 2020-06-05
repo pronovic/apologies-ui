@@ -1,17 +1,20 @@
 <template>
     <div>
         <GameNavbar></GameNavbar>
+        <GameBoard></GameBoard>
     </div>
 </template>
 
 <script>
 import { EventBus } from '../utils/eventbus.js'
 import GameNavbar from '../components/GameNavbar.vue'
+import GameBoard from '../components/GameBoard.vue'
 
 export default {
     name: 'Game',
     components: {
         GameNavbar: GameNavbar,
+        GameBoard: GameBoard,
     },
     beforeMount: function () {
         EventBus.$on('client-toast', (message) => {
