@@ -25,4 +25,11 @@ const GameStatus = {
     DISCONNECTED: 'Disconnected',
 }
 
-export { UserLoadStatus, ServerStatus, GameStatus }
+const Colors = {
+    BLUE: '#0099cc',
+    RED: '#cc3300',
+    GREEN: '#339933',
+    YELLOW: '#ffcc00',
+}
+
+export { UserLoadStatus, ServerStatus, GameStatus, Colors }

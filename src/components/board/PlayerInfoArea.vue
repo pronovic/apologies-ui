@@ -1,11 +1,24 @@
 <template>
-    <v-rect :config="border"></v-rect>
+    <div>
+        <v-rect :config="border"></v-rect>
+        <!-- TODO: this becomes a loop with one pawn/info section per player, probably a component -->
+        <Pawn
+            id="yellow-player"
+            :x="50"
+            :y="50"
+            :size="25"
+            :color="yellow"
+        ></Pawn>
+    </div>
 </template>
 
 <script>
+import Pawn from './Pawn.vue'
+import { Colors } from '../../utils/constants.js'
+
 export default {
     name: 'PlayerInfoArea',
-    components: {},
+    components: { Pawn: Pawn },
     props: {
         config: {
             type: Object,
@@ -15,6 +28,18 @@ export default {
         },
     },
     computed: {
+        yellow() {
+            return Colors.YELLOW
+        },
+        green() {
+            return Colors.GREEN
+        },
+        red() {
+            return Colors.RED
+        },
+        blue() {
+            return Colors.BLUE
+        },
         stage() {
             return {
                 height: this.config.height,
