@@ -1,5 +1,7 @@
 <template>
-    <v-shape :config="config" />
+    <v-group :id="id">
+        <v-shape :config="config"></v-shape>
+    </v-group>
 </template>
 
 <script>

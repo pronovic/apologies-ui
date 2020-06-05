@@ -30,6 +30,7 @@ const Colors = {
     RED: '#cc3300',
     GREEN: '#339933',
     YELLOW: '#ffcc00',
+    PURPLE: '#666699',
 }
 
 export { UserLoadStatus, ServerStatus, GameStatus, Colors }
