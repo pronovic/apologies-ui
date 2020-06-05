@@ -34,14 +34,33 @@ const game = {
     playerMoves: [],
 }
 
+const dimensions = {
+    header: {
+        height: 0,
+    },
+    window: {
+        height: 0,
+        width: 0,
+    },
+}
+
 const store = new Vuex.Store({
     state: {
         config: config,
         user: user,
         server: server,
         game: game,
+        dimensions: dimensions,
     },
     getters: {
+        displayHeight: (state) => {
+            return (
+                state.dimensions.window.height - state.dimensions.header.height
+            )
+        },
+        displayWidth: (state) => {
+            return state.dimensions.window.width
+        },
         playerHandle: (state) => {
             return state.user.handle == null ? '' : state.user.handle
         },
@@ -86,6 +105,21 @@ const store = new Vuex.Store({
         },
     },
     mutations: {
+        trackHeaderHeightChange(state, headerHeight) {
+            console.log('Header height: ' + headerHeight + ' px')
+            state.dimensions.header.height = headerHeight
+        },
+        trackWindowSizeChange(state) {
+            console.log(
+                'Window size: ' +
+                    window.innerHeight +
+                    'x' +
+                    window.innerWidth +
+                    ' px'
+            )
+            state.dimensions.window.height = window.innerHeight
+            state.dimensions.window.width = window.innerWidth
+        },
         trackFailure(state, context) {
             state.server.latestFailure = context
         },
@@ -152,6 +186,12 @@ const store = new Vuex.Store({
         },
     },
     actions: {
+        handleHeaderHeightChange({ commit }, headerHeight) {
+            commit('trackHeaderHeightChange', headerHeight)
+        },
+        handleWindowSizeChange({ commit }) {
+            commit('trackWindowSizeChange')
+        },
         handleRequestFailed({ commit }, context) {
             commit('trackFailure', context)
         },

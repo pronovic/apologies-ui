@@ -1,11 +1,6 @@
 <template>
     <div>
-        <b-navbar toggleable="lg" type="dark" variant="secondary">
-            <b-navbar-brand href="#">Apologies</b-navbar-brand>
-            <b-navbar-nav class="ml-auto">
-                <RegisterHandleButton id="register1" />
-            </b-navbar-nav>
-        </b-navbar>
+        <LandingNavbar></LandingNavbar>
 
         <b-jumbotron class="w-50 mx-auto" bg-variant="white">
             <template v-slot:header>Apologies</template>
@@ -40,11 +35,15 @@
 </template>
 
 <script>
+import LandingNavbar from '../components/LandingNavbar.vue'
 import RegisterHandleButton from '../components/RegisterHandleButton.vue'
 
 export default {
     name: 'Landing',
-    components: { RegisterHandleButton: RegisterHandleButton },
+    components: {
+        LandingNavbar: LandingNavbar,
+        RegisterHandleButton: RegisterHandleButton,
+    },
     computed: {
         licenseUrl() {
             return this.$store.state.config.LICENSE_APACHE_2
