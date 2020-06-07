@@ -67,12 +67,6 @@ const store = new Vuex.Store({
         playerHandle: (state) => {
             return state.user.handle == null ? '' : state.user.handle
         },
-        playerColor: (state, getters) => {
-            const colors = Object.values(getters.players).filter((player) => {
-                return !player.isOpponent
-            })
-            return colors.length === 0 ? null : colors[0].color
-        },
         gameId: (state) => {
             return state.game.id
         },
@@ -109,13 +103,19 @@ const store = new Vuex.Store({
                     return false
             }
         },
-        opponentHandles: (state, getters) => {
+        player: (state, getters) => {
+            return getters.playerHandle in getters.players
+                ? getters.players[getters.playerHandle]
+                : null
+        },
+        opponents: (state, getters) => {
             return Object.values(getters.players)
                 .filter((player) => {
                     return player.isOpponent
                 })
                 .map(({ handle }) => handle)
                 .sort()
+                .map((handle) => getters.players[handle])
         },
         players: (state, getters) => {
             // This merges info from the player change and game state events into a single
