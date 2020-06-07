@@ -4,20 +4,20 @@
             <v-rect :config="border"></v-rect>
         </v-layer>
         <v-layer>
-            <PlayerInfoArea :config="info"></PlayerInfoArea>
+            <PlayerArea :config="info"></PlayerArea>
             <GameBoardArea :config="board"></GameBoardArea>
         </v-layer>
     </v-stage>
 </template>
 
 <script>
-import PlayerInfoArea from './board/PlayerInfoArea.vue'
+import PlayerArea from './board/PlayerArea.vue'
 import GameBoardArea from './board/GameBoardArea.vue'
 
 export default {
     name: 'GameBoard',
     components: {
-        PlayerInfoArea: PlayerInfoArea,
+        PlayerArea: PlayerArea,
         GameBoardArea: GameBoardArea,
     },
     computed: {
