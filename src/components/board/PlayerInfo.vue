@@ -10,19 +10,10 @@
         <v-text
             :id="id + '-handle'"
             :x="30"
-            :y="-22"
+            :y="-15"
             :text="handle"
             fill="black"
             :fontSize="32"
-            align="left"
-        ></v-text>
-        <v-text
-            :id="id + '-status'"
-            :x="30"
-            :y="8"
-            :text="status"
-            fill="black"
-            :fontSize="14"
             align="left"
         ></v-text>
         <CardBack :id="id + '-card-1'" :x="-25" :y="25" :size="50"></CardBack>
@@ -39,7 +30,7 @@ import CardBack from './CardBack.vue'
 import { Colors } from '../../utils/constants'
 
 export default {
-    name: 'OpponentInfo',
+    name: 'PlayerInfo',
     components: { Pawn: Pawn, CardBack: CardBack },
     props: ['id', 'x', 'y', 'player'],
     computed: {
@@ -50,20 +41,6 @@ export default {
             return this.player.color && this.player.color in Colors
                 ? Colors[this.player.color]
                 : Colors.GREY
-        },
-        status() {
-            if (this.player.type === 'HUMAN') {
-                switch (this.player.state) {
-                    case 'QUIT':
-                        return 'Quit'
-                    case 'DISCONNECTED':
-                        return 'Disconnected'
-                    default:
-                        return 'Human Player'
-                }
-            } else {
-                return 'Computer Player'
-            }
         },
     },
 }
