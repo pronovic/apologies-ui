@@ -8,22 +8,18 @@
             :color="color"
         ></Pawn>
         <v-text :config="handle"></v-text>
-        <CardBack :id="id + '-card-1'" :x="-25" :y="25" :size="50"></CardBack>
-        <CardBack :id="id + '-card-2'" :x="30" :y="25" :size="50"></CardBack>
-        <CardBack :id="id + '-card-3'" :x="85" :y="25" :size="50"></CardBack>
-        <CardBack :id="id + '-card-4'" :x="140" :y="25" :size="50"></CardBack>
-        <CardBack :id="id + '-card-5'" :x="195" :y="25" :size="50"></CardBack>
+        <Hand :id="id + '-hand'" :player="player"></Hand>
     </v-group>
 </template>
 
 <script>
 import Pawn from './Pawn.vue'
-import CardBack from './CardBack.vue'
+import Hand from './Hand.vue'
 import { Colors } from '../../utils/constants'
 
 export default {
     name: 'PlayerInfo',
-    components: { Pawn: Pawn, CardBack: CardBack },
+    components: { Pawn: Pawn, Hand: Hand },
     props: ['id', 'x', 'y', 'player'],
     computed: {
         color() {
