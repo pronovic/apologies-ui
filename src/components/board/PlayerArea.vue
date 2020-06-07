@@ -5,20 +5,20 @@
         <!-- Probably should group the pawn, text, and cards in the hand, then locations are relative to group location -->
         <!-- Need a way to indicate whether to show face or back of card (depending on handle) -->
         <!-- The hand won't be visible until after the game starts - so maybe we "flip" the player's cards when the game starts? -->
-        <OpponentInfo
-            id="yellow-player"
-            :x="55"
-            :y="50"
-            :color="yellow"
-            name="Ken"
-            status="Computer Player"
-        ></OpponentInfo>
+
+        <div v-for="(opponent, index) in opponents" v-bind:key="opponent.id">
+            <OpponentInfo
+                :id="'player-' + opponent.handle"
+                :x="55"
+                :y="index * 150 + 50"
+                :player="opponent"
+            ></OpponentInfo>
+        </div>
     </div>
 </template>
 
 <script>
 import OpponentInfo from './OpponentInfo.vue'
-import { Colors } from '../../utils/constants.js'
 
 export default {
     name: 'PlayerArea',
@@ -32,23 +32,8 @@ export default {
         },
     },
     computed: {
-        yellow() {
-            return Colors.YELLOW
-        },
-        green() {
-            return Colors.GREEN
-        },
-        red() {
-            return Colors.RED
-        },
-        blue() {
-            return Colors.BLUE
-        },
-        stage() {
-            return {
-                height: this.config.height,
-                width: this.config.width,
-            }
+        opponents() {
+            return this.$store.getters.opponents
         },
         border() {
             return {

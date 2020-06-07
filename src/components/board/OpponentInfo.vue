@@ -1,15 +1,23 @@
 <template>
     <v-group :id="id" :x="x" :y="y">
-        <Pawn :id="id" :x="0" :y="0" :size="40" :color="color"></Pawn>
+        <Pawn
+            :id="id + '-color'"
+            :x="0"
+            :y="0"
+            :size="40"
+            :color="color"
+        ></Pawn>
         <v-text
+            :id="id + '-handle'"
             :x="30"
             :y="-22"
-            :text="name"
+            :text="handle"
             fill="black"
             :fontSize="32"
             align="left"
         ></v-text>
         <v-text
+            :id="id + '-status'"
             :x="30"
             :y="8"
             :text="status"
@@ -28,10 +36,35 @@
 <script>
 import Pawn from './Pawn.vue'
 import CardBack from './CardBack.vue'
+import { Colors } from '../../utils/constants'
 
 export default {
     name: 'OpponentInfo',
     components: { Pawn: Pawn, CardBack: CardBack },
-    props: ['id', 'x', 'y', 'color', 'name', 'status'],
+    props: ['id', 'x', 'y', 'player'],
+    computed: {
+        handle() {
+            return this.player.handle
+        },
+        color() {
+            return this.player.color && this.player.color in Colors
+                ? Colors[this.player.color]
+                : Colors.GREY
+        },
+        status() {
+            if (this.player.type === 'HUMAN') {
+                switch (this.player.state) {
+                    case 'QUIT':
+                        return 'Quit game'
+                    case 'DISCONNECTED':
+                        return 'Disconnected from game'
+                    default:
+                        return 'Playing game'
+                }
+            } else {
+                return 'Computer player'
+            }
+        },
+    },
 }
 </script>
