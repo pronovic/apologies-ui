@@ -44,17 +44,17 @@ export default {
             }
         },
         status() {
-            let status = 'Computer Player'
+            let status = 'Computer Opponent'
             if (this.player.type === 'HUMAN') {
                 switch (this.player.state) {
                     case 'QUIT':
-                        status = 'Quit Game - Computer Player'
+                        status = 'Quit Game - Computer Opponent'
                         break
                     case 'DISCONNECTED':
-                        status = 'Disconnected - Computer Player'
+                        status = 'Disconnected - Computer Opponent'
                         break
                     default:
-                        status = 'Human Player'
+                        status = 'Human Opponent'
                         break
                 }
             }
