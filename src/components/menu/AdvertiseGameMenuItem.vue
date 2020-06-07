@@ -110,7 +110,7 @@ export default {
             this.name = ''
             this.nameState = null
             this.mode = 'STANDARD'
-            this.players = 2
+            this.players = 4
             this.visibility = 'PUBLIC'
             this.invitedHandles = []
         },

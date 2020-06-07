@@ -61,13 +61,18 @@ const store = new Vuex.Store({
         displayWidth: (state) => {
             return state.dimensions.window.width
         },
-        playerHandle: (state) => {
-            return state.user.handle == null ? '' : state.user.handle
-        },
         playerId: (state) => {
             return state.user.playerId
         },
-
+        playerHandle: (state) => {
+            return state.user.handle == null ? '' : state.user.handle
+        },
+        playerColor: (state, getters) => {
+            const colors = Object.values(getters.players).filter((player) => {
+                return !player.isOpponent
+            })
+            return colors.length === 0 ? null : colors[0].color
+        },
         gameId: (state) => {
             return state.game.id
         },
@@ -104,63 +109,62 @@ const store = new Vuex.Store({
                     return false
             }
         },
-        playerColor: (state, getters) => {
-            const info = state.game.players.filter((player) => {
-                return player.handle === getters.playerHandle
-            })
-
-            return info.length === 0 ? null : info[0].player_color // eslint-disable-line camelcase
+        opponentHandles: (state, getters) => {
+            return Object.values(getters.players)
+                .filter((player) => {
+                    return player.isOpponent
+                })
+                .map(({ handle }) => handle)
+                .sort()
         },
-        opponentColors: (state, getters) => {
-            const info = state.game.players.filter((player) => {
-                return player.handle !== getters.playerHandle
-            })
+        players: (state, getters) => {
+            // This merges info from the player change and game state events into a single
+            // map by handle.  Unfortunately, there's no handle in the game state, only a
+            // color.  Also, we don't have any game state information or any color until
+            // after the game has been started and colors have been assigned.  So, we need
+            // to jump through some hoops to fill in only the information that is
+            // available at the current time.
 
-            return info.length === 0
-                ? []
-                : info.map(({ player_color }) => player_color) // eslint-disable-line camelcase
-        },
-        stateByColor: (state, getters) => {
-            // this merges info from the player change and game state events, by color
+            var players = {}
 
-            const colors = state.game.players.map(
-                ({ player_color }) => player_color // eslint-disable-line camelcase
-            )
-
-            const infoMap = Object.fromEntries(
-                state.game.players.map((e) => [e.player_color, e])
-            )
-
-            const stateMap = Object.fromEntries(
-                state.game.opponentStates.map((e) => [e.color, e])
-            )
-
-            // the published data splits player state and opponent state, but we want them merged here
-            if (getters.playerColor) {
-                stateMap[getters.playerColor] = state.game.playerState
-            }
-
-            var result = {}
-
-            // we get player info as soon as the game is advertised
-            for (var color of colors) {
-                result[color] = {
-                    handle: infoMap[color].handle,
-                    color: infoMap[color].player_color,
-                    type: infoMap[color].player_type,
+            if (state.game.players) {
+                for (const player of state.game.players) {
+                    players[player.handle] = {
+                        handle: player.handle,
+                        color: player.player_color,
+                        type: player.player_type,
+                        state: player.player_state,
+                        isOpponent: player.handle !== getters.playerHandle,
+                        turns: 0,
+                        hand: [],
+                        pawns: [],
+                    }
                 }
             }
 
-            // there is no game state until after the game is started
-            for (var color of colors) {
-                if (color in stateMap) {
-                    result[color].state = infoMap[color].player_state
-                    result[color].hand = stateMap[color].hand
-                    result[color].pawns = stateMap[color].pawns
+            if (state.game.playerState) {
+                players[getters.playerHandle].turns =
+                    state.game.playerState.turns
+                players[getters.playerHandle].hand = state.game.playerState.hand
+                players[getters.playerHandle].pawns =
+                    state.game.playerState.pawns
+            }
+
+            if (state.game.opponentStates) {
+                const stateMap = Object.fromEntries(
+                    state.game.opponentStates.map((e) => [e.color, e])
+                )
+
+                for (const player in players) {
+                    if (player.color in stateMap) {
+                        player.turns = stateMap[player.color].turns
+                        player.hand = stateMap[player.color].hand
+                        player.pawns = stateMap[player.color].pawns
+                    }
                 }
             }
 
-            return result
+            return players
         },
     },
     mutations: {
