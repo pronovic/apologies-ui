@@ -36,7 +36,7 @@ export default {
             return {
                 id: this.id + '-handle',
                 x: 30,
-                y: -22,
+                y: -24,
                 text: this.player.handle,
                 fill: 'black',
                 fontSize: 32,

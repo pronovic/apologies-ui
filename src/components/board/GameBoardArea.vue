@@ -22,7 +22,7 @@ export default {
                 height: this.config.height - 5,
                 width: this.config.width - 5,
                 fill: 'white',
-                stroke: 'red', // TODO: get rid of the border
+                stroke: 'white', // TODO: get rid of the border once there are other components
                 strokeWidth: 1,
             }
         },
