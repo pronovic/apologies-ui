@@ -6,7 +6,7 @@
             :y="-22"
             :text="name"
             fill="black"
-            fontSize="32"
+            :fontSize="32"
             align="left"
         ></v-text>
         <v-text
@@ -14,7 +14,7 @@
             :y="8"
             :text="status"
             fill="black"
-            fontSize="14"
+            :fontSize="14"
             align="left"
         ></v-text>
         <CardBack :id="id + '-card-1'" :x="-25" :y="25" :size="50"></CardBack>

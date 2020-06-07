@@ -33,4 +33,4 @@ const Colors = {
     PURPLE: '#666699',
 }
 
-export { UserLoadStatus, ServerStatus, GameStatus, Colors }
+export { UserLoadStatus, ServerStatus, GameStatus, Colors, }
