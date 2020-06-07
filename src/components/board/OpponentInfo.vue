@@ -7,24 +7,8 @@
             :size="40"
             :color="color"
         ></Pawn>
-        <v-text
-            :id="id + '-handle'"
-            :x="30"
-            :y="-22"
-            :text="handle"
-            fill="black"
-            :fontSize="32"
-            align="left"
-        ></v-text>
-        <v-text
-            :id="id + '-status'"
-            :x="30"
-            :y="8"
-            :text="status"
-            fill="black"
-            :fontSize="14"
-            align="left"
-        ></v-text>
+        <v-text :config="handle"></v-text>
+        <v-text :config="status"></v-text>
         <CardBack :id="id + '-card-1'" :x="-25" :y="25" :size="50"></CardBack>
         <CardBack :id="id + '-card-2'" :x="30" :y="25" :size="50"></CardBack>
         <CardBack :id="id + '-card-3'" :x="85" :y="25" :size="50"></CardBack>
@@ -43,26 +27,46 @@ export default {
     components: { Pawn: Pawn, CardBack: CardBack },
     props: ['id', 'x', 'y', 'player'],
     computed: {
-        handle() {
-            return this.player.handle
-        },
         color() {
             return this.player.color && this.player.color in Colors
                 ? Colors[this.player.color]
                 : Colors.GREY
         },
+        handle() {
+            return {
+                id: this.id + '-handle',
+                x: 30,
+                y: -22,
+                text: this.player.handle,
+                fill: 'black',
+                fontSize: 32,
+                align: 'left',
+            }
+        },
         status() {
+            let status = 'Computer Player'
             if (this.player.type === 'HUMAN') {
                 switch (this.player.state) {
                     case 'QUIT':
-                        return 'Quit'
+                        status = 'Quit Game - Computer Player'
+                        break
                     case 'DISCONNECTED':
-                        return 'Disconnected'
+                        status = 'Disconnected - Computer Player'
+                        break
                     default:
-                        return 'Human Player'
+                        status = 'Human Player'
+                        break
                 }
-            } else {
-                return 'Computer Player'
+            }
+
+            return {
+                id: this.id + '-status',
+                x: 30,
+                y: 8,
+                text: status,
+                fill: 'black',
+                fontSize: 14,
+                align: 'left',
             }
         },
     },

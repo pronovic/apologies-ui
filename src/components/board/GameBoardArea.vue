@@ -15,12 +15,6 @@ export default {
         },
     },
     computed: {
-        stage() {
-            return {
-                height: this.config.height,
-                width: this.config.width,
-            }
-        },
         border() {
             return {
                 x: this.config.x,

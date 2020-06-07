@@ -19,11 +19,11 @@ export default {
     beforeMount: function () {
         EventBus.$on('client-toast', (message) => {
             this.$bvToast.toast(message, {
-                title: null,
-                toaster: 'b-toaster-top-left',
+                title: 'Status Update',
+                toaster: 'b-toaster-top-center',
                 autoHideDelay: 5000,
                 appendToast: false,
-                noCloseButton: true,
+                noCloseButton: false,
                 variant: 'info',
             })
         })
