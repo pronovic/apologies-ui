@@ -5,53 +5,29 @@
 </template>
 
 <script>
-import Konva from 'konva'
+import { configureBounce } from '../../utils/util'
 
 export default {
     name: 'Pawn',
     props: ['id', 'x', 'y', 'size', 'color'],
     data: function () {
         return {
-            pawn: null,
-            beginX: null,
-            beginY: null,
-            animation: null,
+            bounce: null,
         }
     },
     mounted() {
         this.$nextTick(() => {
-            this.setupAnimation()
+            this.bounce = configureBounce(
+                this.x,
+                this.y,
+                this.$refs.pawn.getNode()
+            )
         })
     },
     methods: {
-        setupAnimation() {
-            this.beginX = this.x
-            this.beginY = this.y
-
-            const amplitude = 5
-            const period = 500
-            const centerY = this.y - 5
-            const pawn = this.$refs.pawn.getNode()
-
-            this.animation = new Konva.Animation(function (frame) {
-                pawn.setY(
-                    amplitude * Math.sin((frame.time * 2 * Math.PI) / period) +
-                        centerY
-                )
-            }, pawn.getLayer())
-        },
         toggleBounce(enabled) {
-            if (this.animation) {
-                if (enabled) {
-                    this.animation.start()
-                } else {
-                    this.animation.stop()
-                    const pawn = this.$refs.pawn.getNode()
-                    if (pawn) {
-                        pawn.setX(this.beginX)
-                        pawn.setY(this.beginY)
-                    }
-                }
+            if (this.bounce) {
+                this.bounce.toggle(enabled)
             }
         },
     },
