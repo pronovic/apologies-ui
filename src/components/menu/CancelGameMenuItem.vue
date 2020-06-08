@@ -35,7 +35,7 @@ export default {
                         cancelGame()
                     }
                 })
-                .catch((err) => {}) /* eslint handle-callback-err: "off" */
+                .catch((err) => {}) // eslint-disable-line handle-callback-err
         },
     },
 }

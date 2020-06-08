@@ -36,7 +36,7 @@ export default {
                         quitGame()
                     }
                 })
-                .catch((err) => {}) /* eslint handle-callback-err: "off" */
+                .catch((err) => {}) // eslint-disable-line handle-callback-err
         },
     },
 }
