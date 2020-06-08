@@ -8,6 +8,7 @@
             :color="color"
         ></Pawn>
         <v-text :config="handle"></v-text>
+        <v-text :config="status"></v-text>
         <Hand :id="id + '-hand'" :player="player"></Hand>
     </v-group>
 </template>
@@ -40,10 +41,28 @@ export default {
             return {
                 id: this.id + '-handle',
                 x: 30,
-                y: -15,
+                y: -23,
                 text: this.player.handle,
                 fill: 'black',
                 fontSize: 32,
+                align: 'left',
+            }
+        },
+        status() {
+            let status = 'Your Player'
+            if (this.player.isWinner) {
+                status = 'Game Winner'
+            } else if (this.player.isAdvertiser) {
+                status = 'Game Advertiser'
+            }
+
+            return {
+                id: this.id + '-status',
+                x: 30,
+                y: 10,
+                text: status,
+                fill: 'black',
+                fontSize: 14,
                 align: 'left',
             }
         },

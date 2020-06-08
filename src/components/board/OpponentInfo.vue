@@ -16,7 +16,7 @@
 <script>
 import Pawn from './Pawn.vue'
 import Hand from './Hand.vue'
-import { Colors } from '../../utils/constants'
+import { PlayerState, Colors } from '../../utils/constants'
 
 export default {
     name: 'OpponentInfo',
@@ -32,7 +32,7 @@ export default {
             return {
                 id: this.id + '-handle',
                 x: 30,
-                y: -24,
+                y: -23,
                 text: this.player.handle,
                 fill: 'black',
                 fontSize: 32,
@@ -41,24 +41,23 @@ export default {
         },
         status() {
             let status = 'Computer Opponent'
-            if (this.player.type === 'HUMAN') {
-                switch (this.player.state) {
-                    case 'QUIT':
-                        status = 'Quit Game - Computer Opponent'
-                        break
-                    case 'DISCONNECTED':
-                        status = 'Disconnected - Computer Opponent'
-                        break
-                    default:
-                        status = 'Human Opponent'
-                        break
+            if (this.player.isWinner) {
+                status = 'Game Winner'
+            } else if (this.player.isAdvertiser) {
+                status = 'Game Advertiser'
+            } else if (this.player.type === 'HUMAN') {
+                status = 'Human Opponent'
+                if (this.player.state === PlayerState.QUIT) {
+                    status = 'Quit Game (Computer Opponent)'
+                } else if (this.player.state === PlayerState.DISCONNECTED) {
+                    status = 'Disconnected (Computer Opponent)'
                 }
             }
 
             return {
                 id: this.id + '-status',
                 x: 30,
-                y: 8,
+                y: 10,
                 text: status,
                 fill: 'black',
                 fontSize: 14,

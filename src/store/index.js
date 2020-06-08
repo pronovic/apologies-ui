@@ -150,7 +150,9 @@ const store = new Vuex.Store({
                         color: player.player_color,
                         type: player.player_type,
                         state: player.player_state,
+                        isAdvertiser: false,
                         isOpponent: player.handle !== getters.playerHandle,
+                        isWinner: false,
                         turns: 0,
                         hand: [],
                         pawns: [],
@@ -211,6 +213,14 @@ const store = new Vuex.Store({
                 }
             }
 
+            if (state.game.winner && state.game.winner in players) {
+                players[state.game.winner].isWinner = true
+            }
+
+            if (state.game.advertiser && state.game.advertiser in players) {
+                players[state.game.advertiser].isAdvertiser = true
+            }
+
             return players
         },
     },
@@ -263,9 +273,6 @@ const store = new Vuex.Store({
         trackGameInvitation(state, context) {
             state.server.invitations.push(context)
         },
-        trackGameId(state, gameId) {
-            state.game.id = gameId
-        },
         trackGameStatus(state, status) {
             state.game.status = status
         },
@@ -276,10 +283,13 @@ const store = new Vuex.Store({
             state.game.comment = context.comment
             Vue.set(state.game, 'players', context.players)
         },
-        trackGameState(state, context) {
+        trackGameDetails(state, context) {
+            state.game.id = context.game_id
             state.game.name = context.name
             state.game.mode = context.mode
             state.game.advertiser = context.advertiser_handle
+        },
+        trackGameState(state, context) {
             state.game.playerState = context.player
             Vue.set(state.game, 'opponentStates', context.opponents)
             state.game.previousTurn = null
@@ -369,8 +379,8 @@ const store = new Vuex.Store({
             commit('trackGameInvitation', context)
         },
         handleGameJoined({ commit }, context) {
-            commit('trackGameId', context.game_id)
             commit('trackGameStatus', GameStatus.GAME_JOINED)
+            commit('trackGameDetails', context)
         },
         handleGameStarted({ commit }) {
             commit('trackGameStatus', GameStatus.GAME_STARTED)
@@ -381,9 +391,9 @@ const store = new Vuex.Store({
         handleGameCancelled({ commit }) {
             commit('trackGameStatus', GameStatus.GAME_CANCELLED)
         },
-        handleGameCompleted({ commit }, context) {
+        handleGameCompleted({ commit }, winner) {
             commit('trackGameStatus', GameStatus.GAME_COMPLETED)
-            commit('trackGameWinner', context.winner)
+            commit('trackGameWinner', winner)
         },
         handleGameIdle({ commit }) {
             commit('trackGameStatus', GameStatus.GAME_IDLE)

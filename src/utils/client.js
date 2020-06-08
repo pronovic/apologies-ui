@@ -164,7 +164,7 @@ function handleGameCancelled(message) {
 
 function handleGameCompleted(message) {
     EventBus.$emit('client-toast', message.context.comment)
-    store.dispatch('handleGameCompleted')
+    store.dispatch('handleGameCompleted', message.context.winner)
 }
 
 function handleGameIdle(message) {

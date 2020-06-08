@@ -30,6 +30,11 @@ const GameMode = {
     ADULT: 'ADULT',
 }
 
+const PlayerState = {
+    QUIT: 'QUIT',
+    DISCONNECTED: 'DISCONNECTED',
+}
+
 const Colors = {
     BLUE: '#0099cc',
     RED: '#cc3300',
@@ -53,4 +58,12 @@ const Cards = {
     CARD_APOLOGIES: 'CARD_APOLOGIES',
 }
 
-export { UserLoadStatus, ServerStatus, GameStatus, GameMode, Colors, Cards }
+export {
+    UserLoadStatus,
+    ServerStatus,
+    GameStatus,
+    GameMode,
+    PlayerState,
+    Colors,
+    Cards,
+}
