@@ -71,12 +71,12 @@ export default {
         this.$nextTick(() => {
             this.beginX = this.x
             this.beginY = this.y
-            
+
             const amplitude = 5
             const period = 500
-            const centerY = this.y
+            const centerY = this.y - 5
             const pawn = this.$refs.pawn.getNode()
-            
+
             this.animation = new Konva.Animation(function (frame) {
                 pawn.setY(
                     amplitude * Math.sin((frame.time * 2 * Math.PI) / period) +

@@ -23,6 +23,19 @@ export default {
     name: 'OpponentInfo',
     components: { Pawn: Pawn, Hand: Hand },
     props: ['id', 'x', 'y', 'player'],
+    mounted() {
+        this.$nextTick(() => {
+            this.$refs.pawn.bounce(this.player.isWinner)
+        })
+    },
+    watch: {
+        player: {
+            deep: true,
+            handler(newValue, oldValue) {
+                this.$refs.pawn.bounce(newValue.isWinner)
+            },
+        },
+    },
     computed: {
         color() {
             return this.player.color && this.player.color in Colors

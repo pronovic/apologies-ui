@@ -23,6 +23,19 @@ export default {
     name: 'PlayerInfo',
     components: { Pawn: Pawn, Hand: Hand },
     props: ['id', 'x', 'y', 'player'],
+    mounted() {
+        this.$nextTick(() => {
+            this.$refs.pawn.bounce(this.player.isWinner)
+        })
+    },
+    watch: {
+        player: {
+            deep: true,
+            handler(newValue, oldValue) {
+                this.$refs.pawn.bounce(newValue.isWinner)
+            },
+        },
+    },
     computed: {
         color() {
             return this.player.color && this.player.color in Colors
@@ -66,25 +79,6 @@ export default {
                 fontSize: 14,
                 align: 'left',
             }
-        },
-    },
-    mounted() {
-        this.$nextTick(() => {
-            console.log('Mounted attempting to set bounce() to ' + !this.player.isWinner)
-            this.$refs.pawn.bounce(!this.player.isWinner)
-        })
-    },
-    watch: {
-        player: {
-            immediate: true,
-            deep: true,
-            handler(newValue, oldValue) {
-                console.log("Watcher caught player change")
-                console.log('Watcher attempting to set bounce() to ' + !newValue.isWinner)
-                if (this.$refs.pawn) {
-                    this.$refs.pawn.bounce(!newValue.isWinner)
-                }
-            },
         },
     },
 }
