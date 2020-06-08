@@ -25,6 +25,11 @@ const GameStatus = {
     DISCONNECTED: 'Disconnected',
 }
 
+const GameMode = {
+    STANDARD: 'STANDARD',
+    ADULT: 'ADULT',
+}
+
 const Colors = {
     BLUE: '#0099cc',
     RED: '#cc3300',
@@ -34,4 +39,18 @@ const Colors = {
     GREY: '#cccccc',
 }
 
-export { UserLoadStatus, ServerStatus, GameStatus, Colors }
+const Cards = {
+    CARD_1: 'CARD_1',
+    CARD_2: 'CARD_2',
+    CARD_3: 'CARD_3',
+    CARD_4: 'CARD_4',
+    CARD_5: 'CARD_5',
+    CARD_7: 'CARD_7',
+    CARD_8: 'CARD_8',
+    CARD_10: 'CARD_10',
+    CARD_11: 'CARD_11',
+    CARD_12: 'CARD_12',
+    CARD_APOLOGIES: 'CARD_APOLOGIES',
+}
+
+export { UserLoadStatus, ServerStatus, GameStatus, GameMode, Colors, Cards }

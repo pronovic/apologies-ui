@@ -2,6 +2,7 @@ import store from '../store'
 import router from '../router'
 import atmosphere from 'atmosphere.js'
 import { EventBus } from './eventbus.js'
+import { sleep } from './util.js'
 
 var socket = atmosphere
 var subsocket = null
@@ -162,7 +163,7 @@ function handleGameCancelled(message) {
 }
 
 function handleGameCompleted(message) {
-    EventBus.$emit('client-toast', 'The game has been completed')
+    EventBus.$emit('client-toast', message.context.comment)
     store.dispatch('handleGameCompleted')
 }
 
@@ -197,6 +198,14 @@ function handleGameStateChange(message) {
 
 function handleGamePlayerTurn(message) {
     store.dispatch('handleGamePlayerTurn', message.context)
+
+    // TODO: remove stubbed code to automatically play
+    console.log('Automatically choosing a move to let game proceeed')
+    const [move] = Object.values(message.context.moves)
+    sleep(1000).then(() => {
+        executeMove(move)
+        store.dispatch('handleMovePlayed')
+    })
 }
 
 async function onClose(response) {
@@ -564,6 +573,20 @@ function advertiseGame(advertised) {
     sendRequest(request)
 }
 
+function executeMove(move) {
+    console.log('Executing move: ' + move)
+
+    const request = {
+        message: 'EXECUTE_MOVE',
+        player_id: store.getters.playerId,
+        context: {
+            move_id: move.move_id,
+        },
+    }
+
+    sendRequest(request)
+}
+
 export {
     disconnectSocket,
     registerHandle,
@@ -575,4 +598,5 @@ export {
     startGame,
     listAvailableGames,
     advertiseGame,
+    executeMove,
 }

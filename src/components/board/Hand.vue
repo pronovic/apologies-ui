@@ -1,20 +1,23 @@
 <template>
     <v-group :id="id" :x="x" :y="y">
-        <CardBack :id="id + '-card-1'" :x="-25" :y="25" :size="50"></CardBack>
-        <CardBack :id="id + '-card-2'" :x="30" :y="25" :size="50"></CardBack>
-        <CardBack :id="id + '-card-3'" :x="85" :y="25" :size="50"></CardBack>
-        <CardBack :id="id + '-card-4'" :x="140" :y="25" :size="50"></CardBack>
-        <CardBack :id="id + '-card-5'" :x="195" :y="25" :size="50"></CardBack>
+        <div v-for="(card, index) in player.hand" v-bind:key="index">
+            <Card
+                :id="id + '-card-' + index"
+                :x="index * 55 - 25"
+                :y="25"
+                :size="50"
+                :card="card"
+            ></Card>
+        </div>
     </v-group>
 </template>
 
 <script>
-import CardBack from './CardBack.vue'
+import Card from './Card.vue'
 
 export default {
     name: 'Hand',
-    components: { CardBack: CardBack },
+    components: { Card: Card },
     props: ['id', 'x', 'y', 'player'],
-    computed: {},
 }
 </script>

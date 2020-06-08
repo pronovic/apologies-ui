@@ -2,7 +2,12 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import { config } from './config.js'
 import { clearPlayer, persistPlayer } from '../utils/storage.js'
-import { UserLoadStatus, ServerStatus, GameStatus } from '../utils/constants.js'
+import {
+    UserLoadStatus,
+    ServerStatus,
+    GameStatus,
+    GameMode,
+} from '../utils/constants.js'
 
 Vue.use(Vuex)
 
@@ -24,10 +29,14 @@ const server = {
 
 const game = {
     id: null,
+    name: null,
+    mode: null,
+    advertiser: null,
+    winner: null,
+    previousTurn: null,
     status: null,
     comment: null,
     players: [],
-    history: [],
     playerState: null,
     opponentStates: [],
     drawnCard: null,
@@ -118,12 +127,19 @@ const store = new Vuex.Store({
                 .map((handle) => getters.players[handle])
         },
         players: (state, getters) => {
-            // This merges info from the player change and game state events into a single
-            // map by handle.  Unfortunately, there's no handle in the game state, only a
-            // color.  Also, we don't have any game state information or any color until
-            // after the game has been started and colors have been assigned.  So, we need
-            // to jump through some hoops to fill in only the information that is
-            // available at the current time.
+            // This merges information from several different events into a single
+            // cohesive state for each player, tracked as a map by player handle.
+            //
+            // Most of the information comes from the player change and game state events.
+            // Public information about each opponent's hand is augmented based on the
+            // previous turn information tracked via history.  For a standard mode game,
+            // the player's hand is augmented based on the game player turn event.
+            //
+            // Unfortunately, there's no handle in the game state, only a color.  And, we
+            // don't have any game state information or any color until after the game has
+            // been started and colors have been assigned.  So, we need to jump through
+            // some hoops to fill in only the information that is available at the current
+            // time.
 
             var players = {}
 
@@ -155,11 +171,42 @@ const store = new Vuex.Store({
                     state.game.opponentStates.map((e) => [e.color, e])
                 )
 
-                for (const player in players) {
+                for (const player of Object.values(players)) {
                     if (player.color in stateMap) {
                         player.turns = stateMap[player.color].turns
-                        player.hand = stateMap[player.color].hand
                         player.pawns = stateMap[player.color].pawns
+                    }
+                }
+            }
+
+            if (state.game.mode === GameMode.STANDARD && state.game.drawnCard) {
+                // In a standard mode game, the hand is always empty, so we fill it
+                // with the card they most recently played.
+                players[getters.playerHandle].hand = [state.game.drawnCard]
+            }
+
+            if (state.game.previousTurn) {
+                for (const player of Object.values(players)) {
+                    if (player.isOpponent) {
+                        if (player.color === state.game.previousTurn.color) {
+                            if (state.game.mode === GameMode.STANDARD) {
+                                player.hand = [state.game.previousTurn.card]
+                            } else {
+                                player.hand = [
+                                    state.game.previousTurn.card,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                ]
+                            }
+                        } else {
+                            if (state.game.mode === GameMode.STANDARD) {
+                                player.hand = []
+                            } else {
+                                player.hand = [null, null, null, null, null]
+                            }
+                        }
                     }
                 }
             }
@@ -222,14 +269,27 @@ const store = new Vuex.Store({
         trackGameStatus(state, status) {
             state.game.status = status
         },
+        trackGameWinner(state, winner) {
+            state.game.winner = winner
+        },
         trackGamePlayers(state, context) {
             state.game.comment = context.comment
             Vue.set(state.game, 'players', context.players)
         },
         trackGameState(state, context) {
-            Vue.set(state.game, 'history', context.recent_history)
+            state.game.name = context.name
+            state.game.mode = context.mode
+            state.game.advertiser = context.advertiser_handle
             state.game.playerState = context.player
             Vue.set(state.game, 'opponentStates', context.opponents)
+            state.game.previousTurn = null
+            if (context.recent_history && context.recent_history.length > 0) {
+                const last =
+                    context.recent_history[context.recent_history.length - 1]
+                if (last.color && last.card) {
+                    state.game.previousTurn = last
+                }
+            }
         },
         trackPlayerTurn(state, context) {
             state.game.drawnCard = context.drawn_card
@@ -238,14 +298,22 @@ const store = new Vuex.Store({
         clearGame(state) {
             state.server.advertisedGame = null
             state.game.id = null
+            state.game.name = null
+            state.game.mode = null
+            state.game.advertiser = null
+            state.game.winner = null
             state.game.status = null
             state.game.comment = null
             Vue.set(state.game, 'players', [])
-            Vue.set(state.game, 'history', [])
             state.game.playerState = null
             Vue.set(state.game, 'opponentStates', [])
             state.game.drawnCard = null
             Vue.set(state.game, 'playerMoves', [])
+            state.game.previousTurn = null
+        },
+        clearPlayerMove(state) {
+            state.game.drawnCard = null
+            state.game.playerMoves = []
         },
     },
     actions: {
@@ -313,8 +381,9 @@ const store = new Vuex.Store({
         handleGameCancelled({ commit }) {
             commit('trackGameStatus', GameStatus.GAME_CANCELLED)
         },
-        handleGameCompleted({ commit }) {
+        handleGameCompleted({ commit }, context) {
             commit('trackGameStatus', GameStatus.GAME_COMPLETED)
+            commit('trackGameWinner', context.winner)
         },
         handleGameIdle({ commit }) {
             commit('trackGameStatus', GameStatus.GAME_IDLE)
@@ -336,6 +405,9 @@ const store = new Vuex.Store({
         },
         handleGameClear({ commit }) {
             commit('clearGame')
+        },
+        handleMovePlayed({ commit }) {
+            commit('clearPlayerMove')
         },
     },
 })
