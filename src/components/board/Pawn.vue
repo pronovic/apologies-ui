@@ -9,11 +9,30 @@ import Konva from 'konva'
 
 export default {
     name: 'Pawn',
-    props: ['id', 'x', 'y', 'size', 'color', 'bounce'],
+    props: ['id', 'x', 'y', 'size', 'color'],
     data: function () {
         return {
-            animation: null
+            pawn: null,
+            beginX: null,
+            beginY: null,
+            animation: null,
         }
+    },
+    methods: {
+        bounce(enabled) {
+            if (this.animation) {
+                if (enabled) {
+                    this.animation.start()
+                } else {
+                    this.animation.stop()
+                    const pawn = this.$refs.pawn.getNode()
+                    if (pawn) {
+                        pawn.setX(this.beginX)
+                        pawn.setY(this.beginY)
+                    }
+                }
+            }
+        },
     },
     computed: {
         config() {
@@ -50,36 +69,21 @@ export default {
     },
     mounted() {
         this.$nextTick(() => {
+            this.beginX = this.x
+            this.beginY = this.y
+            
             const amplitude = 5
             const period = 500
             const centerY = this.y
             const pawn = this.$refs.pawn.getNode()
-
+            
             this.animation = new Konva.Animation(function (frame) {
                 pawn.setY(
                     amplitude * Math.sin((frame.time * 2 * Math.PI) / period) +
                         centerY
                 )
             }, pawn.getLayer())
-
-            if (this.bounce) {
-                this.animation.start()
-            }
         })
     },
-    watch: {
-        bounce: function (newValue, oldValue) {
-            console.log("Watch noticed change in bounce from " + oldValue + " to " + newValue)
-            this.$nextTick(() => {
-                if (newValue) {
-                    console.log("Starting animation")
-                    this.animation.start()
-                } else {
-                    console.log("Stopping animation")
-                    this.animation.stop()
-                }
-            })
-        }
-    }
 }
 </script>

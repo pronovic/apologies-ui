@@ -1,12 +1,12 @@
 <template>
     <v-group :id="id" :x="x" :y="y">
         <Pawn
+            ref="pawn"
             :id="id + '-color'"
             :x="0"
             :y="0"
             :size="40"
             :color="color"
-            :bounce="winner"
         ></Pawn>
         <v-text :config="handle"></v-text>
         <v-text :config="status"></v-text>
@@ -24,9 +24,6 @@ export default {
     components: { Pawn: Pawn, Hand: Hand },
     props: ['id', 'x', 'y', 'player'],
     computed: {
-        winner() {
-            return !this.player.winner
-        },
         color() {
             return this.player.color && this.player.color in Colors
                 ? Colors[this.player.color]
@@ -69,6 +66,25 @@ export default {
                 fontSize: 14,
                 align: 'left',
             }
+        },
+    },
+    mounted() {
+        this.$nextTick(() => {
+            console.log('Mounted attempting to set bounce() to ' + !this.player.isWinner)
+            this.$refs.pawn.bounce(!this.player.isWinner)
+        })
+    },
+    watch: {
+        player: {
+            immediate: true,
+            deep: true,
+            handler(newValue, oldValue) {
+                console.log("Watcher caught player change")
+                console.log('Watcher attempting to set bounce() to ' + !newValue.isWinner)
+                if (this.$refs.pawn) {
+                    this.$refs.pawn.bounce(!newValue.isWinner)
+                }
+            },
         },
     },
 }

@@ -7,7 +7,6 @@
             :y="0"
             :size="40"
             :color="color"
-            :bounce="winner"
         ></Pawn>
         <v-text :config="handle"></v-text>
         <v-text :config="status"></v-text>
@@ -29,9 +28,6 @@ export default {
             return this.player.color && this.player.color in Colors
                 ? Colors[this.player.color]
                 : Colors.GREY
-        },
-        winner() {
-            return !this.player.winner
         },
         handle() {
             return {
@@ -70,12 +66,5 @@ export default {
             }
         },
     },
-    watch: { 
-        player: {
-            handler (newValue, oldValue) {
-                this.$refs.pawn.bounce
-            },
-            deep: true, // nested data
-        }
 }
 </script>
