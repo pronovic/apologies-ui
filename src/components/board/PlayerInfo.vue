@@ -25,14 +25,14 @@ export default {
     props: ['id', 'x', 'y', 'player'],
     mounted() {
         this.$nextTick(() => {
-            this.$refs.pawn.bounce(this.player.isWinner)
+            this.$refs.pawn.toggleBounce(this.player.isWinner)
         })
     },
     watch: {
         player: {
             deep: true,
             handler(newValue, oldValue) {
-                this.$refs.pawn.bounce(newValue.isWinner)
+                this.$refs.pawn.toggleBounce(newValue.isWinner)
             },
         },
     },

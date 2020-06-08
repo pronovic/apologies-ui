@@ -18,8 +18,29 @@ export default {
             animation: null,
         }
     },
+    mounted() {
+        this.$nextTick(() => {
+            this.setupAnimation()
+        })
+    },
     methods: {
-        bounce(enabled) {
+        setupAnimation() {
+            this.beginX = this.x
+            this.beginY = this.y
+
+            const amplitude = 5
+            const period = 500
+            const centerY = this.y - 5
+            const pawn = this.$refs.pawn.getNode()
+
+            this.animation = new Konva.Animation(function (frame) {
+                pawn.setY(
+                    amplitude * Math.sin((frame.time * 2 * Math.PI) / period) +
+                        centerY
+                )
+            }, pawn.getLayer())
+        },
+        toggleBounce(enabled) {
             if (this.animation) {
                 if (enabled) {
                     this.animation.start()
@@ -66,24 +87,6 @@ export default {
                 },
             }
         },
-    },
-    mounted() {
-        this.$nextTick(() => {
-            this.beginX = this.x
-            this.beginY = this.y
-
-            const amplitude = 5
-            const period = 500
-            const centerY = this.y - 5
-            const pawn = this.$refs.pawn.getNode()
-
-            this.animation = new Konva.Animation(function (frame) {
-                pawn.setY(
-                    amplitude * Math.sin((frame.time * 2 * Math.PI) / period) +
-                        centerY
-                )
-            }, pawn.getLayer())
-        })
     },
 }
 </script>
