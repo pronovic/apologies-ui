@@ -1,5 +1,5 @@
 <template>
-    <v-stage v-if="visible" :config="stage">
+    <v-stage ref="stage" v-if="visible" :config="stage">
         <v-layer>
             <PlayerArea :config="info"></PlayerArea>
             <GameBoardArea :config="board"></GameBoardArea>

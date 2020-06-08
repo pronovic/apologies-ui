@@ -1,13 +1,20 @@
 <template>
     <v-group :id="id">
-        <v-shape :config="config"></v-shape>
+        <v-shape ref="pawn" :config="config"></v-shape>
     </v-group>
 </template>
 
 <script>
+import Konva from 'konva'
+
 export default {
     name: 'Pawn',
-    props: ['id', 'x', 'y', 'size', 'color'],
+    props: ['id', 'x', 'y', 'size', 'color', 'bounce'],
+    data: function () {
+        return {
+            animation: null
+        }
+    },
     computed: {
         config() {
             return {
@@ -41,5 +48,38 @@ export default {
             }
         },
     },
+    mounted() {
+        this.$nextTick(() => {
+            const amplitude = 5
+            const period = 500
+            const centerY = this.y
+            const pawn = this.$refs.pawn.getNode()
+
+            this.animation = new Konva.Animation(function (frame) {
+                pawn.setY(
+                    amplitude * Math.sin((frame.time * 2 * Math.PI) / period) +
+                        centerY
+                )
+            }, pawn.getLayer())
+
+            if (this.bounce) {
+                this.animation.start()
+            }
+        })
+    },
+    watch: {
+        bounce: function (newValue, oldValue) {
+            console.log("Watch noticed change in bounce from " + oldValue + " to " + newValue)
+            this.$nextTick(() => {
+                if (newValue) {
+                    console.log("Starting animation")
+                    this.animation.start()
+                } else {
+                    console.log("Stopping animation")
+                    this.animation.stop()
+                }
+            })
+        }
+    }
 }
 </script>

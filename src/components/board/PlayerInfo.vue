@@ -6,6 +6,7 @@
             :y="0"
             :size="40"
             :color="color"
+            :bounce="winner"
         ></Pawn>
         <v-text :config="handle"></v-text>
         <v-text :config="status"></v-text>
@@ -23,6 +24,9 @@ export default {
     components: { Pawn: Pawn, Hand: Hand },
     props: ['id', 'x', 'y', 'player'],
     computed: {
+        winner() {
+            return !this.player.winner
+        },
         color() {
             return this.player.color && this.player.color in Colors
                 ? Colors[this.player.color]
