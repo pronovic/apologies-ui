@@ -38,7 +38,7 @@
             text="START"
             :x="202"
             :y="112"
-            :fill="white"
+            :fill="lightred"
             :stroke="black"
             :strokeWidth="1"
             :fontSize="42"
@@ -50,7 +50,7 @@
             text="START"
             :x="622"
             :y="810"
-            :fill="white"
+            :fill="lightyellow"
             :stroke="black"
             :strokeWidth="1"
             :fontSize="42"
@@ -62,7 +62,7 @@
             text="START"
             :x="758"
             :y="250"
-            :fill="white"
+            :fill="lightblue"
             :stroke="black"
             :strokeWidth="1"
             :fontSize="42"
@@ -74,7 +74,7 @@
             text="START"
             :x="65"
             :y="670"
-            :fill="white"
+            :fill="lightgreen"
             :stroke="black"
             :strokeWidth="1"
             :fontSize="42"
@@ -148,7 +148,7 @@
             text="HOME"
             :x="86"
             :y="412"
-            :fill="white"
+            :fill="lightred"
             :stroke="black"
             :strokeWidth="1"
             :fontSize="42"
@@ -160,7 +160,7 @@
             text="HOME"
             :x="745"
             :y="510"
-            :fill="white"
+            :fill="lightyellow"
             :stroke="black"
             :strokeWidth="1"
             :fontSize="42"
@@ -172,7 +172,7 @@
             text="HOME"
             :x="460"
             :y="132"
-            :fill="white"
+            :fill="lightblue"
             :stroke="black"
             :strokeWidth="1"
             :fontSize="42"
@@ -184,7 +184,7 @@
             text="HOME"
             :x="370"
             :y="792"
-            :fill="white"
+            :fill="lightgreen"
             :stroke="black"
             :strokeWidth="1"
             :fontSize="42"
@@ -221,6 +221,70 @@
             :color="lightgreen"
             :boxes="5"
         ></HorizontalBoxRow>
+
+        <!-- red slides -->
+        <RightSlide
+            id="redSlide1"
+            :x="90"
+            :y="10"
+            :length="180"
+            :color="lightred"
+        ></RightSlide>
+        <RightSlide
+            id="redSlide1"
+            :x="560"
+            :y="10"
+            :length="250"
+            :color="lightred"
+        ></RightSlide>
+
+        <!-- yellow slides -->
+        <LeftSlide
+            id="yellowSlide1"
+            :x="690"
+            :y="910"
+            :length="180"
+            :color="lightyellow"
+        ></LeftSlide>
+        <LeftSlide
+            id="yellowSlide1"
+            :x="150"
+            :y="910"
+            :length="240"
+            :color="lightyellow"
+        ></LeftSlide>
+
+        <!-- blue slides -->
+        <DownSlide
+            id="blueSlide1"
+            :x="920"
+            :y="90"
+            :length="180"
+            :color="lightblue"
+        ></DownSlide>
+        <DownSlide
+            id="blueSlide1"
+            :x="920"
+            :y="570"
+            :length="240"
+            :color="lightblue"
+        ></DownSlide>
+
+        <!-- green slides -->
+        <UpSlide
+            id="greenSlide1"
+            :x="20"
+            :y="140"
+            :length="240"
+            :color="lightgreen"
+        ></UpSlide>
+        <UpSlide
+            id="greenSlide1"
+            :x="20"
+            :y="680"
+            :length="180"
+            :color="lightgreen"
+        ></UpSlide>
     </v-group>
 </template>
 
@@ -229,6 +293,10 @@ import { Colors } from '../../utils/constants'
 import HorizontalBoxRow from './HorizontalBoxRow.vue'
 import VerticalBoxRow from './VerticalBoxRow.vue'
 import CircleArea from './CircleArea.vue'
+import RightSlide from './RightSlide.vue'
+import LeftSlide from './LeftSlide.vue'
+import DownSlide from './DownSlide.vue'
+import UpSlide from './UpSlide.vue'
 
 export default {
     name: 'GameBoardArea',
@@ -236,6 +304,10 @@ export default {
         VerticalBoxRow: VerticalBoxRow,
         HorizontalBoxRow: HorizontalBoxRow,
         CircleArea: CircleArea,
+        RightSlide: RightSlide,
+        LeftSlide: LeftSlide,
+        DownSlide: DownSlide,
+        UpSlide: UpSlide,
     },
     computed: {
         white() {
@@ -255,17 +327,6 @@ export default {
         },
         lightblue() {
             return Colors.LIGHT_BLUE
-        },
-        border() {
-            return {
-                x: 0,
-                y: 0,
-                height: 960,
-                width: 960,
-                fill: Colors.WHITE,
-                stroke: 'red', // TODO: get rid of the border once there are other components
-                strokeWidth: 1,
-            }
         },
     },
 }
