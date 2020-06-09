@@ -84,10 +84,11 @@ This is a list of things I need to accomplish, in no particular order:
    - [ ] Integration tests for component interations (maybe?) 
    - [ ] Some sort of E2E functional test suite to cover the entire application (which isn't really that large)
 - [ ] Implement the game canvas using Konva
-   - [ ] Figure out what size the board will be 
+   - [x] Figure out what size the board will be 
    - [x] Render the player's hand of cards
-   - [ ] Render the board based on published game state, including animation of pawns moving so the game is intelligible
+   - [x] Render the static portions of the board
+   - [ ] Render the game state, including animation of pawns 
    - [ ] Let the player pick a move
    - [ ] Validate the player's move (this means mapping their action - cards and pawns - to one the legal actions)
    - [ ] Figure out how we'll decide that a player's move is final - just move the pawn and if it's legal we submit?
-   - [ ] Figure out how (or even if) we can write unit test or E2E tests for Phaser (might not be fully possible)
+   - [ ] Figure out how (or even if) we can write unit test or E2E tests for game board (might not be fully possible)
