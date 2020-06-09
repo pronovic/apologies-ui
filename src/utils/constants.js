@@ -42,6 +42,7 @@ const Colors = {
     YELLOW: '#ffcc00',
     PURPLE: '#666699',
     GREY: '#cccccc',
+    OFF_WHITE: '#f4f3db',
 }
 
 const Cards = {

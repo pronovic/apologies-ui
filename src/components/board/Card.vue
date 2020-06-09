@@ -58,7 +58,7 @@ export default {
                 y: 0,
                 width: 50,
                 height: 75,
-                fill: 'white',
+                fill: Colors.OFF_WHITE,
                 stroke: 'black',
                 strokeWidth: 1,
                 shadowBlur: 0,
@@ -91,7 +91,7 @@ export default {
                 x: 7,
                 y: 20,
                 text: '@',
-                fill: 'white',
+                fill: Colors.OFF_WHITE,
                 fontSize: 36,
                 align: 'center',
             }
