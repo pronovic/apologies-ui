@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+
+import { logger } from '../utils/util.js'
 import { config } from './config.js'
 import { clearPlayer, persistPlayer } from '../utils/storage.js'
 import {
@@ -226,11 +228,11 @@ const store = new Vuex.Store({
     },
     mutations: {
         trackHeaderHeightChange(state, headerHeight) {
-            console.log('Header height: ' + headerHeight + ' px')
+            logger.debug('Header height: ' + headerHeight + ' px')
             state.dimensions.header.height = headerHeight
         },
         trackWindowSizeChange(state) {
-            console.log(
+            logger.debug(
                 'Window size: ' +
                     window.innerHeight +
                     'x' +

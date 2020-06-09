@@ -21,6 +21,8 @@
 </template>
 
 <script>
+import { logger } from '../utils/util.js'
+
 import ClearGameButton from '../components/ClearGameButton.vue'
 import GameMenu from '../components/GameMenu.vue'
 import GameInProgressIndicator from '../components/GameInProgressIndicator.vue'
@@ -36,7 +38,7 @@ export default {
     },
     mounted() {
         this.$nextTick(() => {
-            console.log('Game navbar mounted')
+            logger.debug('Game navbar mounted')
             this.$store.dispatch(
                 'handleHeaderHeightChange',
                 this.$el.clientHeight

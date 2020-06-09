@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '../store'
 
+import { logger } from '../utils/util.js'
+
 const Landing = () => import('../views/Landing.vue')
 const Game = () => import('../views/Game.vue')
 const Error = () => import('../views/Error.vue')
@@ -71,7 +73,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
     if (to.name !== 'LoadUser' && to.name !== 'Error') {
         if (!store.getters.isUserLoaded) {
-            console.log('User is not yet loaded, redirecting to load user page')
+            logger.info('User is not yet loaded, redirecting to load user page')
             next({ name: 'LoadUser' })
         }
     }

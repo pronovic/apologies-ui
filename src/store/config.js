@@ -8,17 +8,25 @@
 // list specific variables individually.
 
 const config = {
+    // General configuration
+    LOG_LEVEL: process.env.LOG_LEVEL,
+
+    // Websocket configuration
     WEBSOCKET_API: process.env.WEBSOCKET_API,
-    LICENSE_APACHE_2: process.env.LICENSE_APACHE_2,
-    GITHUB_APOLOGIES: process.env.GITHUB_APOLOGIES,
-    GITHUB_APOLOGIES_SERVER: process.env.GITHUB_APOLOGIES_SERVER,
-    GITHUB_APOLOGIES_UI: process.env.GITHUB_APOLOGIES_UI,
     SERVER_TIMEOUT_MS: parseInt(process.env.SERVER_TIMEOUT_MS),
     INITIAL_RECONNECT_DELAY_MS: parseInt(
         process.env.INITIAL_RECONNECT_DELAY_MS
     ),
     MAX_RECONNECT_DELAY_MS: parseInt(process.env.MAX_RECONNECT_DELAY_MS),
     RECONNECT_DECAY_FACTOR: parseFloat(process.env.RECONNECT_DECAY_FACTOR),
+
+    // License URLs
+    LICENSE_APACHE_2: process.env.LICENSE_APACHE_2,
+
+    // GitHub URLs
+    GITHUB_APOLOGIES: process.env.GITHUB_APOLOGIES,
+    GITHUB_APOLOGIES_SERVER: process.env.GITHUB_APOLOGIES_SERVER,
+    GITHUB_APOLOGIES_UI: process.env.GITHUB_APOLOGIES_UI,
 }
 
 export { config }

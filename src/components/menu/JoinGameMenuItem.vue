@@ -79,6 +79,7 @@
 </template>
 
 <script>
+import { logger } from '../../utils/util.js'
 import { joinGame, listAvailableGames } from '../../utils/client.js'
 
 export default {
@@ -151,7 +152,7 @@ export default {
             listAvailableGames() // will eventually fill them in
         },
         joinGame(gameId) {
-            console.log('Player selected game: ' + gameId)
+            logger.info('Player selected game: ' + gameId)
             this.$nextTick(() => {
                 this.$bvModal.hide('joinGameModal')
                 joinGame(gameId)

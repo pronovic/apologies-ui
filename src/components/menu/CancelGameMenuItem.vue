@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import { logger } from '../../utils/util.js'
 import { cancelGame } from '../../utils/client.js'
 
 export default {
@@ -31,7 +32,7 @@ export default {
                 })
                 .then((value) => {
                     if (value) {
-                        console.log('User triggered cancel')
+                        logger.info('User triggered cancel')
                         cancelGame()
                     }
                 })

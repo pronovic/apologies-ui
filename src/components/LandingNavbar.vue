@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import { logger } from '../utils/util.js'
 import RegisterHandleButton from '../components/RegisterHandleButton.vue'
 
 export default {
@@ -17,7 +18,7 @@ export default {
     components: { RegisterHandleButton: RegisterHandleButton },
     mounted() {
         this.$nextTick(() => {
-            console.log('Landing navbar mounted')
+            logger.debug('Landing navbar mounted')
             this.$store.dispatch(
                 'handleHeaderHeightChange',
                 this.$el.clientHeight

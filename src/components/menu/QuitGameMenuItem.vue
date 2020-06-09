@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import { logger } from '../../utils/util.js'
 import { quitGame } from '../../utils/client.js'
 
 export default {
@@ -32,7 +33,7 @@ export default {
                 })
                 .then((value) => {
                     if (value) {
-                        console.log('User triggered quit')
+                        logger.info('User triggered quit')
                         quitGame()
                     }
                 })

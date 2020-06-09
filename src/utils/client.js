@@ -1,8 +1,9 @@
 import store from '../store'
 import router from '../router'
 import atmosphere from 'atmosphere.js'
+
 import { EventBus } from './eventbus.js'
-import { sleep } from './util.js'
+import { logger, sleep } from './util.js'
 
 var socket = atmosphere
 var subsocket = null
@@ -45,7 +46,8 @@ class MessageQueue {
         let json
         while ((json = this.q.shift())) {
             const message = JSON.parse(json)
-            console.log('Processing ' + message.message)
+            logger.info('Processing ' + message.message)
+            logger.debug(json)
             await dispatchMessage(message)
         }
 
@@ -135,7 +137,7 @@ async function handleRequestFailed(message) {
     switch (reason) {
         case 'INVALID_PLAYER':
         case 'DUPLICATE_USER':
-            console.log('Handle is not available: ' + handle)
+            logger.info('Handle is not available: ' + handle)
             await disconnectSocket()
             store.dispatch('handlePlayerNotRegistered')
             if (router.currentRoute.name !== 'HandleUnavailable') {
@@ -146,7 +148,7 @@ async function handleRequestFailed(message) {
             }
             break
         default:
-            console.log(
+            logger.error(
                 'Request failed: ' +
                     message.context.reason +
                     ', ' +
@@ -200,7 +202,7 @@ async function handlePlayerRegistered(message) {
 
     const handle = message.context.handle
     const playerId = message.player_id
-    console.log(
+    logger.info(
         'Completed registering handle ' +
             handle +
             ' tied to player id ' +
@@ -220,7 +222,7 @@ async function handlePlayerRegistered(message) {
 
 async function handlePlayerUnregistered(message) {
     EventBus.$emit('client-toast', 'Completed unregistering your handle.')
-    console.log('Completed unregistering handle')
+    logger.info('Completed unregistering handle')
     await disconnectSocket()
     store.dispatch('handlePlayerNotRegistered')
     if (router.currentRoute.name !== 'Landing') {
@@ -307,7 +309,7 @@ async function handleGameStateChange(message) {
     // TODO: this sleep is probably not necessary after game animation is more mature?
     await sleep(250).then(() => {
         store.dispatch('handleGameStateChange', message.context)
-        console.log('Completed  handling state change')
+        logger.debug('Completed handling state change')
     })
 }
 
@@ -315,17 +317,17 @@ async function handleGamePlayerTurn(message) {
     store.dispatch('handleGamePlayerTurn', message.context)
 
     // TODO: remove stubbed code to automatically play
-    console.log('Automatically choosing a move to let game proceeed')
+    logger.warn('Automatically choosing a move to let game proceed')
     const [move] = Object.values(message.context.moves)
     await executeMove(move)
     await sleep(250).then(() => {
         store.dispatch('handleMovePlayed')
-        console.log('Completed handling player move')
+        logger.debug('Completed handling player move')
     })
 }
 
 async function onClose(response) {
-    console.log(
+    logger.info(
         'Websocket connection is closed: ' +
             response.status +
             ', ' +
@@ -337,14 +339,14 @@ async function onClose(response) {
     store.dispatch('handleGameDisconnected') // once disconnected, you can't rejoin
 
     if (closeRequested) {
-        console.log('Close was expected; no more action needs to be taken')
+        logger.info('Close was expected; no more action needs to be taken')
         closeRequested = false
     } else {
-        console.log('Close was unexpected; entering recovery/retry')
+        logger.debug('Close was unexpected; entering recovery/retry')
 
         retryDurationMs += reconnectDelayMs
         if (retryDurationMs > serverTimeoutMs) {
-            console.log(
+            logger.info(
                 'Retry duration exceeded: ' +
                     retryDurationMs +
                     'ms > ' +
@@ -374,7 +376,7 @@ async function onClose(response) {
             }
         }
 
-        console.log('Will reconnect after ' + reconnectDelayMs + 'ms')
+        logger.debug('Will reconnect after ' + reconnectDelayMs + 'ms')
         await sleep(reconnectDelayMs)
         EventBus.$emit('client-toast', 'Server connection lost; retrying now.')
 
@@ -393,7 +395,7 @@ async function onClose(response) {
 }
 
 async function onError(response) {
-    console.log(
+    logger.error(
         'Websocket connection error: ' +
             response.status +
             ', ' +
@@ -405,7 +407,7 @@ async function onError(response) {
 
 async function onTransportFailure(errorMsg, request) {
     // the two settings prevent the stupid client from falling back to HTTP when the websocket disconnects
-    console.log('Websocket transport failure: ' + errorMsg)
+    logger.error('Websocket transport failure: ' + errorMsg)
     request.transport = 'websocket'
     request.fallbackTransport = 'websocket'
 }
@@ -413,7 +415,7 @@ async function onTransportFailure(errorMsg, request) {
 async function onReconnect(request, response) {
     // in theory, this never gets called, because we had to turn off auto-reconnect to make things work
     // the two settings prevent the stupid client from falling back to HTTP when the websocket disconnects
-    console.log(
+    logger.warn(
         'Websocket connection is reconnecting: ' +
             response.status +
             ', ' +
@@ -431,7 +433,8 @@ async function onMessage(response) {
 
 async function sendRequest(request) {
     const json = JSON.stringify(request, null, 2)
-    console.log('Sending JSON data: ' + json)
+    logger.info('Sending ' + request.message)
+    logger.debug(json)
     subsocket.push(json)
 }
 
@@ -469,7 +472,7 @@ async function connectSocket(onOpen) {
 }
 
 async function disconnectSocket() {
-    console.log('Closing websocket connection')
+    logger.info('Closing websocket connection')
     closeRequested = true
     socket.unsubscribe()
     retryDurationMs = 0
@@ -480,7 +483,7 @@ async function connectAndSend(request) {
     connectSocket(async (response) => {
         if (!open) {
             // The stupid library sometimes triggers duplicate onOpen events
-            console.log('Connection is open, sending request')
+            logger.info('Connection is open, sending request')
             await sendRequest(request) // send the request once the socket is open
             open = true
             closeRequested = false
@@ -493,7 +496,7 @@ async function connectAndSend(request) {
 async function registerHandle(handle) {
     pending = { handle: handle, playerId: null }
 
-    console.log('Client is registering handle: ' + handle)
+    logger.info('Client is registering handle: ' + handle)
 
     const request = {
         message: 'REGISTER_PLAYER',
@@ -508,7 +511,7 @@ async function registerHandle(handle) {
 async function reregisterHandle(player) {
     pending = player
 
-    console.log(
+    logger.info(
         'Client is reregistering handle: ' +
             player.handle +
             ' with player id ' +
@@ -530,7 +533,7 @@ async function unregisterHandle() {
     const handle = store.getters.playerHandle
     const playerId = store.getters.playerId
 
-    console.log(
+    logger.info(
         'Client is unregistering handle: ' +
             handle +
             ' with player id ' +
@@ -546,7 +549,7 @@ async function unregisterHandle() {
 }
 
 async function quitGame() {
-    console.log('Quitting active game')
+    logger.info('Quitting active game')
 
     const request = {
         message: 'QUIT_GAME',
@@ -557,7 +560,7 @@ async function quitGame() {
 }
 
 async function cancelGame() {
-    console.log('Cancelling active game')
+    logger.info('Cancelling active game')
 
     const request = {
         message: 'CANCEL_GAME',
@@ -568,7 +571,7 @@ async function cancelGame() {
 }
 
 async function joinGame(gameId) {
-    console.log('Joining game: ' + gameId)
+    logger.info('Joining game: ' + gameId)
 
     const request = {
         message: 'JOIN_GAME',
@@ -582,7 +585,7 @@ async function joinGame(gameId) {
 }
 
 async function startGame(gameId) {
-    console.log('Starting game')
+    logger.info('Starting game')
 
     const request = {
         message: 'START_GAME',
@@ -593,7 +596,7 @@ async function startGame(gameId) {
 }
 
 async function listAvailableGames() {
-    console.log('Listing available games')
+    logger.info('Listing available games')
 
     const request = {
         message: 'LIST_AVAILABLE_GAMES',
@@ -604,7 +607,7 @@ async function listAvailableGames() {
 }
 
 async function advertiseGame(advertised) {
-    console.log('Advertising new game')
+    logger.info('Advertising new game')
 
     const request = {
         message: 'ADVERTISE_GAME',
@@ -616,7 +619,7 @@ async function advertiseGame(advertised) {
 }
 
 async function executeMove(move) {
-    console.log('Executing move: ' + move.move_id)
+    logger.info('Executing move: ' + move.move_id)
 
     const request = {
         message: 'EXECUTE_MOVE',
