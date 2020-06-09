@@ -112,7 +112,7 @@ export default {
             this.nameState = null
             this.mode = GameMode.STANDARD
             this.players = 4
-            this.visibility = GameMode.PUBLIC
+            this.visibility = GameVisibility.PUBLIC
             this.invitedHandles = []
         },
         handleOk(bvModalEvt) {
