@@ -83,6 +83,13 @@ function sleep(waitMs) {
     return new Promise((resolve) => setTimeout(resolve, waitMs))
 }
 
+// random integer between min (inclusive) and max (exclusive)
+function random(min, max) {
+    min = Math.ceil(min)
+    max = Math.floor(max)
+    return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
 function configureBounce(x, y, node) {
     const beginX = x
     const beginY = y
@@ -116,4 +123,4 @@ function configureBounce(x, y, node) {
 
 const logger = new Logger()
 
-export { logger, sleep, configureBounce }
+export { logger, sleep, random, configureBounce }

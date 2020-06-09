@@ -73,7 +73,7 @@ export default {
             return {
                 id: this.id + '-status',
                 x: 30,
-                y: 10,
+                y: 9,
                 text: status,
                 fill: 'black',
                 fontSize: 14,

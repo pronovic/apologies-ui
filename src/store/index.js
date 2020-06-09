@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import { logger } from '../utils/util.js'
+import { logger, random } from '../utils/util.js'
 import { config } from './config.js'
 import { clearPlayer, persistPlayer } from '../utils/storage.js'
 import {
@@ -196,13 +196,11 @@ const store = new Vuex.Store({
                             if (state.game.mode === GameMode.STANDARD) {
                                 player.hand = [state.game.previousTurn.card]
                             } else {
-                                player.hand = [
-                                    state.game.previousTurn.card,
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                ]
+                                // Here, we're being cute and pretending they pick from different parts of their hand
+                                const index = random(0, 4)
+                                const hand = [null, null, null, null, null]
+                                hand[index] = state.game.previousTurn.card
+                                player.hand = hand
                             }
                         } else {
                             if (state.game.mode === GameMode.STANDARD) {
