@@ -40,6 +40,13 @@ const PlayerState = {
     DISCONNECTED: 'DISCONNECTED',
 }
 
+const PlayerColor = {
+    RED: 'RED',
+    YELLOW: 'YELLOW',
+    BLUE: 'BLUE',
+    GREEN: 'GREEN',
+}
+
 const Colors = {
     BLACK: 'black',
     WHITE: 'white',
@@ -77,6 +84,7 @@ export {
     GameMode,
     GameVisibility,
     PlayerState,
+    PlayerColor,
     Colors,
     Cards,
 }

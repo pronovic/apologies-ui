@@ -9,6 +9,7 @@ import {
     ServerStatus,
     GameStatus,
     GameMode,
+    PlayerColor,
 } from '../utils/constants.js'
 
 Vue.use(Vuex)
@@ -135,6 +136,38 @@ const store = new Vuex.Store({
                 .map(({ handle }) => handle)
                 .sort()
                 .map((handle) => getters.players[handle])
+        },
+        redPawns: (state, getters) => {
+            for (const player of Object.values(getters.players)) {
+                if (player.color === PlayerColor.RED) {
+                    return player.pawns
+                }
+            }
+            return [] // if we can't find the player, just return no pawns
+        },
+        yellowPawns: (state, getters) => {
+            for (const player of Object.values(getters.players)) {
+                if (player.color === PlayerColor.YELLOW) {
+                    return player.pawns
+                }
+            }
+            return [] // if we can't find the player, just return no pawns
+        },
+        greenPawns: (state, getters) => {
+            for (const player of Object.values(getters.players)) {
+                if (player.color === PlayerColor.GREEN) {
+                    return player.pawns
+                }
+            }
+            return [] // if we can't find the player, just return no pawns
+        },
+        bluePawns: (state, getters) => {
+            for (const player of Object.values(getters.players)) {
+                if (player.color === PlayerColor.BLUE) {
+                    return player.pawns
+                }
+            }
+            return [] // if we can't find the player, just return no pawns
         },
         players: (state, getters) => {
             // This merges information from several different events into a single
