@@ -10,6 +10,7 @@
 const config = {
     // General configuration
     LOG_LEVEL: process.env.LOG_LEVEL,
+    SHOW_SQUARE_NUMBERS: process.env.SHOW_SQUARE_NUMBERS === 'true',
 
     // Websocket configuration
     WEBSOCKET_API: process.env.WEBSOCKET_API,

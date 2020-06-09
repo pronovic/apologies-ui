@@ -10,6 +10,9 @@
             <PlayerPawns id="bluePawns" :pawns="bluePawns"></PlayerPawns>
             <PlayerPawns id="greenPawns" :pawns="greenPawns"></PlayerPawns>
         </v-layer>
+        <v-layer>
+            <PositionNumbers id="positions"></PositionNumbers>
+        </v-layer>
     </v-stage>
 </template>
 
@@ -17,6 +20,7 @@
 import PlayerArea from './board/PlayerArea.vue'
 import GameBoardArea from './board/GameBoardArea.vue'
 import PlayerPawns from './board/PlayerPawns.vue'
+import PositionNumbers from './board/PositionNumbers.vue'
 
 export default {
     name: 'GameBoard',
@@ -24,6 +28,7 @@ export default {
         PlayerArea: PlayerArea,
         GameBoardArea: GameBoardArea,
         PlayerPawns: PlayerPawns,
+        PositionNumbers: PositionNumbers,
     },
     computed: {
         visible() {

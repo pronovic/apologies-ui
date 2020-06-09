@@ -57,6 +57,7 @@ const Colors = {
     WHITE: 'white',
     GREY: '#cccccc',
     PURPLE: '#666699',
+    NEON_PURPLE: '#ff00ff',
     OFF_WHITE: '#f4f3db',
     BLUE: '#0099cc',
     LIGHT_BLUE: '#e6f9fe',
