@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { configureBounce } from '../../utils/util'
+import { configureBounce } from '../../utils/movement'
 import { Colors } from '../../utils/constants'
 
 export default {
