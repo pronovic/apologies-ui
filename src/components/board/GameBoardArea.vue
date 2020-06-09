@@ -1,5 +1,37 @@
 <template>
+    <!-- Ordering in this group matters, because it determines which components overlap other components -->
+
     <v-group :x="320" :y="20">
+        <!-- these are the 4 start areas -->
+        <CircleArea
+            id="redStart"
+            :x="268"
+            :y="130"
+            :color="lightred"
+            :boxes="5"
+        ></CircleArea>
+        <CircleArea
+            id="yellowStart"
+            :x="688"
+            :y="825"
+            :color="lightyellow"
+            :boxes="5"
+        ></CircleArea>
+        <CircleArea
+            id="blueStart"
+            :x="825"
+            :y="266"
+            :color="lightblue"
+            :boxes="5"
+        ></CircleArea>
+        <CircleArea
+            id="greenStart"
+            :x="130"
+            :y="687"
+            :color="lightgreen"
+            :boxes="5"
+        ></CircleArea>
+
         <!-- This is the box around the outside -->
         <HorizontalBoxRow
             id="topBoxes"
@@ -29,6 +61,36 @@
             :color="white"
             :boxes="16"
         ></HorizontalBoxRow>
+
+        <!-- these are the 4 home areas -->
+        <CircleArea
+            id="redHome"
+            :x="148"
+            :y="430"
+            :color="lightred"
+            :boxes="5"
+        ></CircleArea>
+        <CircleArea
+            id="yellowHome"
+            :x="808"
+            :y="525"
+            :color="lightyellow"
+            :boxes="5"
+        ></CircleArea>
+        <CircleArea
+            id="blueHome"
+            :x="525"
+            :y="150"
+            :color="lightblue"
+            :boxes="5"
+        ></CircleArea>
+        <CircleArea
+            id="greenHome"
+            :x="430"
+            :y="810"
+            :color="lightgreen"
+            :boxes="5"
+        ></CircleArea>
 
         <!-- these are the 4 safe zones -->
         <VerticalBoxRow
@@ -66,12 +128,14 @@
 import { Colors } from '../../utils/constants'
 import HorizontalBoxRow from './HorizontalBoxRow.vue'
 import VerticalBoxRow from './VerticalBoxRow.vue'
+import CircleArea from './CircleArea.vue'
 
 export default {
     name: 'GameBoardArea',
     components: {
         VerticalBoxRow: VerticalBoxRow,
         HorizontalBoxRow: HorizontalBoxRow,
+        CircleArea: CircleArea,
     },
     computed: {
         white() {
