@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import { configureBounce } from '../../utils/movement'
 import { Colors } from '../../utils/constants'
 
 export default {
@@ -13,24 +12,13 @@ export default {
     props: ['id', 'x', 'y', 'size', 'color'],
     data: function () {
         return {
-            bounce: null,
+            node: null,
         }
     },
     mounted() {
         this.$nextTick(() => {
-            this.bounce = configureBounce(
-                this.x,
-                this.y,
-                this.$refs.pawn.getNode()
-            )
+            this.node = this.$refs.pawn.getNode()
         })
-    },
-    methods: {
-        toggleBounce(enabled) {
-            if (this.bounce) {
-                this.bounce.toggle(enabled)
-            }
-        },
     },
     computed: {
         config() {

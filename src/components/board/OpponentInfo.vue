@@ -17,22 +17,38 @@
 <script>
 import Pawn from './Pawn.vue'
 import Hand from './Hand.vue'
+import { configureBounce } from '../../utils/movement'
 import { PlayerState, Colors } from '../../utils/constants'
 
 export default {
     name: 'OpponentInfo',
     components: { Pawn: Pawn, Hand: Hand },
     props: ['id', 'x', 'y', 'player'],
+    data: function () {
+        return {
+            node: null,
+            bounce: null,
+        }
+    },
     mounted() {
         this.$nextTick(() => {
-            this.$refs.pawn.toggleBounce(this.player.isWinner)
+            this.node = this.$refs.pawn.node
         })
+    },
+    methods: {
+        toggleBounce(enabled) {
+            if (!this.bounce) {
+                this.bounce = configureBounce(0, 0, this.node) // (0, 0) because it's relative to group
+            }
+
+            this.bounce.toggle(enabled)
+        },
     },
     watch: {
         player: {
             deep: true,
             handler(newValue, oldValue) {
-                this.$refs.pawn.toggleBounce(newValue.isWinner)
+                this.toggleBounce(newValue.isWinner)
             },
         },
     },
