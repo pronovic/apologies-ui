@@ -4,18 +4,26 @@
             <PlayerArea ref="player" :config="info"></PlayerArea>
             <GameBoardArea ref="board" :config="board"></GameBoardArea>
         </v-layer>
+        <v-layer>
+            <PlayerPawns id="redPawns" :pawns="redPawns"></PlayerPawns>
+            <PlayerPawns id="yellowPawns" :pawns="yellowPawns"></PlayerPawns>
+            <PlayerPawns id="bluePawns" :pawns="bluePawns"></PlayerPawns>
+            <PlayerPawns id="greenPawns" :pawns="greenPawns"></PlayerPawns>
+        </v-layer>
     </v-stage>
 </template>
 
 <script>
 import PlayerArea from './board/PlayerArea.vue'
 import GameBoardArea from './board/GameBoardArea.vue'
+import PlayerPawns from './board/PlayerPawns.vue'
 
 export default {
     name: 'GameBoard',
     components: {
         PlayerArea: PlayerArea,
         GameBoardArea: GameBoardArea,
+        PlayerPawns: PlayerPawns,
     },
     computed: {
         visible() {
@@ -26,6 +34,18 @@ export default {
         },
         width() {
             return 310 + 960 + 5 + 5 // width of components, plus spacing, plus a buffer
+        },
+        redPawns() {
+            return this.$store.getters.redPawns
+        },
+        yellowPawns() {
+            return this.$store.getters.yellowPawns
+        },
+        bluePawns() {
+            return this.$store.getters.bluePawns
+        },
+        greenPawns() {
+            return this.$store.getters.greenPawns
         },
         stage() {
             return {

@@ -3,10 +3,10 @@
         <Pawn
             ref="pawn"
             :id="id + '-color'"
-            :x="0"
-            :y="0"
+            :position="{ x: 0, y: 0 }"
             :size="40"
             :color="color"
+            :visible="true"
         ></Pawn>
         <v-text :config="handle"></v-text>
         <v-text :config="status"></v-text>
