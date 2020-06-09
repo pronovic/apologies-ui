@@ -41,13 +41,19 @@ const PlayerState = {
 }
 
 const Colors = {
-    BLUE: '#0099cc',
-    RED: '#cc3300',
-    GREEN: '#339933',
-    YELLOW: '#ffcc00',
-    PURPLE: '#666699',
+    BLACK: 'black',
+    WHITE: 'white',
     GREY: '#cccccc',
+    PURPLE: '#666699',
     OFF_WHITE: '#f4f3db',
+    BLUE: '#0099cc',
+    LIGHT_BLUE: '#e6f9fe',
+    RED: '#cc3300',
+    LIGHT_RED: '#fed9cd',
+    GREEN: '#339933',
+    LIGHT_GREEN: '#ecf9ec',
+    YELLOW: '#ffcc00',
+    LIGHT_YELLOW: '#fff5cc',
 }
 
 const Cards = {

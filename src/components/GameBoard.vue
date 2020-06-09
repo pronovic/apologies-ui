@@ -1,8 +1,8 @@
 <template>
     <v-stage ref="stage" v-if="visible" :config="stage">
         <v-layer>
-            <PlayerArea :config="info"></PlayerArea>
-            <GameBoardArea :config="board"></GameBoardArea>
+            <PlayerArea ref="player" :config="info"></PlayerArea>
+            <GameBoardArea ref="board" :config="board"></GameBoardArea>
         </v-layer>
     </v-stage>
 </template>
@@ -22,14 +22,10 @@ export default {
             return this.$store.getters.isGameJoined
         },
         height() {
-            return this.$store.getters.displayHeight < 800
-                ? 800
-                : this.$store.getters.displayHeight
+            return 960 + 15 + 5 // height of components, plus spacing, plus a buffer
         },
         width() {
-            return this.$store.getters.displayWidth < 1250
-                ? 1250
-                : this.$store.getters.displayWidth
+            return 310 + 960 + 5 + 5 // width of components, plus spacing, plus a buffer
         },
         stage() {
             return {
@@ -41,7 +37,7 @@ export default {
             return {
                 x: 15,
                 y: 15,
-                height: this.height - 25,
+                height: 960,
                 width: 310,
             }
         },
@@ -49,8 +45,8 @@ export default {
             return {
                 x: 310 + 5,
                 y: 15,
-                height: this.height - 25,
-                width: this.width - 310 - 15,
+                height: 960,
+                width: 960,
             }
         },
     },

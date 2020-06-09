@@ -6,6 +6,7 @@
 
 <script>
 import { configureBounce } from '../../utils/util'
+import { Colors } from '../../utils/constants'
 
 export default {
     name: 'Pawn',
@@ -35,7 +36,7 @@ export default {
         config() {
             return {
                 fill: this.color,
-                stroke: 'black',
+                stroke: Colors.BLACK,
                 strokeWidth: 1,
                 sceneFunc: (context, shape) => {
                     const scale = this.size / 100.0

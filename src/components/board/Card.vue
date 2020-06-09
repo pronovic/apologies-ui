@@ -59,7 +59,7 @@ export default {
                 width: 50,
                 height: 75,
                 fill: Colors.OFF_WHITE,
-                stroke: 'black',
+                stroke: Colors.BLACK,
                 strokeWidth: 1,
                 shadowBlur: 0,
                 cornerRadius: 12,
@@ -70,7 +70,7 @@ export default {
                 x: 5,
                 y: 22,
                 text: this.text,
-                fill: 'black',
+                fill: Colors.BLACK,
                 fontSize: 36,
                 align: 'center',
             }

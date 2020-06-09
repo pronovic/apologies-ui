@@ -57,7 +57,7 @@ export default {
                 x: 30,
                 y: -23,
                 text: this.player.handle,
-                fill: 'black',
+                fill: Colors.BLACK,
                 fontSize: 32,
                 align: 'left',
             }
@@ -75,7 +75,7 @@ export default {
                 x: 30,
                 y: 9,
                 text: status,
-                fill: 'black',
+                fill: Colors.BLACK,
                 fontSize: 14,
                 align: 'left',
             }
