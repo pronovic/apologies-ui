@@ -18,12 +18,12 @@
 import Pawn from './Pawn.vue'
 import Hand from './Hand.vue'
 import { configureBounce } from '../../utils/movement'
-import { Colors } from '../../utils/constants'
+import { PlayerState, PlayerType, Colors } from '../../utils/constants'
 
 export default {
     name: 'PlayerInfo',
     components: { Pawn: Pawn, Hand: Hand },
-    props: ['id', 'x', 'y', 'player'],
+    props: ['id', 'x', 'y', 'player', 'opponent'],
     data: function () {
         return {
             node: null,
@@ -70,11 +70,20 @@ export default {
             }
         },
         status() {
-            let status = 'Your Player'
+            let status = this.opponent ? 'Computer Opponent' : 'Your Player'
             if (this.player.isWinner) {
                 status = 'Game Winner'
             } else if (this.player.isAdvertiser) {
                 status = 'Game Advertiser'
+            } else {
+                if (this.opponent && this.player.type === PlayerType.HUMAN) {
+                    status = 'Human Opponent'
+                    if (this.player.state === PlayerState.QUIT) {
+                        status = 'Quit Game (Computer Opponent)'
+                    } else if (this.player.state === PlayerState.DISCONNECTED) {
+                        status = 'Disconnected (Computer Opponent)'
+                    }
+                }
             }
 
             return {
