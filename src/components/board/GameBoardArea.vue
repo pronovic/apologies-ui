@@ -32,6 +32,56 @@
             :boxes="5"
         ></CircleArea>
 
+        <!-- this is the text for the 4 start areas -->
+        <v-text
+            id="redStartText"
+            text="START"
+            :x="202"
+            :y="112"
+            :fill="white"
+            :stroke="black"
+            :strokeWidth="1"
+            :fontSize="42"
+            align="center"
+            verticalAlighn="middle"
+        ></v-text>
+        <v-text
+            id="yellowStartText"
+            text="START"
+            :x="622"
+            :y="810"
+            :fill="white"
+            :stroke="black"
+            :strokeWidth="1"
+            :fontSize="42"
+            align="center"
+            verticalAlighn="middle"
+        ></v-text>
+        <v-text
+            id="blueStartText"
+            text="START"
+            :x="758"
+            :y="250"
+            :fill="white"
+            :stroke="black"
+            :strokeWidth="1"
+            :fontSize="42"
+            align="center"
+            verticalAlighn="middle"
+        ></v-text>
+        <v-text
+            id="greenStartText"
+            text="START"
+            :x="65"
+            :y="670"
+            :fill="white"
+            :stroke="black"
+            :strokeWidth="1"
+            :fontSize="42"
+            align="center"
+            verticalAlighn="middle"
+        ></v-text>
+
         <!-- This is the box around the outside -->
         <HorizontalBoxRow
             id="topBoxes"
@@ -92,6 +142,56 @@
             :boxes="5"
         ></CircleArea>
 
+        <!-- this is the text for the 4 home areas -->
+        <v-text
+            id="redHomeText"
+            text="HOME"
+            :x="86"
+            :y="412"
+            :fill="white"
+            :stroke="black"
+            :strokeWidth="1"
+            :fontSize="42"
+            align="center"
+            verticalAlighn="middle"
+        ></v-text>
+        <v-text
+            id="yellowHomeText"
+            text="HOME"
+            :x="745"
+            :y="510"
+            :fill="white"
+            :stroke="black"
+            :strokeWidth="1"
+            :fontSize="42"
+            align="center"
+            verticalAlighn="middle"
+        ></v-text>
+        <v-text
+            id="blueHomeText"
+            text="HOME"
+            :x="460"
+            :y="132"
+            :fill="white"
+            :stroke="black"
+            :strokeWidth="1"
+            :fontSize="42"
+            align="center"
+            verticalAlighn="middle"
+        ></v-text>
+        <v-text
+            id="greenHomeText"
+            text="HOME"
+            :x="370"
+            :y="792"
+            :fill="white"
+            :stroke="black"
+            :strokeWidth="1"
+            :fontSize="42"
+            align="center"
+            verticalAlighn="middle"
+        ></v-text>
+
         <!-- these are the 4 safe zones -->
         <VerticalBoxRow
             id="redSafe"
@@ -140,6 +240,9 @@ export default {
     computed: {
         white() {
             return Colors.WHITE
+        },
+        black() {
+            return Colors.BLACK
         },
         lightred() {
             return Colors.LIGHT_RED
