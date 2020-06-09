@@ -67,6 +67,7 @@
 
 <script>
 import { advertiseGame } from '../../utils/client.js'
+import { GameMode, GameVisibility } from '../../utils/constants.js'
 
 export default {
     name: 'AdvertiseGameMenuItem',
@@ -74,13 +75,13 @@ export default {
         return {
             name: '',
             nameState: null,
-            mode: 'STANDARD',
-            players: 2,
-            visibility: 'PUBLIC',
+            mode: GameMode.STANDARD,
+            players: 4,
+            visibility: GameVisibility.PUBLIC,
             invitedHandles: [],
             modeOptions: [
-                { value: 'STANDARD', text: 'STANDARD' },
-                { value: 'ADULT', text: 'ADULT' },
+                { value: GameMode.STANDARD, text: GameMode.STANDARD },
+                { value: GameMode.ADULT, text: GameMode.ADULT },
             ],
             playerOptions: [
                 { value: 2, text: '2 Players' },
@@ -88,8 +89,8 @@ export default {
                 { value: 4, text: '4 Players' },
             ],
             visibilityOptions: [
-                { value: 'PUBLIC', text: 'PUBLIC' },
-                { value: 'PRIVATE', text: 'PRIVATE' },
+                { value: GameVisibility.PUBLIC, text: GameVisibility.PUBLIC },
+                { value: GameVisibility.PRIVATE, text: GameVisibility.PRIVATE },
             ],
         }
     },
@@ -109,9 +110,9 @@ export default {
         resetModal() {
             this.name = ''
             this.nameState = null
-            this.mode = 'STANDARD'
+            this.mode = GameMode.STANDARD
             this.players = 4
-            this.visibility = 'PUBLIC'
+            this.visibility = GameMode.PUBLIC
             this.invitedHandles = []
         },
         handleOk(bvModalEvt) {

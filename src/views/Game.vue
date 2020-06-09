@@ -20,7 +20,7 @@ export default {
         EventBus.$on('client-toast', (message) => {
             this.$bvToast.toast(message, {
                 title: 'Status Update',
-                toaster: 'b-toaster-top-center',
+                toaster: 'b-toaster-bottom-left',
                 autoHideDelay: 5000,
                 appendToast: false,
                 noCloseButton: false,

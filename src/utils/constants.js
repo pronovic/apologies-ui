@@ -30,6 +30,11 @@ const GameMode = {
     ADULT: 'ADULT',
 }
 
+const GameVisibility = {
+    PUBLIC: 'PUBLIC',
+    PRIVATE: 'PRIVATE",',
+}
+
 const PlayerState = {
     QUIT: 'QUIT',
     DISCONNECTED: 'DISCONNECTED',
@@ -64,6 +69,7 @@ export {
     ServerStatus,
     GameStatus,
     GameMode,
+    GameVisibility,
     PlayerState,
     Colors,
     Cards,

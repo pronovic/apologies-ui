@@ -31,6 +31,8 @@ const server = {
 
 const game = {
     id: null,
+    demo: false,
+    terminated: false,
     name: null,
     mode: null,
     advertiser: null,
@@ -92,6 +94,12 @@ const store = new Vuex.Store({
         },
         isUserRegistered: (state) => {
             return state.user.registered
+        },
+        isDemoInProgress: (state) => {
+            return state.game.demo
+        },
+        isGameTerminated: (state) => {
+            return state.game.terminated
         },
         isGameJoined: (state) => {
             return state.game.id != null
@@ -273,6 +281,12 @@ const store = new Vuex.Store({
         trackGameInvitation(state, context) {
             state.server.invitations.push(context)
         },
+        trackGameDemo(state, value) {
+            state.game.demo = value
+        },
+        trackGameTerminated(state, value) {
+            state.game.terminated = value
+        },
         trackGameStatus(state, status) {
             state.game.status = status
         },
@@ -285,6 +299,7 @@ const store = new Vuex.Store({
         },
         trackGameDetails(state, context) {
             state.game.id = context.game_id
+            state.game.terminated = false // just in case it's left over
             state.game.name = context.name
             state.game.mode = context.mode
             state.game.advertiser = context.advertiser_handle
@@ -308,6 +323,8 @@ const store = new Vuex.Store({
         clearGame(state) {
             state.server.advertisedGame = null
             state.game.id = null
+            state.game.demo = false
+            state.game.terminated = false
             state.game.name = null
             state.game.mode = null
             state.game.advertiser = null
@@ -327,6 +344,12 @@ const store = new Vuex.Store({
         },
     },
     actions: {
+        markDemoInProgress({ commit }) {
+            commit('trackGameDemo', true)
+        },
+        markGameTerminated({ commit }) {
+            commit('trackGameTerminated', true)
+        },
         handleHeaderHeightChange({ commit }, headerHeight) {
             commit('trackHeaderHeightChange', headerHeight)
         },

@@ -134,33 +134,40 @@ async function dispatchMessage(message) {
 async function handleRequestFailed(message) {
     const reason = message.context.reason
     const handle = message.context.handle
-    switch (reason) {
-        case 'INVALID_PLAYER':
-        case 'DUPLICATE_USER':
-            logger.info('Handle is not available: ' + handle)
-            await disconnectSocket()
-            store.dispatch('handlePlayerNotRegistered')
-            if (router.currentRoute.name !== 'HandleUnavailable') {
-                router.push({
-                    name: 'HandleUnavailable',
-                    params: { handle: handle },
-                })
-            }
-            break
-        default:
-            logger.error(
-                'Request failed: ' +
-                    message.context.reason +
-                    ', ' +
-                    message.context.comment
-            )
-            await disconnectSocket()
-            store.dispatch('handleRequestFailed', message.context)
-            store.dispatch('handlePlayerNotRegistered')
-            if (router.currentRoute.name !== 'Error') {
-                router.push({ name: 'Error' })
-            }
-            break
+
+    if (store.getters.isGameTerminated) {
+        logger.warn(
+            'Ignoring error because game has been terminated: ' + reason
+        )
+    } else {
+        switch (reason) {
+            case 'INVALID_PLAYER':
+            case 'DUPLICATE_USER':
+                logger.info('Handle is not available: ' + handle)
+                await disconnectSocket()
+                store.dispatch('handlePlayerNotRegistered')
+                if (router.currentRoute.name !== 'HandleUnavailable') {
+                    router.push({
+                        name: 'HandleUnavailable',
+                        params: { handle: handle },
+                    })
+                }
+                break
+            default:
+                logger.error(
+                    'Request failed: ' +
+                        message.context.reason +
+                        ', ' +
+                        message.context.comment
+                )
+                await disconnectSocket()
+                store.dispatch('handleRequestFailed', message.context)
+                store.dispatch('handlePlayerNotRegistered')
+                if (router.currentRoute.name !== 'Error') {
+                    router.push({ name: 'Error' })
+                }
+                break
+        }
     }
 }
 
@@ -253,6 +260,12 @@ async function handlePlayerMessageReceived(message) {
 async function handleGameAdvertised(message) {
     EventBus.$emit('client-toast', 'Your game has been advertised')
     store.dispatch('handleGameAdvertised', message.context)
+    if (store.getters.isDemoInProgress) {
+        logger.info(
+            'Demo game is in progress; starting advertised game immediately.'
+        )
+        await startGame()
+    }
 }
 
 async function handleGameInvitation(message) {
@@ -315,15 +328,15 @@ async function handleGameStateChange(message) {
 
 async function handleGamePlayerTurn(message) {
     store.dispatch('handleGamePlayerTurn', message.context)
-
-    // TODO: remove stubbed code to automatically play
-    logger.warn('Automatically choosing a move to let game proceed')
-    const [move] = Object.values(message.context.moves)
-    await executeMove(move)
-    await sleep(250).then(() => {
-        store.dispatch('handleMovePlayed')
-        logger.debug('Completed handling player move')
-    })
+    if (store.getters.isDemoInProgress) {
+        logger.info(
+            'Demo game is in progress; server will execute optimal move'
+        )
+        await optimalMove()
+        await sleep(250).then(() => {
+            store.dispatch('handleMovePlayed')
+        })
+    }
 }
 
 async function onClose(response) {
@@ -545,6 +558,7 @@ async function unregisterHandle() {
         player_id: playerId,
     }
 
+    store.dispatch('markGameTerminated')
     await sendRequest(request)
 }
 
@@ -556,6 +570,7 @@ async function quitGame() {
         player_id: store.getters.playerId,
     }
 
+    store.dispatch('markGameTerminated')
     await sendRequest(request)
 }
 
@@ -567,6 +582,7 @@ async function cancelGame() {
         player_id: store.getters.playerId,
     }
 
+    store.dispatch('markGameTerminated')
     await sendRequest(request)
 }
 
@@ -619,17 +635,42 @@ async function advertiseGame(advertised) {
 }
 
 async function executeMove(move) {
-    logger.info('Executing move: ' + move.move_id)
+    if (store.getters.isGameTerminated) {
+        // Because things happen asynchronously, we sometimes cross streams
+        logger.warn(
+            'Ignoring execute move request because game has been terminated'
+        )
+    } else {
+        logger.info('Executing move: ' + move.move_id)
 
-    const request = {
-        message: 'EXECUTE_MOVE',
-        player_id: store.getters.playerId,
-        context: {
-            move_id: move.move_id,
-        },
+        const request = {
+            message: 'EXECUTE_MOVE',
+            player_id: store.getters.playerId,
+            context: {
+                move_id: move.move_id,
+            },
+        }
+
+        await sendRequest(request)
     }
+}
 
-    await sendRequest(request)
+async function optimalMove(move) {
+    if (store.getters.isGameTerminated) {
+        // Because things happen asynchronously, we sometimes cross streams
+        logger.warn(
+            'Ignoring optimal move request because game has been terminated'
+        )
+    } else {
+        logger.info('Executing server-determined optimal move')
+
+        const request = {
+            message: 'OPTIMAL_MOVE',
+            player_id: store.getters.playerId,
+        }
+
+        await sendRequest(request)
+    }
 }
 
 export {
@@ -644,4 +685,5 @@ export {
     listAvailableGames,
     advertiseGame,
     executeMove,
+    optimalMove,
 }
