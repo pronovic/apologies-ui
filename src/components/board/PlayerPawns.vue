@@ -80,15 +80,31 @@ export default {
             deep: true,
             handler(newValue, oldValue) {
                 if (newValue && newValue.length > 0) {
-                    logger.debug('Relocating ' + newValue[0].color + ' pawns')
+                    if (oldValue && oldValue.length > 0) {
+                        logger.info(
+                            'Relocating ' + newValue[0].color + ' pawns'
+                        )
 
-                    this.position1 = lookupPosition(newValue[0])
-                    this.position2 = lookupPosition(newValue[1])
-                    this.position3 = lookupPosition(newValue[2])
-                    this.position4 = lookupPosition(newValue[3])
+                        this.position1 = lookupPosition(newValue[0])
+                        this.position2 = lookupPosition(newValue[1])
+                        this.position3 = lookupPosition(newValue[2])
+                        this.position4 = lookupPosition(newValue[3])
 
-                    // for some reason, a redraw of the Konva layer is required
-                    this.$refs.pawn1.node.getLayer().draw()
+                        // for some reason, a redraw of the Konva layer is required
+                        this.$refs.pawn1.node.getLayer().draw()
+                    } else {
+                        logger.info(
+                            'Initializing ' + newValue[0].color + ' pawns'
+                        )
+
+                        this.position1 = lookupPosition(newValue[0])
+                        this.position2 = lookupPosition(newValue[1])
+                        this.position3 = lookupPosition(newValue[2])
+                        this.position4 = lookupPosition(newValue[3])
+
+                        // for some reason, a redraw of the Konva layer is required
+                        this.$refs.pawn1.node.getLayer().draw()
+                    }
                 }
             },
         },
