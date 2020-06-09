@@ -43,7 +43,7 @@
             :strokeWidth="1"
             :fontSize="42"
             align="center"
-            verticalAlighn="middle"
+            verticalAlign="middle"
         ></v-text>
         <v-text
             id="yellowStartText"
@@ -55,7 +55,7 @@
             :strokeWidth="1"
             :fontSize="42"
             align="center"
-            verticalAlighn="middle"
+            verticalAlign="middle"
         ></v-text>
         <v-text
             id="blueStartText"
@@ -67,7 +67,7 @@
             :strokeWidth="1"
             :fontSize="42"
             align="center"
-            verticalAlighn="middle"
+            verticalAlign="middle"
         ></v-text>
         <v-text
             id="greenStartText"
@@ -79,7 +79,7 @@
             :strokeWidth="1"
             :fontSize="42"
             align="center"
-            verticalAlighn="middle"
+            verticalAlign="middle"
         ></v-text>
 
         <!-- This is the box around the outside -->
@@ -153,7 +153,7 @@
             :strokeWidth="1"
             :fontSize="42"
             align="center"
-            verticalAlighn="middle"
+            verticalAlign="middle"
         ></v-text>
         <v-text
             id="yellowHomeText"
@@ -165,7 +165,7 @@
             :strokeWidth="1"
             :fontSize="42"
             align="center"
-            verticalAlighn="middle"
+            verticalAlign="middle"
         ></v-text>
         <v-text
             id="blueHomeText"
@@ -177,7 +177,7 @@
             :strokeWidth="1"
             :fontSize="42"
             align="center"
-            verticalAlighn="middle"
+            verticalAlign="middle"
         ></v-text>
         <v-text
             id="greenHomeText"
@@ -189,7 +189,7 @@
             :strokeWidth="1"
             :fontSize="42"
             align="center"
-            verticalAlighn="middle"
+            verticalAlign="middle"
         ></v-text>
 
         <!-- these are the 4 safe zones -->
