@@ -306,3 +306,50 @@ made manually to Vuex state flow reactively to components that rely on that
 state.  For instance, if you've registered a game, you can change
 `state.game.winner` to your handle (i.e. `"Ken"`) and see your pawn bounce up
 and down as if you won the game.
+
+## Visual Studio Code
+
+I have been using [VSCode](https://code.visualstudio.com/) for my IDE.  I
+have limited experience with VSCode, so this section just documents how
+I'm using it.
+
+I have the following plugins installed:
+
+- [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome)
+- [Vetur](https://marketplace.visualstudio.com/items?itemName=octref.vetur)
+- [Vue VSCode Snippets](https://marketplace.visualstudio.com/items?itemName=sdras.vue-vscode-snippets)
+- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+- [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+
+The Vetur and Vue VSCode Snippets plugins conflict slightly, and you need
+to adjust configuration to minimize that (see below).
+
+I find the ESLint and Prettier plugins to be fairly distracting, because they
+show a lot of warnings that can usually be fixed automatically and don't seem
+to require my attention.  Right now, I have these plugins turned off.  Instead,
+I periodically run `yarn format` from the terminal to check and fix the code.
+
+There are no project-specific VSCode settings.  All of my settings are
+maintained globally.  For reference, here is my `settings.json`:
+
+```json
+{
+  "vetur.validation.template": false,
+  "vetur.completion.scaffoldSnippetSources": {
+    "workspace": "",
+    "user": "",
+    "vetur": ""
+  },
+  "editor.tabCompletion": "onlySnippets",
+  "editor.formatOnSave": true,
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "workbench.colorTheme": "Night Owl Light (No Italics)",
+  "editor.minimap.enabled": false,
+  "files.autoSave": "afterDelay",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "explorer.confirmDelete": false,
+  "files.autoSaveDelay": 2500
+}
+```
