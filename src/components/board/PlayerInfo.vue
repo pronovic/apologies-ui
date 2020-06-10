@@ -3,7 +3,7 @@
         <Pawn
             ref="pawn"
             :id="id + '-color'"
-            :position="{ x: 0, y: 0 }"
+            :position="position"
             :size="40"
             :color="color"
             :visible="true"
@@ -15,10 +15,12 @@
 </template>
 
 <script>
+import { gsap } from 'gsap'
+
 import Pawn from './Pawn.vue'
 import Hand from './Hand.vue'
-import { configureBounce } from '../../utils/movement'
 import { PlayerState, PlayerType, Colors } from '../../utils/constants'
+import { logger } from '../../utils/util'
 
 export default {
     name: 'PlayerInfo',
@@ -26,29 +28,34 @@ export default {
     props: ['id', 'x', 'y', 'player', 'opponent'],
     data: function () {
         return {
-            node: null,
-            bounce: null,
+            position: { x: 0, y: 0 },
         }
     },
-    mounted() {
-        this.$nextTick(() => {
-            this.node = this.$refs.pawn.node
-        })
-    },
     methods: {
-        toggleBounce(enabled) {
-            if (!this.bounce) {
-                this.bounce = configureBounce(0, 0, this.node) // (0, 0) because it's relative to group
-            }
-
-            this.bounce.toggle(enabled)
+        bounce() {
+            var val = { x: 0, y: -10 }
+            gsap.to(val, 0.1, {
+                x: 0,
+                y: 0,
+                yoyo: true,
+                repeat: 100,
+                onUpdate: () => {
+                    this.position.x = parseInt(val.x)
+                    this.position.y = parseInt(val.y)
+                    this.$refs.pawn.node.getLayer().draw() // this does not seem like a good idea, but it doesn't work otherwise
+                },
+            })
         },
     },
     watch: {
         player: {
             deep: true,
             handler(newValue, oldValue) {
-                this.toggleBounce(newValue.isWinner)
+                logger.info('Handling change to player')
+                if (newValue.isWinner) {
+                    logger.info('This player is the winner')
+                    this.bounce()
+                }
             },
         },
     },

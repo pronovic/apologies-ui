@@ -1,8 +1,4 @@
-import Konva from 'konva'
 import { PlayerColor } from './constants.js'
-
-const BOUNCE_AMPLITUDE = 5
-const BOUNCE_PERIOD_MS = 500
 
 const RED_START = [
     { x: 240, y: 100 },
@@ -219,42 +215,4 @@ function lookupPosition(location) {
     }
 }
 
-function configureBounce(x, y, node) {
-    const beginX = x
-    const beginY = y
-
-    const amplitude = BOUNCE_AMPLITUDE
-    const period = BOUNCE_PERIOD_MS
-    const centerY = beginY - BOUNCE_AMPLITUDE
-
-    const animation = new Konva.Animation(function (frame) {
-        node.setY(
-            amplitude * Math.sin((frame.time * 2 * Math.PI) / period) + centerY
-        )
-    }, node.getLayer())
-
-    return {
-        node: node,
-        beginX: beginX,
-        beginY: beginY,
-        animation: animation,
-        toggle: function (enabled) {
-            if (enabled) {
-                this.animation.start()
-            } else {
-                this.animation.stop()
-                node.setX(this.beginX)
-                node.setY(this.beginY)
-            }
-        },
-    }
-}
-
-export {
-    configureBounce,
-    lookupPosition,
-    lookupHome,
-    lookupStart,
-    lookupSafe,
-    lookupSquare,
-}
+export { lookupPosition, lookupHome, lookupStart, lookupSafe, lookupSquare }

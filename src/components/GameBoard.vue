@@ -2,6 +2,8 @@
     <v-stage ref="stage" v-if="visible" :config="stage">
         <v-layer>
             <PlayerArea ref="player" :config="info"></PlayerArea>
+        </v-layer>
+        <v-layer>
             <GameBoardArea ref="board" :config="board"></GameBoardArea>
         </v-layer>
         <v-layer>
