@@ -41,7 +41,7 @@ in [`package.json`](package.json).  The following scripts are available:
 - `yarn checks` - Run the StandardJS and Prettier source code checks (note: `checks`, not `check`)
 - `yarn format` - Reformat code based on the StandardJS and Prettier checks
 - `yarn clean` - Remove the production bundle in `dist/bundle.js`
-- `yarn cache` - Remove the Parcel cache, sometimes needed if changes to `.env` are not picked up
+- `yarn rmcache` - Remove the Parcel cache, sometimes needed if changes to `.env` are not picked up
 - `yarn build` - Build the production bundle in `dist/bundle.js`
 - `yarn server` - Start the development server in hot module reloading mode
 

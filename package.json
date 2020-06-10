@@ -10,6 +10,7 @@
         "checks": "eslint --max-warnings=0 '**/*.js' '**/*.vue'",
         "format": "eslint --fix --max-warnings=0 '**/*.js' '**/*.vue'",
         "clean": "rm -rf 'dist/*'",
+        "rmcache": "rm -rf '.cache'",
         "build": "yarn clean && parcel build src/index.html",
         "server": "parcel serve src/index.html"
     },
