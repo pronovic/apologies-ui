@@ -51,9 +51,9 @@ export default {
         player: {
             deep: true,
             handler(newValue, oldValue) {
-                logger.info('Handling change to player')
+                logger.debug('Handling change to player')
                 if (newValue.isWinner) {
-                    logger.info('This player is the winner')
+                    logger.debug('This player is the winner')
                     this.bounce()
                 }
             },

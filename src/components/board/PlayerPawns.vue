@@ -81,7 +81,7 @@ export default {
             handler(newValue, oldValue) {
                 if (newValue && newValue.length > 0) {
                     if (oldValue && oldValue.length > 0) {
-                        logger.info(
+                        logger.debug(
                             'Relocating ' + newValue[0].color + ' pawns'
                         )
 
@@ -93,7 +93,7 @@ export default {
                         // for some reason, a redraw of the Konva layer is required
                         this.$refs.pawn1.node.getLayer().draw()
                     } else {
-                        logger.info(
+                        logger.debug(
                             'Initializing ' + newValue[0].color + ' pawns'
                         )
 
