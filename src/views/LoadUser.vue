@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { logger } from '../utils/util.js'
 import { loadPlayer } from '../utils/storage.js'
 import { reregisterHandle } from '../utils/client.js'
 
@@ -31,12 +32,12 @@ export default {
     created: function () {
         const player = loadPlayer()
         if (player == null) {
-            console.log('No player in local storage')
+            logger.info('No player in local storage')
             this.$store.dispatch('handlePlayerNotRegistered')
             this.$router.push({ name: 'Landing' })
         } else {
             // This will either transition away from this page or time out
-            console.log('Reregistering player from local storage')
+            logger.info('Reregistering player from local storage')
             reregisterHandle(player)
         }
     },

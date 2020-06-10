@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import { logger } from '../../utils/util.js'
+
 export default {
     name: 'UnregisterMenuItem',
     methods: {
@@ -32,11 +34,11 @@ export default {
                 )
                 .then((value) => {
                     if (value) {
-                        console.log('User triggered unregister')
+                        logger.info('User triggered unregister')
                         this.$router.push({ name: 'UnregisterHandle' })
                     }
                 })
-                .catch((err) => {}) /* eslint handle-callback-err: "off" */
+                .catch((err) => {}) // eslint-disable-line handle-callback-err
         },
     },
 }

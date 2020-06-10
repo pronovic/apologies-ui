@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import { logger } from '../../utils/util.js'
+
 export default {
     name: 'ClearGameMenuItem',
     computed: {
@@ -23,7 +25,7 @@ export default {
     },
     methods: {
         handleClick() {
-            console.log('User triggered clear')
+            logger.info('User triggered clear')
             this.$store.dispatch('handleGameClear')
         },
     },

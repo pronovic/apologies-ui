@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://unpkg.com/konva@6.0.0/konva.min.js"></script>
+    <meta charset="utf-8" />
+    <title>Konva Custom Shape Demo</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #f0f0f0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container"></div>
+    <script>
+      var stage = new Konva.Stage({
+        container: 'container',
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+
+      var layer = new Konva.Layer();
+
+      // full hardcoded pawn
+      var pawn1 = new Konva.Shape({
+        sceneFunc: function (context, shape) {
+          context.beginPath();
+
+          context.moveTo(150, 650)
+          context.lineTo(150, 620)
+          context.lineTo(200, 600)
+          context.arc(300, 385, 35, (Math.PI/2)+0.40, (Math.PI/2)-0.40);
+          context.lineTo(400, 600)
+          context.lineTo(450, 620)
+          context.lineTo(450, 650)
+          context.closePath();
+
+          context.fillStrokeShape(shape);
+        },
+        fill: 'red',
+        stroke: 'black',
+        strokeWidth: 1,
+      });
+
+      // pawn with dimensions 300x300, specified from geometrical center
+      var pawn2 = new Konva.Shape({
+        sceneFunc: function (context, shape) {
+          x = 500
+          y = 700
+
+          context.beginPath();
+
+          context.moveTo(x-150, y+192)
+          context.lineTo(x-150, y+163)
+          context.lineTo(x-100, y+143)
+          context.arc(x, y-72, 35, (Math.PI/2)+0.40, (Math.PI/2)-0.40);
+          context.lineTo(x+100, y+143)
+          context.lineTo(x+150, y+163)
+          context.lineTo(x+150, y+193)
+          context.closePath();
+
+          context.fillStrokeShape(shape);
+        },
+        fill: 'blue',
+        stroke: 'black',
+        strokeWidth: 1,
+      })
+
+      // pawn with dimensions 100x100, hardcoded
+      var pawn3 = new Konva.Shape({
+        sceneFunc: function (context, shape) {
+          context.beginPath();
+
+          context.moveTo(0, 100)
+          context.lineTo(0, 90)
+          context.lineTo(30, 80)
+          context.arc(50, 10, 8, (Math.PI/2)+0.40, (Math.PI/2)-0.40);
+          context.lineTo(70, 80)
+          /context.lineTo(100, 90)
+          context.lineTo(100, 100)
+          context.closePath();
+
+          context.fillStrokeShape(shape);
+        },
+        fill: 'green',
+        stroke: 'black',
+        strokeWidth: 1,
+      })
+
+      // pawn with dimensions 100x100, specified from geometrical center
+      var pawn4 = new Konva.Shape({
+        sceneFunc: function (context, shape) {
+          context.beginPath();
+
+          //x = 50
+          //y = 50
+
+          x = 300 
+          y = 300
+
+          context.moveTo(x-50, y+50)
+          context.lineTo(x-50, y+40)
+          context.lineTo(x-20, y+30)
+          context.arc(x, y-40, 8, (Math.PI/2)+0.40, (Math.PI/2)-0.40);
+          context.lineTo(x+20, y+30)
+          /context.lineTo(x+50, y+40)
+          context.lineTo(x+50, y+50)
+          context.closePath();
+
+          context.fillStrokeShape(shape);
+        },
+        fill: 'yellow',
+        stroke: 'black',
+        strokeWidth: 1,
+      })
+
+      // pawn with scaled dimensions, specified from geometrical center
+      var pawn5 = new Konva.Shape({
+        sceneFunc: function (context, shape) {
+          context.beginPath();
+
+          //x = 50
+          //y = 50
+
+          x = 300 
+          y = 300
+          size = 50
+
+          scale = size / 100
+          context.moveTo(x-(scale*50), y+(scale*50))
+          context.lineTo(x-(scale*50), y+(scale*40))
+          context.lineTo(x-(scale*20), y+(scale*30))
+          context.arc(x, y-(scale*40), scale*8, (Math.PI/2)+0.40, (Math.PI/2)-0.40);
+          context.lineTo(x+(scale*20), y+(scale*30))
+          context.lineTo(x+(scale*50), y+(scale*40))
+          context.lineTo(x+(scale*50), y+(scale*50))
+          context.closePath();
+
+          context.fillStrokeShape(shape);
+        },
+        fill: 'purple',
+        stroke: 'black',
+        strokeWidth: 1,
+      })
+
+      layer.add(pawn1);
+      layer.add(pawn2);
+      layer.add(pawn3);
+      layer.add(pawn4);
+      layer.add(pawn5);
+
+      stage.add(layer);
+    </script>
+  </b>
+</html>

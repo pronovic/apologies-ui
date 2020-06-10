@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import { logger } from '../../utils/util.js'
 import { quitGame } from '../../utils/client.js'
 
 export default {
@@ -32,11 +33,11 @@ export default {
                 })
                 .then((value) => {
                     if (value) {
-                        console.log('User triggered quit')
+                        logger.info('User triggered quit')
                         quitGame()
                     }
                 })
-                .catch((err) => {}) /* eslint handle-callback-err: "off" */
+                .catch((err) => {}) // eslint-disable-line handle-callback-err
         },
     },
 }

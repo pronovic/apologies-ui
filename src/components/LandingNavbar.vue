@@ -1,0 +1,29 @@
+<template>
+    <div>
+        <b-navbar toggleable="lg" type="dark" variant="secondary">
+            <b-navbar-brand href="#">Apologies</b-navbar-brand>
+            <b-navbar-nav class="ml-auto">
+                <RegisterHandleButton id="register1" />
+            </b-navbar-nav>
+        </b-navbar>
+    </div>
+</template>
+
+<script>
+import { logger } from '../utils/util.js'
+import RegisterHandleButton from '../components/RegisterHandleButton.vue'
+
+export default {
+    name: 'LandingNavbar',
+    components: { RegisterHandleButton: RegisterHandleButton },
+    mounted() {
+        this.$nextTick(() => {
+            logger.debug('Landing navbar mounted')
+            this.$store.dispatch(
+                'handleHeaderHeightChange',
+                this.$el.clientHeight
+            )
+        })
+    },
+}
+</script>

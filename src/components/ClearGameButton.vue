@@ -19,6 +19,8 @@
 </template>
 
 <script>
+import { logger } from '../utils/util.js'
+
 export default {
     name: 'ClearGameButton',
     computed: {
@@ -31,7 +33,7 @@ export default {
     },
     methods: {
         handleClick() {
-            console.log('User triggered clear')
+            logger.debug('User triggered clear')
             this.$store.dispatch('handleGameClear')
         },
     },

@@ -1,7 +1,9 @@
 import store from '../store'
 import router from '../router'
 import atmosphere from 'atmosphere.js'
+
 import { EventBus } from './eventbus.js'
+import { logger, sleep } from './util.js'
 
 var socket = atmosphere
 var subsocket = null
@@ -17,41 +19,160 @@ var initialReconnectDelayMs = store.state.config.INITIAL_RECONNECT_DELAY_MS
 var maxReconnectDelayMs = store.state.config.MAX_RECONNECT_DELAY_MS
 var reconnectDelayFactor = store.state.config.RECONNECT_DECAY_FACTOR
 
-function handleRequestFailed(message) {
-    const reason = message.context.reason
-    const handle = message.context.handle
-    switch (reason) {
-        case 'INVALID_PLAYER':
-        case 'DUPLICATE_USER':
-            console.log('Handle is not available: ' + handle)
-            disconnectSocket()
-            store.dispatch('handlePlayerNotRegistered')
-            if (router.currentRoute.name !== 'HandleUnavailable') {
-                router.push({
-                    name: 'HandleUnavailable',
-                    params: { handle: handle },
-                })
-            }
+class MessageQueue {
+    // This message queue forces messages to be processed sequentially, one after another.
+    // Especially in games where there are automated players, status updates arrive
+    // stacked very tightly together, within milliseconds.  Without this message queue,
+    // they all get processed more-or-less simultaneously, with the effect that you really
+    // only see the result of the last event and not any of the intermediate events.  By
+    // processing the messages sequentially, we have the opportunity to slow down game
+    // play so that individual state changes are comprehensible.
+
+    constructor() {
+        this.q = []
+        this.locked = false
+    }
+
+    async add(json) {
+        this.q.push(json)
+        if (!this.locked) {
+            await this.dispatch()
+        }
+    }
+
+    async dispatch() {
+        this.locked = true
+
+        let json
+        while ((json = this.q.shift())) {
+            const message = JSON.parse(json)
+            logger.info('Processing ' + message.message)
+            logger.debug(json)
+            await dispatchMessage(message)
+        }
+
+        this.locked = false
+    }
+}
+
+var queue = new MessageQueue()
+
+async function dispatchMessage(message) {
+    switch (message.message) {
+        case 'REQUEST_FAILED':
+            await handleRequestFailed(message)
             break
-        default:
-            console.log(
-                'Request failed: ' +
-                    message.context.reason +
-                    ', ' +
-                    message.context.comment
-            )
-            disconnectSocket()
-            store.dispatch('handleRequestFailed', message.context)
-            store.dispatch('handlePlayerNotRegistered')
-            if (router.currentRoute.name !== 'Error') {
-                router.push({ name: 'Error' })
-            }
+        case 'SERVER_SHUTDOWN':
+            await handleServerShutdown(message)
+            break
+        case 'REGISTERED_PLAYERS':
+            await handleRegisteredPlayers(message)
+            break
+        case 'AVAILABLE_GAMES':
+            await handleAvailableGames(message)
+            break
+        case 'PLAYER_REGISTERED':
+            await handlePlayerRegistered(message)
+            break
+        case 'PLAYER_UNREGISTERED':
+            await handlePlayerUnregistered(message)
+            break
+        case 'WEBSOCKET_IDLE':
+            await handleWebsocketIdle(message)
+            break
+        case 'WEBSOCKET_INACTIVE':
+            await handleWebsocketInactive(message)
+            break
+        case 'PLAYER_IDLE':
+            await handlePlayerIdle(message)
+            break
+        case 'PLAYER_INACTIVE':
+            await handlePlayerInactive(message)
+            break
+        case 'PLAYER_MESSAGE_RECEIVED':
+            await handlePlayerMessageReceived(message)
+            break
+        case 'GAME_ADVERTISED':
+            await handleGameAdvertised(message)
+            break
+        case 'GAME_INVITATION':
+            await handleGameInvitation(message)
+            break
+        case 'GAME_JOINED':
+            await handleGameJoined(message)
+            break
+        case 'GAME_STARTED':
+            await handleGameStarted(message)
+            break
+        case 'GAME_CANCELLED':
+            await handleGameCancelled(message)
+            break
+        case 'GAME_COMPLETED':
+            await handleGameCompleted(message)
+            break
+        case 'GAME_IDLE':
+            await handleGameIdle(message)
+            break
+        case 'GAME_INACTIVE':
+            await handleGameInactive(message)
+            break
+        case 'GAME_PLAYER_QUIT':
+            await handleGamePlayerQuit(message)
+            break
+        case 'GAME_PLAYER_CHANGE':
+            await handleGamePlayerChange(message)
+            break
+        case 'GAME_STATE_CHANGE':
+            await handleGameStateChange(message)
+            break
+        case 'GAME_PLAYER_TURN':
+            await handleGamePlayerTurn(message)
             break
     }
 }
 
-function handleServerShutdown(message) {
-    disconnectSocket()
+async function handleRequestFailed(message) {
+    const reason = message.context.reason
+    const handle = message.context.handle
+
+    if (store.getters.isGameTerminated) {
+        logger.warn(
+            'Ignoring error because game has been terminated: ' + reason
+        )
+    } else {
+        switch (reason) {
+            case 'INVALID_PLAYER':
+            case 'DUPLICATE_USER':
+                logger.info('Handle is not available: ' + handle)
+                await disconnectSocket()
+                store.dispatch('handlePlayerNotRegistered')
+                if (router.currentRoute.name !== 'HandleUnavailable') {
+                    router.push({
+                        name: 'HandleUnavailable',
+                        params: { handle: handle },
+                    })
+                }
+                break
+            default:
+                logger.error(
+                    'Request failed: ' +
+                        message.context.reason +
+                        ', ' +
+                        message.context.comment
+                )
+                await disconnectSocket()
+                store.dispatch('handleRequestFailed', message.context)
+                store.dispatch('handlePlayerNotRegistered')
+                if (router.currentRoute.name !== 'Error') {
+                    router.push({ name: 'Error' })
+                }
+                break
+        }
+    }
+}
+
+async function handleServerShutdown(message) {
+    await disconnectSocket()
     store.dispatch('handleServerShutdown')
     store.dispatch('handlePlayerNotRegistered')
     if (router.currentRoute.name !== 'ServerShutdown') {
@@ -59,7 +180,7 @@ function handleServerShutdown(message) {
     }
 }
 
-function handleWebsocketIdle(message) {
+async function handleWebsocketIdle(message) {
     EventBus.$emit(
         'client-toast',
         'You are idle; you will be disconnected in a little while'
@@ -67,7 +188,7 @@ function handleWebsocketIdle(message) {
     store.dispatch('handleWebsocketIdle')
 }
 
-function handleWebsocketInactive(message) {
+async function handleWebsocketInactive(message) {
     EventBus.$emit(
         'client-toast',
         'You are inactive; expect a disconnect momentarily'
@@ -75,20 +196,20 @@ function handleWebsocketInactive(message) {
     store.dispatch('handleWebsocketInactive')
 }
 
-function handleRegisteredPlayers(message) {
+async function handleRegisteredPlayers(message) {
     store.dispatch('handleRegisteredPlayers', message.context)
 }
 
-function handleAvailableGames(message) {
+async function handleAvailableGames(message) {
     store.dispatch('handleAvailableGames', message.context)
 }
 
-function handlePlayerRegistered(message) {
+async function handlePlayerRegistered(message) {
     EventBus.$emit('client-toast', 'Completed registering your handle.')
 
     const handle = message.context.handle
     const playerId = message.player_id
-    console.log(
+    logger.info(
         'Completed registering handle ' +
             handle +
             ' tied to player id ' +
@@ -106,17 +227,17 @@ function handlePlayerRegistered(message) {
     }
 }
 
-function handlePlayerUnregistered(message) {
+async function handlePlayerUnregistered(message) {
     EventBus.$emit('client-toast', 'Completed unregistering your handle.')
-    console.log('Completed unregistering handle')
-    disconnectSocket()
+    logger.info('Completed unregistering handle')
+    await disconnectSocket()
     store.dispatch('handlePlayerNotRegistered')
     if (router.currentRoute.name !== 'Landing') {
         router.push({ name: 'Landing' })
     }
 }
 
-function handlePlayerIdle(message) {
+async function handlePlayerIdle(message) {
     EventBus.$emit(
         'client-toast',
         'You are idle; you will be disconnected in a little while'
@@ -124,7 +245,7 @@ function handlePlayerIdle(message) {
     store.dispatch('handlePlayerIdle')
 }
 
-function handlePlayerInactive(message) {
+async function handlePlayerInactive(message) {
     EventBus.$emit(
         'client-toast',
         'You are inactive; expect a disconnect momentarily'
@@ -132,41 +253,47 @@ function handlePlayerInactive(message) {
     store.dispatch('handlePlayerInactive')
 }
 
-function handlePlayerMessageReceived(message) {
+async function handlePlayerMessageReceived(message) {
     store.dispatch('handlePlayerMessageReceived', message.context)
 }
 
-function handleGameAdvertised(message) {
+async function handleGameAdvertised(message) {
     EventBus.$emit('client-toast', 'Your game has been advertised')
     store.dispatch('handleGameAdvertised', message.context)
+    if (store.getters.isDemoInProgress) {
+        logger.info(
+            'Demo game is in progress; starting advertised game immediately.'
+        )
+        await startGame()
+    }
 }
 
-function handleGameInvitation(message) {
+async function handleGameInvitation(message) {
     EventBus.$emit('client-toast', 'You have been invited to a game')
     store.dispatch('handleGameInvitation', message.context)
 }
 
-function handleGameJoined(message) {
+async function handleGameJoined(message) {
     EventBus.$emit('client-toast', 'You have joined the game')
     store.dispatch('handleGameJoined', message.context)
 }
 
-function handleGameStarted(message) {
+async function handleGameStarted(message) {
     EventBus.$emit('client-toast', 'The game has started')
     store.dispatch('handleGameStarted')
 }
 
-function handleGameCancelled(message) {
+async function handleGameCancelled(message) {
     EventBus.$emit('client-toast', 'The game has been cancelled')
     store.dispatch('handleGameCancelled')
 }
 
-function handleGameCompleted(message) {
-    EventBus.$emit('client-toast', 'The game has been completed')
-    store.dispatch('handleGameCompleted')
+async function handleGameCompleted(message) {
+    EventBus.$emit('client-toast', message.context.comment)
+    store.dispatch('handleGameCompleted', message.context.winner)
 }
 
-function handleGameIdle(message) {
+async function handleGameIdle(message) {
     EventBus.$emit(
         'client-toast',
         'The game is idle; it will be cancelled in a little while'
@@ -174,7 +301,7 @@ function handleGameIdle(message) {
     store.dispatch('handleGameIdle')
 }
 
-function handleGameInactive(message) {
+async function handleGameInactive(message) {
     EventBus.$emit(
         'client-toast',
         'The game is inactive; expect it to be cancelled momentarily'
@@ -182,25 +309,38 @@ function handleGameInactive(message) {
     store.dispatch('handleGameInactive')
 }
 
-function handleGamePlayerQuit(message) {
+async function handleGamePlayerQuit(message) {
     EventBus.$emit('client-toast', 'You have quit the game')
     store.dispatch('handleGamePlayerQuit')
 }
 
-function handleGamePlayerChange(message) {
+async function handleGamePlayerChange(message) {
     store.dispatch('handleGamePlayerChange', message.context)
 }
 
-function handleGameStateChange(message) {
-    store.dispatch('handleGameStateChange', message.context)
+async function handleGameStateChange(message) {
+    // TODO: this sleep is probably not necessary after game animation is more mature?
+    await sleep(250).then(() => {
+        store.dispatch('handleGameStateChange', message.context)
+        logger.debug('Completed handling state change')
+    })
 }
 
-function handleGamePlayerTurn(message) {
+async function handleGamePlayerTurn(message) {
     store.dispatch('handleGamePlayerTurn', message.context)
+    if (store.getters.isDemoInProgress) {
+        logger.info(
+            'Demo game is in progress; server will execute optimal move'
+        )
+        await optimalMove()
+        await sleep(250).then(() => {
+            store.dispatch('handleMovePlayed')
+        })
+    }
 }
 
 async function onClose(response) {
-    console.log(
+    logger.info(
         'Websocket connection is closed: ' +
             response.status +
             ', ' +
@@ -212,14 +352,14 @@ async function onClose(response) {
     store.dispatch('handleGameDisconnected') // once disconnected, you can't rejoin
 
     if (closeRequested) {
-        console.log('Close was expected; no more action needs to be taken')
+        logger.info('Close was expected; no more action needs to be taken')
         closeRequested = false
     } else {
-        console.log('Close was unexpected; entering recovery/retry')
+        logger.debug('Close was unexpected; entering recovery/retry')
 
         retryDurationMs += reconnectDelayMs
         if (retryDurationMs > serverTimeoutMs) {
-            console.log(
+            logger.info(
                 'Retry duration exceeded: ' +
                     retryDurationMs +
                     'ms > ' +
@@ -249,26 +389,26 @@ async function onClose(response) {
             }
         }
 
-        console.log('Will reconnect after ' + reconnectDelayMs + 'ms')
-        await new Promise((resolve) => setTimeout(resolve, reconnectDelayMs))
+        logger.debug('Will reconnect after ' + reconnectDelayMs + 'ms')
+        await sleep(reconnectDelayMs)
         EventBus.$emit('client-toast', 'Server connection lost; retrying now.')
 
         if (pending) {
             if (pending.playerId) {
-                reregisterHandle(pending)
+                await reregisterHandle(pending)
             } else {
-                registerHandle(pending.handle)
+                await registerHandle(pending.handle)
             }
         } else {
             const handle = store.getters.playerHandle
             const playerId = store.getters.playerId
-            reregisterHandle({ handle: handle, playerId: playerId })
+            await reregisterHandle({ handle: handle, playerId: playerId })
         }
     }
 }
 
-function onError(response) {
-    console.log(
+async function onError(response) {
+    logger.error(
         'Websocket connection error: ' +
             response.status +
             ', ' +
@@ -278,17 +418,17 @@ function onError(response) {
     )
 }
 
-function onTransportFailure(errorMsg, request) {
+async function onTransportFailure(errorMsg, request) {
     // the two settings prevent the stupid client from falling back to HTTP when the websocket disconnects
-    console.log('Websocket transport failure: ' + errorMsg)
+    logger.error('Websocket transport failure: ' + errorMsg)
     request.transport = 'websocket'
     request.fallbackTransport = 'websocket'
 }
 
-function onReconnect(request, response) {
+async function onReconnect(request, response) {
     // in theory, this never gets called, because we had to turn off auto-reconnect to make things work
     // the two settings prevent the stupid client from falling back to HTTP when the websocket disconnects
-    console.log(
+    logger.warn(
         'Websocket connection is reconnecting: ' +
             response.status +
             ', ' +
@@ -300,91 +440,18 @@ function onReconnect(request, response) {
     request.fallbackTransport = 'websocket'
 }
 
-function onMessage(response) {
-    const json = response.responseBody
-    console.log('Received JSON data (' + response.status + '): ' + json)
-
-    const message = JSON.parse(json)
-    switch (message.message) {
-        case 'REQUEST_FAILED':
-            handleRequestFailed(message)
-            break
-        case 'SERVER_SHUTDOWN':
-            handleServerShutdown(message)
-            break
-        case 'REGISTERED_PLAYERS':
-            handleRegisteredPlayers(message)
-            break
-        case 'AVAILABLE_GAMES':
-            handleAvailableGames(message)
-            break
-        case 'PLAYER_REGISTERED':
-            handlePlayerRegistered(message)
-            break
-        case 'PLAYER_UNREGISTERED':
-            handlePlayerUnregistered(message)
-            break
-        case 'WEBSOCKET_IDLE':
-            handleWebsocketIdle(message)
-            break
-        case 'WEBSOCKET_INACTIVE':
-            handleWebsocketInactive(message)
-            break
-        case 'PLAYER_IDLE':
-            handlePlayerIdle(message)
-            break
-        case 'PLAYER_INACTIVE':
-            handlePlayerInactive(message)
-            break
-        case 'PLAYER_MESSAGE_RECEIVED':
-            handlePlayerMessageReceived(message)
-            break
-        case 'GAME_ADVERTISED':
-            handleGameAdvertised(message)
-            break
-        case 'GAME_INVITATION':
-            handleGameInvitation(message)
-            break
-        case 'GAME_JOINED':
-            handleGameJoined(message)
-            break
-        case 'GAME_STARTED':
-            handleGameStarted(message)
-            break
-        case 'GAME_CANCELLED':
-            handleGameCancelled(message)
-            break
-        case 'GAME_COMPLETED':
-            handleGameCompleted(message)
-            break
-        case 'GAME_IDLE':
-            handleGameIdle(message)
-            break
-        case 'GAME_INACTIVE':
-            handleGameInactive(message)
-            break
-        case 'GAME_PLAYER_QUIT':
-            handleGamePlayerQuit(message)
-            break
-        case 'GAME_PLAYER_CHANGE':
-            handleGamePlayerChange(message)
-            break
-        case 'GAME_STATE_CHANGE':
-            handleGameStateChange(message)
-            break
-        case 'GAME_PLAYER_TURN':
-            handleGamePlayerTurn(message)
-            break
-    }
+async function onMessage(response) {
+    await queue.add(response.responseBody)
 }
 
-function sendRequest(request) {
+async function sendRequest(request) {
     const json = JSON.stringify(request, null, 2)
-    console.log('Sending JSON data: ' + json)
+    logger.info('Sending ' + request.message)
+    logger.debug(json)
     subsocket.push(json)
 }
 
-function connectSocket(onOpen) {
+async function connectSocket(onOpen) {
     var request = new atmosphere.AtmosphereRequest()
 
     request.url = store.state.config.WEBSOCKET_API
@@ -417,20 +484,20 @@ function connectSocket(onOpen) {
     subsocket = socket.subscribe(request)
 }
 
-function disconnectSocket() {
-    console.log('Closing websocket connection')
+async function disconnectSocket() {
+    logger.info('Closing websocket connection')
     closeRequested = true
     socket.unsubscribe()
     retryDurationMs = 0
     reconnectDelayMs = 0
 }
 
-function connectAndSend(request) {
-    connectSocket((response) => {
+async function connectAndSend(request) {
+    connectSocket(async (response) => {
         if (!open) {
             // The stupid library sometimes triggers duplicate onOpen events
-            console.log('Connection is open, sending request')
-            sendRequest(request) // send the request once the socket is open
+            logger.info('Connection is open, sending request')
+            await sendRequest(request) // send the request once the socket is open
             open = true
             closeRequested = false
             retryDurationMs = 0
@@ -439,10 +506,10 @@ function connectAndSend(request) {
     })
 }
 
-function registerHandle(handle) {
+async function registerHandle(handle) {
     pending = { handle: handle, playerId: null }
 
-    console.log('Client is registering handle: ' + handle)
+    logger.info('Client is registering handle: ' + handle)
 
     const request = {
         message: 'REGISTER_PLAYER',
@@ -451,13 +518,13 @@ function registerHandle(handle) {
         },
     }
 
-    connectAndSend(request)
+    await connectAndSend(request)
 }
 
-function reregisterHandle(player) {
+async function reregisterHandle(player) {
     pending = player
 
-    console.log(
+    logger.info(
         'Client is reregistering handle: ' +
             player.handle +
             ' with player id ' +
@@ -472,14 +539,14 @@ function reregisterHandle(player) {
         },
     }
 
-    connectAndSend(request)
+    await connectAndSend(request)
 }
 
-function unregisterHandle() {
+async function unregisterHandle() {
     const handle = store.getters.playerHandle
     const playerId = store.getters.playerId
 
-    console.log(
+    logger.info(
         'Client is unregistering handle: ' +
             handle +
             ' with player id ' +
@@ -491,33 +558,36 @@ function unregisterHandle() {
         player_id: playerId,
     }
 
-    sendRequest(request)
+    store.dispatch('markGameTerminated')
+    await sendRequest(request)
 }
 
-function quitGame() {
-    console.log('Quitting active game')
+async function quitGame() {
+    logger.info('Quitting active game')
 
     const request = {
         message: 'QUIT_GAME',
         player_id: store.getters.playerId,
     }
 
-    sendRequest(request)
+    store.dispatch('markGameTerminated')
+    await sendRequest(request)
 }
 
-function cancelGame() {
-    console.log('Cancelling active game')
+async function cancelGame() {
+    logger.info('Cancelling active game')
 
     const request = {
         message: 'CANCEL_GAME',
         player_id: store.getters.playerId,
     }
 
-    sendRequest(request)
+    store.dispatch('markGameTerminated')
+    await sendRequest(request)
 }
 
-function joinGame(gameId) {
-    console.log('Joining game: ' + gameId)
+async function joinGame(gameId) {
+    logger.info('Joining game: ' + gameId)
 
     const request = {
         message: 'JOIN_GAME',
@@ -527,33 +597,33 @@ function joinGame(gameId) {
         },
     }
 
-    sendRequest(request)
+    await sendRequest(request)
 }
 
-function startGame(gameId) {
-    console.log('Starting game: ' + gameId)
+async function startGame(gameId) {
+    logger.info('Starting game')
 
     const request = {
         message: 'START_GAME',
         player_id: store.getters.playerId,
     }
 
-    sendRequest(request)
+    await sendRequest(request)
 }
 
-function listAvailableGames() {
-    console.log('Listing available games')
+async function listAvailableGames() {
+    logger.info('Listing available games')
 
     const request = {
         message: 'LIST_AVAILABLE_GAMES',
         player_id: store.getters.playerId,
     }
 
-    sendRequest(request)
+    await sendRequest(request)
 }
 
-function advertiseGame(advertised) {
-    console.log('Advertising new game')
+async function advertiseGame(advertised) {
+    logger.info('Advertising new game')
 
     const request = {
         message: 'ADVERTISE_GAME',
@@ -561,7 +631,46 @@ function advertiseGame(advertised) {
         context: advertised,
     }
 
-    sendRequest(request)
+    await sendRequest(request)
+}
+
+async function executeMove(move) {
+    if (store.getters.isGameTerminated) {
+        // Because things happen asynchronously, we sometimes cross streams
+        logger.warn(
+            'Ignoring execute move request because game has been terminated'
+        )
+    } else {
+        logger.info('Executing move: ' + move.move_id)
+
+        const request = {
+            message: 'EXECUTE_MOVE',
+            player_id: store.getters.playerId,
+            context: {
+                move_id: move.move_id,
+            },
+        }
+
+        await sendRequest(request)
+    }
+}
+
+async function optimalMove(move) {
+    if (store.getters.isGameTerminated) {
+        // Because things happen asynchronously, we sometimes cross streams
+        logger.warn(
+            'Ignoring optimal move request because game has been terminated'
+        )
+    } else {
+        logger.info('Executing server-determined optimal move')
+
+        const request = {
+            message: 'OPTIMAL_MOVE',
+            player_id: store.getters.playerId,
+        }
+
+        await sendRequest(request)
+    }
 }
 
 export {
@@ -575,4 +684,6 @@ export {
     startGame,
     listAvailableGames,
     advertiseGame,
+    executeMove,
+    optimalMove,
 }

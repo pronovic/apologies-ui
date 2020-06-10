@@ -22,8 +22,8 @@ straightforward to wire its callbacks into varius UI handlers.
 ### Frontend Layout
 
 My intent is to use [Vue.js](https://vuejs.org/v2) for the frontend layout,
-probably with either [BootstrapVue](https://bootstrap-vue.org/) or
-[Vuetify](https://vuetifyjs.com/en/) for styling and widgets.  
+along with [BootstrapVue](https://bootstrap-vue.org/) for styling and
+widgets.
 
 I chose Vue.js based on their [comparison](https://vuejs.org/v2/guide/comparison.html) document, 
 under the assumption that it will be easier to learn and deal with for a
@@ -31,19 +31,11 @@ relatively small application like this.  Vue.js is supposed to have relatively
 good documentation and a good getting started guide that someone can get
 through in a day of study.  
 
-Both Vuetify and BootstrapVue have a good reputation.  Bootstrap is perhaps
-more flexible, but requires things like jquery.  Vuetify provides a very strict
-Material Design result with very few options.
-
-Sounds like there is a good source of components with [awesome-vue](https://github.com/vuejs/awesome-vue#ui-components) as well.
-
 ### Rendering the Game Board
 
-My intent is to use [Phaser 3](http://phaser.io/) for rendering the game board
-itself within the frontend.  There are a zillion different ways to do this.  A
-lot of them seem to have a niche focus, a small audience, or aren't very
-active.  Phaser seems to be popular and well supported, and there's good
-documentation for how to get started.
+My intent is to use [Vue Konva](https://konvajs.org/docs/vue/index.html) for
+rendering the game board.  Konva is a canvas library. Since it has Vue
+integration, the canvas widgets are reactive.
 
 ### Testing
 
@@ -65,12 +57,8 @@ and seem to work well.  Cypress only supports Chrome, but it seems like that's
 probably ok for my purposes.  (The articles [here](https://www.monterail.com/blog/end-to-end-testing-with-cypress) and
 [here](https://medium.com/welldone-software/an-overview-of-javascript-testing-7ce7298b9870) were helpful.)
 
-It's less clear how to test Phaser code.  The [recommendations](https://phaser.discourse.group/t/unit-testing/2922) I found
-were to "architect your code so that logic is decoupled from rendering in order
-to make it easily testable".  In other words, generally treat Phaser as a
-rendering engine only, and to implement game play decisions outside of Phaser.
-The game play decisions can then be tested like anything else using Jest.  I
-have no idea how I'll actually do this, but it'll be a learning process.
+Since the Vue Konva library works much like the rest of Vue, my expectation
+is that I can unit test it the same way.  
 
 ## TODO List
 
@@ -81,7 +69,7 @@ This is a list of things I need to accomplish, in no particular order:
 - [x] Figure out how to save state (specifically, handle and player id) to HTML 5 local storage.
 - [x] Connect Atmosphere to the websockets server.  Understand how to handle automatic reconnects, etc.
 - [x] Consider whether it should be possible to reconnect to a game after being disconnected from it
-- [ ] Lay out a simple UI.  Needs at least the following:
+- [x] Lay out a simple UI.  Needs at least the following:
    - [x] Some sort of landing page to advertise what the game is, with a "register now" link
    - [x] Some sort of main page for the user once logged in (very spare - with menus and space in the middle for canvas)
    - [x] A way to register a handle (or to tell that a handle is still registered, via integration with local storage)
@@ -90,16 +78,17 @@ This is a list of things I need to accomplish, in no particular order:
    - [x] A way to see which games can be joined, and to choose one off the list
    - [x] Some sort of visible hint that a game has been joined, the game state (started, etc.), and a way to quit it
    - [x] A way to advertise a game, and start and cancel it once advertised (the advertiser has slightly different options)
-   - [ ] A rudimentary way to view game state and choose a move before the Phaser game board is written
+   - [x] A rudimentary way to view game state and choose a move before the game board canvast is written
 - [ ] Figure out test patterns and implement tests
    - [ ] Unit tests for individual Vue.js components
    - [ ] Integration tests for component interations (maybe?) 
    - [ ] Some sort of E2E functional test suite to cover the entire application (which isn't really that large)
-- [ ] Implement the Phaser game canvas
-   - [ ] Figure out what size the board will be (use the Chromebook as an example of moderate size screen)
-   - [ ] Render the player's hand of cards
-   - [ ] Render the board based on published game state, including animation of pawns moving so the game is intelligible
+- [ ] Implement the game canvas using Konva
+   - [x] Figure out what size the board will be 
+   - [x] Render the player's hand of cards
+   - [x] Render the static portions of the board
+   - [ ] Render the game state, including animation of pawns 
    - [ ] Let the player pick a move
    - [ ] Validate the player's move (this means mapping their action - cards and pawns - to one the legal actions)
    - [ ] Figure out how we'll decide that a player's move is final - just move the pawn and if it's legal we submit?
-   - [ ] Figure out how (or even if) we can write unit test or E2E tests for Phaser (might not be fully possible)
+   - [ ] Figure out how (or even if) we can write unit test or E2E tests for game board (might not be fully possible)

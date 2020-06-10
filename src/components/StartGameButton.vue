@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { logger } from '../utils/util.js'
 import { startGame } from '../utils/client.js'
 
 export default {
@@ -34,7 +35,7 @@ export default {
     },
     methods: {
         handleClick() {
-            console.log('User triggered game start')
+            logger.info('User triggered game start')
             startGame()
         },
     },
