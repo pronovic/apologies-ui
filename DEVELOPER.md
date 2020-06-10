@@ -33,71 +33,6 @@ If necessary, you can temporarily disable a hook using Git's `--no-verify`
 switch.  However, keep in mind that the CI build on GitHub enforces these
 checks, so the build will fail.
 
-## Developer Tasks
-
-The most common developer tasks are managed with `yarn` via the `scripts` list
-in [`package.json`](package.json).  The following scripts are available:
-
-- `yarn checks` - Run the StandardJS and Prettier source code checks (note: `checks`, not `check`)
-- `yarn format` - Reformat code based on the StandardJS and Prettier checks
-- `yarn clean` - Remove the production bundle in `dist/bundle.js`
-- `yarn rmcache` - Remove the Parcel cache, sometimes needed if changes to `.env` are not picked up
-- `yarn build` - Build the production bundle in `dist/bundle.js`
-- `yarn server` - Start the development server in hot module reloading mode
-
-## Prequisites
-
-Nearly all prerequisites are managed by Yarn. All you need to do is make sure
-that you have Yarn itself installed (see below).  Once you have Yarn installed,
-set up your development environment like this:
-
-```
-$ yarn 
-$ yarn install
-```
-
-### MacOS
-
-On MacOS, it's easiest to use [Homebrew](https://brew.sh/) to install Yarn:
-
-```
-$ brew install yarn
-```
-
-This installs "classic" Yarn 1.22.x, which is what we're using right now.
-In the future, we may upgrade to Yarn 2, and having yarn installed this
-way will support that transition.
-
-
-### Debian
-
-On Debian, you have to jump through some hoops, because the packaged
-version of `yarn` (in `yarnpkg`) is not new enough to support the package
-format we use for this repo. 
-
-First, install `npm`:
-
-```
-$ sudo apt-get install npm
-```
-
-Then, install `yarn`:
-
-```
-$ sudo npm install -g yarn
-```
-
-Finally, add the `npm`-installed version of `yarn` to your `$PATH`:
-
-```
-$ export $PATH="/usr/local/bin:$PATH"
-```
-
-At this point, you have a working version of "classic" Yarn 1.22.x, which is
-what we're using right now.  In the future, we may upgrade to Yarn 2, and
-having yarn installed this way will support that transition.
-
-
 ## Javascript Libaries
 
 ### Websockets
@@ -178,3 +113,196 @@ probably ok for my purposes.  (The articles [here](https://www.monterail.com/blo
 
 Since the Vue Konva library works much like the rest of Vue, my expectation is
 that I can unit test it the same way as everything else.
+
+## Developer Tasks
+
+The most common developer tasks are managed with `yarn` via the `scripts` list
+in [`package.json`](package.json).  The following scripts are available:
+
+- `yarn checks` - Run the StandardJS and Prettier source code checks (note: `checks`, not `check`)
+- `yarn format` - Reformat code based on the StandardJS and Prettier checks
+- `yarn clean` - Remove the production bundle in `dist/bundle.js`
+- `yarn rmcache` - Remove the Parcel cache, sometimes needed if changes to `.env` are not picked up
+- `yarn build` - Build the production bundle in `dist/bundle.js`
+- `yarn server` - Start the development server in hot module reloading mode
+
+## Prequisites
+
+Nearly all prerequisites are managed by Yarn. All you need to do is make sure
+that you have Yarn itself installed (see below).  Once you have Yarn installed,
+set up your development environment like this:
+
+```
+$ yarn 
+$ yarn install
+```
+
+### MacOS
+
+On MacOS, it's easiest to use [Homebrew](https://brew.sh/) to install Yarn:
+
+```
+$ brew install yarn
+```
+
+This installs "classic" Yarn 1.22.x, which is what we're using right now.
+In the future, we may upgrade to Yarn 2, and having yarn installed this
+way will support that transition.
+
+
+### Debian
+
+On Debian, you have to jump through some hoops, because the packaged
+version of `yarn` (in `yarnpkg`) is not new enough to support the package
+format we use for this repo. 
+
+First, install `npm`:
+
+```
+$ sudo apt-get install npm
+```
+
+Then, install `yarn`:
+
+```
+$ sudo npm install -g yarn
+```
+
+Finally, add the `npm`-installed version of `yarn` to your `$PATH`:
+
+```
+$ export $PATH="/usr/local/bin:$PATH"
+```
+
+At this point, you have a working version of "classic" Yarn 1.22.x, which is
+what we're using right now.  In the future, we may upgrade to Yarn 2, and
+having yarn installed this way will support that transition.
+
+## Local Testing
+
+Local testing is straightforward.  In addition to this repository, you also need
+the [apologies-server](https://github.com/pronovic/apologies-server).  You will
+run the websockets server in one terminal window and the Parcel server in
+another terminal window.
+
+### Websockets Server
+
+```
+apologies-server $ run server --help
+usage: server [-h] [--quiet] [--verbose] [--debug] [--config CONFIG]
+              [--logfile LOGFILE] [--override OVERRIDE]
+
+Start the apologies server and let it run forever.
+
+optional arguments:
+  -h, --help           show this help message and exit
+  --quiet              decrease log verbosity from INFO to ERROR
+  --verbose            increase log verbosity from INFO to DEBUG
+  --debug              like --verbose but also include websockets logs
+  --config CONFIG      path to configuration on disk
+  --logfile LOGFILE    path to logfile on disk (default is stdout)
+  --override OVERRIDE  override a config parameter as "param:value"
+
+By default, the server writes logs to stdout. If you prefer, you can specify
+the path to a logfile, and logs will be written there instead. The default
+configuration file is "/Users/kpronovici/.apologiesrc". If the default
+configuration file is not found, default values will be set. If you override
+the default config file, it must exist. You may override any individual config
+parameter with "--override param:value".
+```
+
+The simplest way to start the server is with no arguments:
+
+```
+apologies-server $ run server
+2020-06-10 14:31:39,831Z --> [INFO   ] Apologies server started
+2020-06-10 14:31:39,832Z --> [INFO   ] Configuration: {
+  "logfile_path": null,
+  "server_host": "localhost",
+  "server_port": 8080,
+  "close_timeout_sec": 10,
+  "websocket_limit": 1000,
+  "total_game_limit": 1000,
+  "in_progress_game_limit": 25,
+  "registered_player_limit": 100,
+  "websocket_idle_thresh_min": 2,
+  "websocket_inactive_thresh_min": 5,
+  "player_idle_thresh_min": 15,
+  "player_inactive_thresh_min": 30,
+  "game_idle_thresh_min": 10,
+  "game_inactive_thresh_min": 20,
+  "game_retention_thresh_min": 2880,
+  "idle_websocket_check_period_sec": 120,
+  "idle_websocket_check_delay_sec": 300,
+  "idle_player_check_period_sec": 120,
+  "idle_player_check_delay_sec": 300,
+  "idle_game_check_period_sec": 120,
+  "idle_game_check_delay_sec": 300,
+  "obsolete_game_check_period_sec": 300,
+  "obsolete_game_check_delay_sec": 300
+}
+2020-06-10 14:31:39,832Z --> [INFO   ] Adding signal handlers...
+2020-06-10 14:31:39,832Z --> [INFO   ] Scheduling tasks...
+2020-06-10 14:31:39,832Z --> [INFO   ] Completed starting websocket server
+```
+
+The server displays its configuration when it boots.  You can override any of
+this configuration using the switches on the `run server` command.   
+
+You can normally start the websockets server and leave it running forever.
+If something gets screwed up (like your handle is accidentally in use and
+you can't register for it again) just CTRL-C the server and restart it.  No
+state is maintained in between, so you'll start over fresh.
+
+### Parcel Server
+
+The Javascript application is served by Parcel in hot module reloading mode:
+
+```
+apologies-ui $ yarn server
+yarn run v1.22.4
+$ parcel serve src/index.html
+Server running at http://localhost:1234 
+✨  Built in 12.08s.
+```
+
+This example shows what happens with a fresh cache (a built time of around 12
+seconds on my MacBook).  The server starts much faster after the cache has been
+built.
+
+Changes to the source tree are picked up automatically.  This usually works ok,
+but sometimes things can get a little confused, depending on what changes you
+made.  If necessary, CTRL-C the server and restart it.
+
+### Browser Testing
+
+Once the websockets server and the Parcel server are both running, you can
+test in the browser at: http://localhost:1234
+
+Some types of changes to the source tree are reflected immediately due to
+Parcel's hot reloading.  For instance, if you change Vue properties like colors
+or locations, those often appear on screen as soon as you save your code.
+
+Other changes won't be reflected until the application is reloaded.  When in
+doubt, just refresh the browser window.  The code to manage registration state
+is robust, so this typically works fairly well, and a refresh leaves you still
+logged in and at an empty game window.  Refreshing disconnects your websocket,
+which cancels any game you're in the middle of, so you won't have lots of junk
+left around in the websockets server.
+
+The Vue browser plugin is quite helpful for understanding the state of the
+application.  I have used it for two browsers:
+
+- [Chrome](https://chrome.google.com/webstore/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd?hl=en)
+- [Firefox](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
+
+Once installed, the plugin is available under the browser's developer tools.
+It lets you introspect state for Vue components that have rendered on the
+screen.  It also lets you introspect _and change_ Vuex state.  It auto-detects
+whether a Vue application is available.
+
+The plugin's functionality for Vuex is particularly useful, because changes
+made manually to Vuex state flow reactively to components that rely on that
+state.  For instance, if you've registered a game, you can change
+`state.game.winner` to your handle (i.e. `"Ken"`) and see your pawn bounce up
+and down as if you won the game.
