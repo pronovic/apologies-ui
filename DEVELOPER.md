@@ -5,8 +5,7 @@
 My primary development environment MacOS, and that is the only environment I
 test with regularly.  The code should be portable, and I sometimes spot-check
 using my Debian buster development environment.  However, the backend
-websockets server is only known to run on Linux and MacOS, which may limit
-opportunities for local testing on other platforms.  I do not do any software
+websockets server does not run on Windows.  I do not do any software
 development on Windows, and the development process (code checks & formatting,
 etc.) may or may not work as expected there.
 
@@ -52,7 +51,7 @@ worked around most of the warts.
 
 ### Frontend Layout
 
-I am using [Vue.js](https://vuejs.org/v2) for the frontend layout, along with
+I am using [Vue.js v2](https://vuejs.org/) for the frontend layout, along with
 the [BootstrapVue](https://bootstrap-vue.org/) library for styling and widgets.
 
 I chose Vue.js based on their
@@ -74,7 +73,7 @@ easy to integrate with the rest of the Vue application.
 
 Some animations are implemented with [GreenSock GSAP](https://greensock.com/gsap/).
 GSAP is popular and relatively easy to use.  However, it sometimes interacts
-poorly with Konva.  For instance, it's sometimes necessary to manually re-draw
+poorly with Konva.  For instance, it is sometimes necessary to manually re-draw
 the Konva canvas during the GSAP animation loop, which is expensive and seems
 like it shouldn't be necessary.
 
@@ -85,7 +84,8 @@ confused and hard-to-follow fashion.  I haven't figured out exactly why, but my
 leading theory is that it's tied to timing. There's no obvious way to
 synchronously complete one animation before starting the next.  For now, I've
 decided to forgoe animation, and pawns simply teleport from their old location
-to their new location.
+to their new location.  Unfortunately, this is hard to follow when you are
+watching the game.
 
 ### Testing
 
@@ -121,9 +121,9 @@ in [`package.json`](package.json).  The following scripts are available:
 
 - `yarn checks` - Run the StandardJS and Prettier source code checks (note: `checks`, not `check`)
 - `yarn format` - Reformat code based on the StandardJS and Prettier checks
-- `yarn clean` - Remove the production bundle in `dist/bundle.js`
-- `yarn rmcache` - Remove the Parcel cache, sometimes needed if changes to `.env` are not picked up
-- `yarn build` - Build the production bundle in `dist/bundle.js`
+- `yarn clean` - Remove the production bundle in `dist/`
+- `yarn rmcache` - Remove the Parcel cache, which is sometimes needed if changes to `.env` are not picked up
+- `yarn build` - Build the production bundle in `dist/`
 - `yarn server` - Start the development server in hot module reloading mode
 
 ## Prequisites
@@ -186,6 +186,8 @@ run the websockets server in one terminal window and the Parcel server in
 another terminal window.
 
 ### Websockets Server
+
+Here is usage information for the websockets server:
 
 ```
 apologies-server $ run server --help
