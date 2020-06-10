@@ -48,16 +48,17 @@ This is one place where Parcel and Vue.js do not play well together.  Parcel
 injects configuration into `process.env`, but that variable is not available
 to Vue components.  Instead, we go through a two step process: first `process.env`
 is mapped to a config object in [`config.js`](src/store/config.js), and then
-that configuration is exposed via a Vuex attribute the [global store](src/store/index.js).
+that configuration is exposed via a Vuex attribute in the [global store](src/store/index.js).
 
-This works fairly well, since there are not that many configuration items. 
+Since there are not that many configuration items, this works fairly well.
 However, it does mean that you have to remember to add configuration in two
-different places, otherwise it won't work.
+different places.  There is a comment in `.env` as a reminder.
 
-One big benefit to exposing configuration via Vuex state is that you can
-change it on the fly using the Vue browser plugin.  For instance, you can
-adjust the log level or enable position numbers while the application is
-running.
+One big benefit to exposing configuration via Vuex state is that you can change
+it on the fly using the Vue browser plugin.  For instance, you can adjust the
+log level or enable display of position numbers on the game board while the
+application is running.  These changes will revert to defaults when you refresh
+the application.
 
 On the down side, it is sometimes hard to get Parcel to pick up changes to
 the `.env` file.  If you make a change to configuration and it's not reflected,
