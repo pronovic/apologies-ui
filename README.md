@@ -22,7 +22,8 @@ cancel and quit a game and see each other's state.  There is also a demo mode
 that can be used to observe a fully-automated game played against the backend
 websocket server.  However, the functionality for users to interact with game
 state has not yet been written, so there is no way for users to choose which
-move they would like to play when it is their turn.
+move they would like to play when it is their turn.  There is a [TODO
+list](TODO.md) for the remaining tasks.
 
 Developer documentation is found in [DEVELOPER.md](DEVELOPER.md). See that file
 for notes about how the code is structured, how to set up a development
