@@ -291,6 +291,10 @@ apologies-server $ run server
 2020-06-10 14:31:39,832Z --> [INFO   ] Completed starting websocket server
 ```
 
+The very first time you do this, Poetry will install all of the dependencies
+for you, which will take a little while.  After that, startup will be much
+faster.
+
 The server displays its configuration when it boots.  You can override any of
 this configuration using the switches on the `run server` command.   
 
