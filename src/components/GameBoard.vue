@@ -7,10 +7,26 @@
             <GameBoardArea ref="board" :config="board"></GameBoardArea>
         </v-layer>
         <v-layer>
-            <PlayerPawns id="redPawns" :pawns="redPawns"></PlayerPawns>
-            <PlayerPawns id="yellowPawns" :pawns="yellowPawns"></PlayerPawns>
-            <PlayerPawns id="bluePawns" :pawns="bluePawns"></PlayerPawns>
-            <PlayerPawns id="greenPawns" :pawns="greenPawns"></PlayerPawns>
+            <PlayerPawns
+                id="redPawns"
+                :color="red"
+                :pawns="redPawns"
+            ></PlayerPawns>
+            <PlayerPawns
+                id="yellowPawns"
+                :color="yellow"
+                :pawns="yellowPawns"
+            ></PlayerPawns>
+            <PlayerPawns
+                id="bluePawns"
+                :color="blue"
+                :pawns="bluePawns"
+            ></PlayerPawns>
+            <PlayerPawns
+                id="greenPawns"
+                :color="green"
+                :pawns="greenPawns"
+            ></PlayerPawns>
         </v-layer>
         <v-layer>
             <PositionNumbers id="positions"></PositionNumbers>
@@ -23,6 +39,7 @@ import PlayerArea from './board/PlayerArea.vue'
 import GameBoardArea from './board/GameBoardArea.vue'
 import PlayerPawns from './board/PlayerPawns.vue'
 import PositionNumbers from './board/PositionNumbers.vue'
+import { PlayerColor } from '../utils/constants.js'
 
 export default {
     name: 'GameBoard',
@@ -41,6 +58,18 @@ export default {
         },
         width() {
             return 310 + 960 + 5 + 5 // width of components, plus spacing, plus a buffer
+        },
+        red() {
+            return PlayerColor.RED
+        },
+        yellow() {
+            return PlayerColor.YELLOW
+        },
+        blue() {
+            return PlayerColor.BLUE
+        },
+        green() {
+            return PlayerColor.GREEN
         },
         redPawns() {
             return this.$store.getters.redPawns

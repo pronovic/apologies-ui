@@ -1,4 +1,6 @@
 import { PlayerColor } from './constants.js'
+import { gsap, Circ } from 'gsap'
+import { sleep } from './util.js'
 
 const RED_START = [
     { x: 240, y: 100 },
@@ -154,6 +156,87 @@ const SQUARE = [
     { x: 20, y: 75 },
 ]
 
+class AnimationQueue {
+    // This animation queue forces pawn location changes to be processed seqentially, one
+    // after another.  This way, we only try to animate one pawn's movement at a time, and
+    // we don't have to worry about conflicts between animations.  Especially in games
+    // where there are automated players, status updates arrive stacked very tightly
+    // together, within milliseconds.  Without this queue to serialize animations,
+    // multiple pawn animations are often triggered nearly simultaneously, with the effect
+    // that pawns stagger around drunkenly and often don't end up where they should.  By
+    // processing animations sequentially, we can ensure that each movement completes in
+    // its entirety before the next movement starts.
+
+    constructor() {
+        this.q = []
+        this.locked = false
+        this.rendering = false
+    }
+
+    async add(pawn, position, location) {
+        this.q.push({ pawn: pawn, position: position, location: location })
+
+        while (this.locked) {
+            await sleep(100)
+        }
+
+        await this.dispatch()
+    }
+
+    async dispatch() {
+        this.locked = true
+
+        let action
+        while ((action = this.q.shift())) {
+            var position = lookupPosition(action.location)
+            if (
+                action.position.x !== position.x ||
+                action.position.y !== position.y
+            ) {
+                await this.animate(action.pawn, action.position, position)
+            }
+        }
+
+        this.locked = false
+    }
+
+    async animate(pawn, position, final) {
+        if (position.x === -1 && position.y === -1) {
+            // For board initialization, teleport is ok
+            // PlayerPawns initializes its locations to (-1,-1)
+            position.x = final.x
+            position.y = final.y
+        } else {
+            // Otherwise, we always want to animate the location change
+            this.rendering = true
+
+            var val = { x: position.x, y: position.y }
+            gsap.to(val, 0.75, {
+                x: final.x,
+                y: final.y,
+                ease: Circ.easeOut,
+                onComplete: () => {
+                    this.rendering = false
+                },
+                onUpdate: () => {
+                    position.x = parseInt(val.x)
+                    position.y = parseInt(val.y)
+                    pawn.node.getLayer().draw() // this does not seem like a good idea, but it doesn't render otherwise
+                },
+            })
+
+            // Now, just periodically poll to see if rendering is complete
+            // There is apparently no other, more efficient way to accomplish this
+            while (this.rendering) {
+                await sleep(100)
+            }
+        }
+    }
+}
+
+var queue = new AnimationQueue()
+const registered = {}
+
 function lookupStart(color, id) {
     switch (color) {
         case PlayerColor.RED:
@@ -215,4 +298,19 @@ function lookupPosition(location) {
     }
 }
 
-export { lookupPosition, lookupHome, lookupStart, lookupSafe, lookupSquare }
+function registerPawns(color, pawns, positions) {
+    registered[color] = { pawns: pawns, positions: positions }
+}
+
+async function updateLocations(color, locations) {
+    for (let i = 0; i < 4; i++) {
+        if (registered[color]) {
+            const pawn = registered[color].pawns[i]
+            const position = registered[color].positions[i]
+            const location = locations[i]
+            await queue.add(pawn, position, location)
+        }
+    }
+}
+
+export { registerPawns, updateLocations }
