@@ -104,21 +104,14 @@ game board.  [Konva](https://konvajs.org/) is a 2D library used to manage the
 adds declarative and reactive bindings on top of Konva, which makes it fairly
 easy to integrate with the rest of the Vue application.
 
-Some animations are implemented with [GreenSock GSAP](https://greensock.com/gsap/).
-GSAP is popular and relatively easy to use.  However, it sometimes interacts
-poorly with Konva.  For instance, it is sometimes necessary to manually re-draw
-the Konva canvas during the GSAP animation loop, which is expensive and seems
-like it shouldn't be necessary.
-
-I've attempted to use both built-in Konva tween animations and GSAP tween
-animations to smoothly move the pawns from position to position on the board.
-This works poorly.  Pawns end up in crazy places and move around in a generally
-confused and hard-to-follow fashion.  I haven't figured out exactly why, but my
-leading theory is that it's tied to timing. There's no obvious way to
-synchronously complete one animation before starting the next.  For now, I've
-decided to forgoe animation, and pawns simply teleport from their old location
-to their new location.  Unfortunately, this is hard to follow when you are
-watching the game.
+Animations (such as bouncing actions or pawns moving around the board) are
+implemented with [GreenSock GSAP](https://greensock.com/gsap/).  GSAP is
+popular and relatively easy to use.  However, it sometimes interacts a little
+strangely with Konva.  For instance, I've found it necessary to manually
+re-draw the Konva layer during the GSAP animation loop, which seems like it
+shouldn't be necessary.  I can sometimes make animations work without that
+step, but it's not clear why - maybe something having to with which Konva layer
+the component resides in. 
 
 ### Testing
 
