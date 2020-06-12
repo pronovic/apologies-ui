@@ -33,3 +33,4 @@ This is a list of things I want to accomplish, in no particular order:
    - [ ] Integration tests for component interations (maybe?) 
    - [ ] Some sort of E2E functional test suite to cover the entire application (which isn't really that large)
    - [ ] Figure out how (or even if) we can write unit test or E2E tests for game board (might not be fully possible)
+- [ ] Add JSDoc comments to the codebase so it's more legible
