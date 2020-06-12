@@ -65,6 +65,23 @@ the `.env` file.  If you make a change to configuration and it's not reflected,
 stop the local server and run `yarn clean` and `yarn rmcache`.  That usually
 fixes the problem.
 
+## Console Logging
+
+Code should not use `console.log()` directly.  Instead, import `logger`
+from [`util.js`](src/utils/util.js) and use one of:
+
+- `logger.error()`
+- `logger.warn()`
+- `logger.info()`
+- `logger.debug()`
+
+These methods standardize how `console.log()` is used.  They respect the log
+level in configuration.  This makes it easy to turn up and down the verbosity
+just by adjusting configuration in Vuex state using the Vue browser plugin.
+They also implement a standardized log message format, including a timestamp
+and log level.  This makes the result a little easier to read.  (I've always
+found it strange that the console doesn't include a timestamp.)
+
 ## Javascript Libaries
 
 ### Websockets

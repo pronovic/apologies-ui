@@ -2,6 +2,18 @@ import { PlayerColor } from './constants.js'
 import { gsap, Circ } from 'gsap'
 import { sleep } from './util.js'
 
+// These constants specify the (x,y) coordinates of various positions on the board.
+//
+// All of the (x,y) coordinates are relative to the position of the GameBoardArea component.  More
+// specifically, they are relative to the starting coordinates of the that component's <v-group>.
+// Any component within a <v-group> has its coordinates relative to the parent group. The (x,y)
+// coordinates are passed to a pawn when placing it on the board, and represent the geometric
+// center of the pawn.
+//
+// These coordinates were developed manually, by visually inspecting the result.  It would have
+// been better to have a precise mathematical model of how to locate things, but the board was
+// also drawn manually, and is a little inconsistent.  So, this is what we have.
+
 const RED_START = [
     { x: 240, y: 100 },
     { x: 300, y: 100 },
@@ -156,6 +168,7 @@ const SQUARE = [
     { x: 20, y: 75 },
 ]
 
+/** Animation processing queue. */
 class AnimationQueue {
     // This animation queue forces pawn location changes to be processed seqentially, one
     // after another.  This way, we only try to animate one pawn's movement at a time, and
@@ -234,9 +247,13 @@ class AnimationQueue {
     }
 }
 
+/** The queue that animation requests are placed into. */
 var queue = new AnimationQueue()
+
+/** A map from PlayerColor to pawn components for that color, to avoid hardcoding that knowledge in the websocket client. */
 const registered = {}
 
+/** Look up the (x, y) coordinates for a PlayerColor and start area id (range 0-3). */
 function lookupStart(color, id) {
     switch (color) {
         case PlayerColor.RED:
@@ -252,6 +269,7 @@ function lookupStart(color, id) {
     }
 }
 
+/** Look up the (x, y) coordinates for a PlayerColor and home area id (range 0-3). */
 function lookupHome(color, id) {
     switch (color) {
         case PlayerColor.RED:
@@ -267,6 +285,7 @@ function lookupHome(color, id) {
     }
 }
 
+/** Look up the (x, y) coordinates for a PlayerColor and safe area id (range 0-4). */
 function lookupSafe(color, safe) {
     switch (color) {
         case PlayerColor.RED:
@@ -282,10 +301,12 @@ function lookupSafe(color, safe) {
     }
 }
 
+/** Look up the (x, y) coordinates for a board square outside of safe, home, or start (range 0-59). */
 function lookupSquare(square) {
     return SQUARE[square]
 }
 
+/** Look up the (x, y) coordiantes for a location, provided via the GAME_STATE_CHANGE event from the backend. */
 function lookupPosition(location) {
     if (location.start) {
         return lookupStart(location.color, location.id)
@@ -298,10 +319,12 @@ function lookupPosition(location) {
     }
 }
 
+/** Register pawns for a color, called by the PlayerPawns component. */
 function registerPawns(color, pawns, positions) {
     registered[color] = { pawns: pawns, positions: positions }
 }
 
+/** Update the locations of all pawns for a color, called by the websocket client when processing a GAME_STATE_CHANGE event. */
 async function updateLocations(color, locations) {
     for (let i = 0; i < 4; i++) {
         if (registered[color]) {
@@ -313,4 +336,12 @@ async function updateLocations(color, locations) {
     }
 }
 
-export { registerPawns, updateLocations }
+export {
+    registerPawns,
+    updateLocations,
+    lookupPosition,
+    lookupSquare,
+    lookupSafe,
+    lookupStart,
+    lookupHome,
+}

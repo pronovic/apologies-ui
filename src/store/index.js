@@ -14,6 +14,7 @@ import {
 
 Vue.use(Vuex)
 
+/** State of a user in the web UI. */
 const user = {
     loadStatus: UserLoadStatus.NOT_LOADED,
     registered: false,
@@ -21,6 +22,7 @@ const user = {
     playerId: null,
 }
 
+/** Server state, tracked via events. */
 const server = {
     latestFailure: null,
     registeredPlayers: [],
@@ -30,6 +32,7 @@ const server = {
     invitations: [],
 }
 
+/** Game state, tracked via events. */
 const game = {
     id: null,
     demo: false,
@@ -48,6 +51,7 @@ const game = {
     playerMoves: [],
 }
 
+/** Screen dimensions, tracked via an event handler. */
 const dimensions = {
     header: {
         height: 0,
@@ -58,6 +62,7 @@ const dimensions = {
     },
 }
 
+/** The Vuex store, containing global state. */
 const store = new Vuex.Store({
     state: {
         config: config,

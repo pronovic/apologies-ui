@@ -1,3 +1,4 @@
+/** The status of a user in the web UI. */
 const UserLoadStatus = {
     NOT_LOADED: 'Not Loaded',
     LOADED: 'Loaded',
@@ -5,6 +6,7 @@ const UserLoadStatus = {
     ERROR: 'Error',
 }
 
+/** The status of the backend websocket server. */
 const ServerStatus = {
     SERVER_SHUTDOWN: 'Server Shutdown',
     WEBSOCKET_IDLE: 'Websocket Idle',
@@ -14,6 +16,7 @@ const ServerStatus = {
     PLAYER_INACTIVE: 'PlayerInactive',
 }
 
+/** The status of a game. */
 const GameStatus = {
     GAME_JOINED: 'Joined Game',
     GAME_STARTED: 'Game Started',
@@ -25,26 +28,31 @@ const GameStatus = {
     DISCONNECTED: 'Disconnected',
 }
 
+/** Game modes. */
 const GameMode = {
     STANDARD: 'STANDARD',
     ADULT: 'ADULT',
 }
 
+/** Game visibilities. */
 const GameVisibility = {
     PUBLIC: 'PUBLIC',
     PRIVATE: 'PRIVATE",',
 }
 
+/** Player states. */
 const PlayerState = {
     QUIT: 'QUIT',
     DISCONNECTED: 'DISCONNECTED',
 }
 
+/** Player types. */
 const PlayerType = {
     HUMAN: 'HUMAN',
     PROGRAMMATIC: 'PROGRAMMATIC',
 }
 
+/** Player colors. */
 const PlayerColor = {
     RED: 'RED',
     YELLOW: 'YELLOW',
@@ -52,12 +60,13 @@ const PlayerColor = {
     GREEN: 'GREEN',
 }
 
+/** HTML colors for squares, pawns, etc. */
 const Colors = {
     BLACK: 'black',
     WHITE: 'white',
     GREY: '#cccccc',
     PURPLE: '#666699',
-    NEON_PURPLE: '#ff00ff',
+    MAGENTA: '#ff00ff',
     OFF_WHITE: '#f4f3db',
     BLUE: '#0099cc',
     LIGHT_BLUE: '#e6f9fe',
@@ -69,6 +78,7 @@ const Colors = {
     LIGHT_YELLOW: '#fff5cc',
 }
 
+/** Cards available to be played. */
 const Cards = {
     CARD_1: 'CARD_1',
     CARD_2: 'CARD_2',

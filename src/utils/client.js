@@ -21,6 +21,7 @@ var initialReconnectDelayMs = store.state.config.INITIAL_RECONNECT_DELAY_MS
 var maxReconnectDelayMs = store.state.config.MAX_RECONNECT_DELAY_MS
 var reconnectDelayFactor = store.state.config.RECONNECT_DECAY_FACTOR
 
+/** Message processing queue. */
 class MessageQueue {
     // This message queue forces messages to be processed sequentially, one after another.
     // Especially in games where there are automated players, status updates arrive
@@ -60,8 +61,10 @@ class MessageQueue {
     }
 }
 
+/** The queue that messages are placed into. */
 var queue = new MessageQueue()
 
+/** Dispatch a message to the correct handler function. */
 async function dispatchMessage(message) {
     switch (message.message) {
         case 'REQUEST_FAILED':
@@ -136,6 +139,7 @@ async function dispatchMessage(message) {
     }
 }
 
+/** Handle the REQUEST_FAILED event. */
 async function handleRequestFailed(message) {
     const reason = message.context.reason
     const handle = message.context.handle
@@ -176,6 +180,7 @@ async function handleRequestFailed(message) {
     }
 }
 
+/** Handle the SERVER_SHUTDOWN event. */
 async function handleServerShutdown(message) {
     await disconnectSocket()
     store.dispatch('handleServerShutdown')
@@ -185,6 +190,7 @@ async function handleServerShutdown(message) {
     }
 }
 
+/** Handle the WEBSOCKET_IDLE event. */
 async function handleWebsocketIdle(message) {
     EventBus.$emit(
         'client-toast',
@@ -193,6 +199,7 @@ async function handleWebsocketIdle(message) {
     store.dispatch('handleWebsocketIdle')
 }
 
+/** Handle the WEBSOCKET_INACTIVE event. */
 async function handleWebsocketInactive(message) {
     logger.warn('Websocket is inactive; disconnecting')
 
@@ -207,14 +214,17 @@ async function handleWebsocketInactive(message) {
     await disconnectSocket()
 }
 
+/** Handle the REGISTERED_PLAYERS event. */
 async function handleRegisteredPlayers(message) {
     store.dispatch('handleRegisteredPlayers', message.context)
 }
 
+/** Handle the AVAILABLE_GAMES event. */
 async function handleAvailableGames(message) {
     store.dispatch('handleAvailableGames', message.context)
 }
 
+/** Handle the PLAYER_REGISTERED event. */
 async function handlePlayerRegistered(message) {
     EventBus.$emit('client-toast', 'Completed registering your handle.')
 
@@ -238,19 +248,25 @@ async function handlePlayerRegistered(message) {
     }
 }
 
+/** Handle the PLAYER_UNREGISTERED event. */
 async function handlePlayerUnregistered(message) {
     EventBus.$emit('client-toast', 'Completed unregistering your handle.')
 
     logger.info('Completed unregistering handle')
     store.dispatch('handlePlayerNotRegistered')
 
-    if (router.currentRoute.name === 'Game') {
+    // we only want to redirect to landing if we're in a "normal" place to take this action
+    if (
+        router.currentRoute.name === 'UnregisterHandle' ||
+        router.currentRoute.name === 'Game'
+    ) {
         router.push({ name: 'Landing' })
     }
 
     await disconnectSocket()
 }
 
+/** Handle the PLAYER_IDLE event. */
 async function handlePlayerIdle(message) {
     EventBus.$emit(
         'client-toast',
@@ -259,6 +275,7 @@ async function handlePlayerIdle(message) {
     store.dispatch('handlePlayerIdle')
 }
 
+/** Hand the PLAYER_INACTIVE event. */
 async function handlePlayerInactive(message) {
     logger.warn('Player is inactive; disconnecting')
 
@@ -273,10 +290,12 @@ async function handlePlayerInactive(message) {
     await disconnectSocket()
 }
 
+/** Handle the PLAYER_MESSAGE_RECEIVED event */
 async function handlePlayerMessageReceived(message) {
     store.dispatch('handlePlayerMessageReceived', message.context)
 }
 
+/** Handle the GAME_ADVERTISED event. */
 async function handleGameAdvertised(message) {
     EventBus.$emit('client-toast', 'Your game has been advertised')
     store.dispatch('handleGameAdvertised', message.context)
@@ -288,31 +307,37 @@ async function handleGameAdvertised(message) {
     }
 }
 
+/** Handle the GAME_INVITATION event. */
 async function handleGameInvitation(message) {
     EventBus.$emit('client-toast', 'You have been invited to a game')
     store.dispatch('handleGameInvitation', message.context)
 }
 
+/** Handle the GAME_JOINED event. */
 async function handleGameJoined(message) {
     EventBus.$emit('client-toast', 'You have joined the game')
     store.dispatch('handleGameJoined', message.context)
 }
 
+/** Handle the GAME_STARTED event. */
 async function handleGameStarted(message) {
     EventBus.$emit('client-toast', 'The game has started')
     store.dispatch('handleGameStarted')
 }
 
+/** Handle the GAME_CANCELLED event. */
 async function handleGameCancelled(message) {
     EventBus.$emit('client-toast', 'The game has been cancelled')
     store.dispatch('handleGameCancelled')
 }
 
+/** Handle the GAME_COMPLETED event. */
 async function handleGameCompleted(message) {
     EventBus.$emit('client-toast', message.context.comment)
     store.dispatch('handleGameCompleted', message.context.winner)
 }
 
+/** Handle the GAME_IDLE event. */
 async function handleGameIdle(message) {
     EventBus.$emit(
         'client-toast',
@@ -321,6 +346,7 @@ async function handleGameIdle(message) {
     store.dispatch('handleGameIdle')
 }
 
+/** Handle the GAME_INACTIVE event. */
 async function handleGameInactive(message) {
     EventBus.$emit(
         'client-toast',
@@ -329,16 +355,25 @@ async function handleGameInactive(message) {
     store.dispatch('handleGameInactive')
 }
 
+/** Handle the GAME_PLAYER_QUIT event. */
 async function handleGamePlayerQuit(message) {
     EventBus.$emit('client-toast', 'You have quit the game')
     store.dispatch('handleGamePlayerQuit')
 }
 
+/** Handle the GAME_PLAYER_CHANGE event. */
 async function handleGamePlayerChange(message) {
     store.dispatch('handleGamePlayerChange', message.context)
 }
 
+/** Handle the GAME_STATE_CHANGE event. */
 async function handleGameStateChange(message) {
+    // This is one of the few places in the system where the UI isn't updated
+    // reactively.  We want the locations of the pawns to be updated via an
+    // animation, rather than the pawn "teleporting" to its new location.  We
+    // also need to carefully coordinate the updates so that only one pawn moves
+    // at a time.
+    //
     // It's important to update the locations in the right order, otherwise
     // the game is less intelligible.  For instance, if red lands on a green
     // slide to kick another pawn back to start, it makes more sense if red
@@ -377,6 +412,7 @@ async function handleGameStateChange(message) {
     }
 }
 
+/** Handle the GAME_PLAYER_TURN event. */
 async function handleGamePlayerTurn(message) {
     store.dispatch('handleGamePlayerTurn', message.context)
     if (store.getters.isDemoInProgress) {
@@ -388,6 +424,7 @@ async function handleGamePlayerTurn(message) {
     }
 }
 
+/** Handle a websocket close event. */
 async function onClose(response) {
     logger.info(
         'Websocket connection is closed: ' +
@@ -456,7 +493,9 @@ async function onClose(response) {
     }
 }
 
+/** Handle a websocket error. */
 async function onError(response) {
+    // In practice, an error usually seems to come along with a disconnect, so we just log it. */
     logger.error(
         'Websocket connection error: ' +
             response.status +
@@ -467,16 +506,18 @@ async function onError(response) {
     )
 }
 
+/** Handle a websocket transport failure. */
 async function onTransportFailure(errorMsg, request) {
-    // the two settings prevent the stupid client from falling back to HTTP when the websocket disconnects
+    // These two settings prevent the stupid client from falling back to HTTP when the websocket disconnects
     logger.error('Websocket transport failure: ' + errorMsg)
     request.transport = 'websocket'
     request.fallbackTransport = 'websocket'
 }
 
+/** Handle a websocket reconnect event. */
 async function onReconnect(request, response) {
-    // in theory, this never gets called, because we had to turn off auto-reconnect to make things work
-    // the two settings prevent the stupid client from falling back to HTTP when the websocket disconnects
+    // In theory, this never gets called, because we had to turn off auto-reconnect to make things work
+    // These two settings prevent the stupid client from falling back to HTTP when the websocket disconnects
     logger.warn(
         'Websocket connection is reconnecting: ' +
             response.status +
@@ -489,13 +530,20 @@ async function onReconnect(request, response) {
     request.fallbackTransport = 'websocket'
 }
 
+/** Handle a message received from the websocket. */
 async function onMessage(response) {
+    // We handle the message by enqueing it, so messages are processed one at a time without overlap
     await queue.add(response.responseBody)
     await queue.dispatch()
 }
 
+/** Send a request to a websocket. */
 async function sendRequest(request) {
-    // wait up to 10 seconds for the socket to be established
+    // Intermittently, the subsocket is not yet available when we try to send the request.
+    // In theory, this shouldn't happen, since we wait for the connection to be up before
+    // sending anything.  We'll wait up to 10 seconds for the socket to be established
+    // before erroring out.
+
     let tries = 0
     // eslint-disable-next-line no-unmodified-loop-condition
     while (!subsocket && tries++ < 40) {
@@ -504,11 +552,15 @@ async function sendRequest(request) {
 
     if (!subsocket) {
         logger.error('Timed out waiting for subsocket to be ready')
+
         store.dispatch('handlePlayerNotRegistered')
         store.dispatch('handleGameClear')
+
         if (router.currentRoute.name !== 'Error') {
             router.push({ name: 'Error' })
         }
+
+        await disconnectSocket()
     } else {
         const json = JSON.stringify(request, null, 2)
         logger.info('Sending ' + request.message)
@@ -517,6 +569,7 @@ async function sendRequest(request) {
     }
 }
 
+/** Open the websocket connection. */
 async function connectSocket(onOpen) {
     var request = new atmosphere.AtmosphereRequest()
 
@@ -550,7 +603,11 @@ async function connectSocket(onOpen) {
     subsocket = socket.subscribe(request)
 }
 
+/** Disconnect the websocket. */
 async function disconnectSocket() {
+    // Note that this is a little misleading.  Even if we unsubscribe, it sometimes takes
+    // a while to complete.  So, it's possible to receive messages after unsubscribing.  I
+    // think I've worked around most of the odd corner cases that result.
     logger.info('Closing websocket connection')
     closeRequested = true
     socket.unsubscribe()
@@ -558,6 +615,7 @@ async function disconnectSocket() {
     reconnectDelayMs = 0
 }
 
+/** Open the websocket connection and send a message as soon as the connection is ready. */
 async function connectAndSend(request) {
     connectSocket(async (response) => {
         if (!open) {
@@ -572,6 +630,7 @@ async function connectAndSend(request) {
     })
 }
 
+/** Register the passed-in handle with the backend. */
 async function registerHandle(handle) {
     pending = { handle: handle, playerId: null }
 
@@ -587,6 +646,7 @@ async function registerHandle(handle) {
     await connectAndSend(request)
 }
 
+/** Reregister a handle with the backend, using and existing player id. */
 async function reregisterHandle(player) {
     pending = player
 
@@ -608,6 +668,7 @@ async function reregisterHandle(player) {
     await connectAndSend(request)
 }
 
+/** Unregister with the backend. */
 async function unregisterHandle() {
     const handle = store.getters.playerHandle
     const playerId = store.getters.playerId
@@ -628,6 +689,7 @@ async function unregisterHandle() {
     await sendRequest(request)
 }
 
+/** Quit an in-progress game. */
 async function quitGame() {
     logger.info('Quitting active game')
 
@@ -640,6 +702,7 @@ async function quitGame() {
     await sendRequest(request)
 }
 
+/** Cancel an in-progress game. */
 async function cancelGame() {
     logger.info('Cancelling active game')
 
@@ -652,6 +715,7 @@ async function cancelGame() {
     await sendRequest(request)
 }
 
+/** Join a game. */
 async function joinGame(gameId) {
     logger.info('Joining game: ' + gameId)
 
@@ -666,6 +730,7 @@ async function joinGame(gameId) {
     await sendRequest(request)
 }
 
+/** Start an advertised game. */
 async function startGame(gameId) {
     logger.info('Starting game')
 
@@ -677,6 +742,7 @@ async function startGame(gameId) {
     await sendRequest(request)
 }
 
+/** List all available games. */
 async function listAvailableGames() {
     logger.info('Listing available games')
 
@@ -688,6 +754,7 @@ async function listAvailableGames() {
     await sendRequest(request)
 }
 
+/** Advertise a game. */
 async function advertiseGame(advertised) {
     logger.info('Advertising new game')
 
@@ -700,6 +767,7 @@ async function advertiseGame(advertised) {
     await sendRequest(request)
 }
 
+/** Execute a move. */
 async function executeMove(move) {
     if (store.getters.isGameTerminated) {
         // Because things happen asynchronously, we sometimes cross streams
@@ -721,6 +789,7 @@ async function executeMove(move) {
     }
 }
 
+/** Ask the server to execute the optimal move, rather than choosing one. */
 async function optimalMove(move) {
     if (store.getters.isGameTerminated) {
         // Because things happen asynchronously, we sometimes cross streams

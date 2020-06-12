@@ -1,4 +1,6 @@
 <template>
+    <!-- This draws bright magenta numbers on top of every position on the board, for debugging. -->
+    <!-- You can turn it on and off dynamically (at runtime) by modifying configuration via the Vue plugin -->
     <!-- The (x,y) start of each group has to match that of GameBoardArea, so coordinates are consistent -->
     <v-group :id="id" :x="320" :y="20">
         <div v-if="visible">
@@ -69,7 +71,7 @@ export default {
                 x: position.x,
                 y: position.y,
                 text: text,
-                fill: Colors.NEON_PURPLE,
+                fill: Colors.MAGENTA,
                 fontSize: 32,
                 align: 'center',
                 verticalAlign: 'middle',
