@@ -4,6 +4,8 @@ import atmosphere from 'atmosphere.js'
 
 import { EventBus } from './eventbus.js'
 import { logger, sleep } from './util.js'
+import { PlayerColor } from './constants'
+import { updateLocations } from './movement'
 
 var socket = atmosphere
 var subsocket = null
@@ -35,9 +37,12 @@ class MessageQueue {
 
     async add(json) {
         this.q.push(json)
-        if (!this.locked) {
-            await this.dispatch()
+
+        while (this.locked) {
+            await sleep(100)
         }
+
+        await this.dispatch()
     }
 
     async dispatch() {
@@ -319,11 +324,42 @@ async function handleGamePlayerChange(message) {
 }
 
 async function handleGameStateChange(message) {
-    // TODO: this sleep is probably not necessary after game animation is more mature?
-    await sleep(250).then(() => {
-        store.dispatch('handleGameStateChange', message.context)
-        logger.debug('Completed handling state change')
-    })
+    // It's important to update the locations in the right order, otherwise
+    // the game is less intelligible.  For instance, if red lands on a green
+    // slide to kick another pawn back to start, it makes more sense if red
+    // moves onto the slide first, and then the other pawn moves back to start.
+    // It's not strictly necessary, but makes the game easier to follow visually.
+
+    store.dispatch('handleGameStateChange', message.context)
+
+    if (!store.getters.previousTurn || !store.getters.previousTurn.color) {
+        await updateLocations(PlayerColor.RED, store.getters.redPawns)
+        await updateLocations(PlayerColor.YELLOW, store.getters.yellowPawns)
+        await updateLocations(PlayerColor.BLUE, store.getters.bluePawns)
+        await updateLocations(PlayerColor.GREEN, store.getters.greenPawns)
+    } else {
+        if (store.getters.previousTurn.color === PlayerColor.RED) {
+            await updateLocations(PlayerColor.RED, store.getters.redPawns)
+            await updateLocations(PlayerColor.YELLOW, store.getters.yellowPawns)
+            await updateLocations(PlayerColor.BLUE, store.getters.bluePawns)
+            await updateLocations(PlayerColor.GREEN, store.getters.greenPawns)
+        } else if (store.getters.previousTurn.color === PlayerColor.YELLOW) {
+            await updateLocations(PlayerColor.YELLOW, store.getters.yellowPawns)
+            await updateLocations(PlayerColor.BLUE, store.getters.bluePawns)
+            await updateLocations(PlayerColor.GREEN, store.getters.greenPawns)
+            await updateLocations(PlayerColor.RED, store.getters.redPawns)
+        } else if (store.getters.previousTurn.color === PlayerColor.BLUE) {
+            await updateLocations(PlayerColor.BLUE, store.getters.bluePawns)
+            await updateLocations(PlayerColor.GREEN, store.getters.greenPawns)
+            await updateLocations(PlayerColor.RED, store.getters.redPawns)
+            await updateLocations(PlayerColor.YELLOW, store.getters.yellowPawns)
+        } else {
+            await updateLocations(PlayerColor.BLUE, store.getters.bluePawns)
+            await updateLocations(PlayerColor.RED, store.getters.redPawns)
+            await updateLocations(PlayerColor.YELLOW, store.getters.yellowPawns)
+            await updateLocations(PlayerColor.GREEN, store.getters.greenPawns)
+        }
+    }
 }
 
 async function handleGamePlayerTurn(message) {
@@ -333,9 +369,7 @@ async function handleGamePlayerTurn(message) {
             'Demo game is in progress; server will execute optimal move'
         )
         await optimalMove()
-        await sleep(250).then(() => {
-            store.dispatch('handleMovePlayed')
-        })
+        store.dispatch('handleMovePlayed')
     }
 }
 
@@ -442,6 +476,7 @@ async function onReconnect(request, response) {
 
 async function onMessage(response) {
     await queue.add(response.responseBody)
+    await queue.dispatch()
 }
 
 async function sendRequest(request) {

@@ -16,18 +16,18 @@ This is a list of things I want to accomplish, in no particular order:
    - [x] A way to see which games can be joined, and to choose one off the list
    - [x] Some sort of visible hint that a game has been joined, the game state (started, etc.), and a way to quit it
    - [x] A way to advertise a game, and start and cancel it once advertised (the advertiser has slightly different options)
-   - [x] A rudimentary way to view game state and choose a move before the game board canvast is written
+   - [x] A rudimentary way to view game state and choose a move before the game board canvas is written
 - [ ] Implement the game canvas using Konva
    - [x] Figure out what size the board will be 
    - [x] Render the player's hand of cards
    - [x] Render the static portions of the board
    - [x] Render the game state, including moving pawns between locations ("teleporting" ok at this stage)
+   - [x] Figure out a better mechanism to animate pawn movement, to make game play more intelligible
    - [ ] Render a hint or instructions for a card (hover?  tooltip?  new section?)
    - [ ] A way for a player to pick their card in adult mode
    - [ ] A way for a player to pick pick the pawns associated with a move
    - [ ] A way to validate a player's move (this means mapping their action - cards and pawns - to one the legal actions)
    - [ ] Decide how a player's move is final - just move the pawn and if it's legal we submit?
-   - [ ] Figure out a better mechanism to animate pawn movement, to make game play more intelligible
 - [ ] Figure out test patterns and implement tests
    - [ ] Unit tests for individual Vue.js components
    - [ ] Integration tests for component interations (maybe?) 

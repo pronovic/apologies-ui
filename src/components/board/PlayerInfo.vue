@@ -34,7 +34,7 @@ export default {
     methods: {
         bounce() {
             var val = { x: 0, y: -10 }
-            gsap.to(val, 0.1, {
+            gsap.to(val, 0.25, {
                 x: 0,
                 y: 0,
                 yoyo: true,
@@ -42,7 +42,9 @@ export default {
                 onUpdate: () => {
                     this.position.x = parseInt(val.x)
                     this.position.y = parseInt(val.y)
-                    this.$refs.pawn.node.getLayer().draw() // this does not seem like a good idea, but it doesn't work otherwise
+                    if (this.$refs.pawn) {
+                        this.$refs.pawn.node.getLayer().draw() // this does not seem like a good idea, but it doesn't render otherwise
+                    }
                 },
             })
         },

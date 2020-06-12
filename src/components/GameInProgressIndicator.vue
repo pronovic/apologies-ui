@@ -9,8 +9,8 @@
             title="The game is in progress"
         >
             <b-icon
-                icon="heart-fill"
-                animation="throb"
+                icon="arrow-clockwise"
+                animation="spin"
                 aria-label="Game in Progress"
             ></b-icon>
         </b-button>
