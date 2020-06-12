@@ -7,6 +7,7 @@ import { logger } from '../utils/util.js'
 const Landing = () => import('../views/Landing.vue')
 const Game = () => import('../views/Game.vue')
 const Error = () => import('../views/Error.vue')
+const Inactive = () => import('../views/Inactive.vue')
 const LoadUser = () => import('../views/LoadUser.vue')
 const RegisterHandle = () => import('../views/RegisterHandle.vue')
 const UnregisterHandle = () => import('../views/UnregisterHandle.vue')
@@ -31,6 +32,11 @@ const routes = [
         path: '/error',
         name: 'Error',
         component: Error,
+    },
+    {
+        path: '/inactive',
+        name: 'Inactive',
+        component: Inactive,
     },
     {
         path: '/load',

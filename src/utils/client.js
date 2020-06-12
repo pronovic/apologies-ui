@@ -194,11 +194,17 @@ async function handleWebsocketIdle(message) {
 }
 
 async function handleWebsocketInactive(message) {
-    EventBus.$emit(
-        'client-toast',
-        'You are inactive; expect a disconnect momentarily'
-    )
+    logger.warn('Websocket is inactive; disconnecting')
+
     store.dispatch('handleWebsocketInactive')
+    store.dispatch('handlePlayerNotRegistered')
+    store.dispatch('handleGameClear')
+
+    if (router.currentRoute.name !== 'Inactive') {
+        router.push({ name: 'Inactive' })
+    }
+
+    await disconnectSocket()
 }
 
 async function handleRegisteredPlayers(message) {
@@ -234,12 +240,15 @@ async function handlePlayerRegistered(message) {
 
 async function handlePlayerUnregistered(message) {
     EventBus.$emit('client-toast', 'Completed unregistering your handle.')
+
     logger.info('Completed unregistering handle')
-    await disconnectSocket()
     store.dispatch('handlePlayerNotRegistered')
-    if (router.currentRoute.name !== 'Landing') {
+
+    if (router.currentRoute.name === 'Game') {
         router.push({ name: 'Landing' })
     }
+
+    await disconnectSocket()
 }
 
 async function handlePlayerIdle(message) {
@@ -251,11 +260,17 @@ async function handlePlayerIdle(message) {
 }
 
 async function handlePlayerInactive(message) {
-    EventBus.$emit(
-        'client-toast',
-        'You are inactive; expect a disconnect momentarily'
-    )
+    logger.warn('Player is inactive; disconnecting')
+
     store.dispatch('handlePlayerInactive')
+    store.dispatch('handlePlayerNotRegistered')
+    store.dispatch('handleGameClear')
+
+    if (router.currentRoute.name !== 'Inactive') {
+        router.push({ name: 'Inactive' })
+    }
+
+    await disconnectSocket()
 }
 
 async function handlePlayerMessageReceived(message) {
@@ -480,10 +495,26 @@ async function onMessage(response) {
 }
 
 async function sendRequest(request) {
-    const json = JSON.stringify(request, null, 2)
-    logger.info('Sending ' + request.message)
-    logger.debug(json)
-    subsocket.push(json)
+    // wait up to 10 seconds for the socket to be established
+    let tries = 0
+    // eslint-disable-next-line no-unmodified-loop-condition
+    while (!subsocket && tries++ < 40) {
+        await sleep(250)
+    }
+
+    if (!subsocket) {
+        logger.error('Timed out waiting for subsocket to be ready')
+        store.dispatch('handlePlayerNotRegistered')
+        store.dispatch('handleGameClear')
+        if (router.currentRoute.name !== 'Error') {
+            router.push({ name: 'Error' })
+        }
+    } else {
+        const json = JSON.stringify(request, null, 2)
+        logger.info('Sending ' + request.message)
+        logger.debug(json)
+        subsocket.push(json)
+    }
 }
 
 async function connectSocket(onOpen) {
