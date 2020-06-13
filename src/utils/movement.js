@@ -326,8 +326,8 @@ function registerPawns(color, pawns, positions) {
 
 /** Update the locations of all pawns for a color, called by the websocket client when processing a GAME_STATE_CHANGE event. */
 async function updateLocations(color, locations) {
-    for (let i = 0; i < 4; i++) {
-        if (registered[color]) {
+    if (registered[color] && locations && locations.length === 4) {
+        for (let i = 0; i < 4; i++) {
             const pawn = registered[color].pawns[i]
             const position = registered[color].positions[i]
             const location = locations[i]
