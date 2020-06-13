@@ -398,10 +398,10 @@ async function handleGameStateChange(message) {
             await updateLocations(PlayerColor.RED, store.getters.redPawns)
             await updateLocations(PlayerColor.YELLOW, store.getters.yellowPawns)
         } else {
-            await updateLocations(PlayerColor.BLUE, store.getters.bluePawns)
+            await updateLocations(PlayerColor.GREEN, store.getters.greenPawns)
             await updateLocations(PlayerColor.RED, store.getters.redPawns)
             await updateLocations(PlayerColor.YELLOW, store.getters.yellowPawns)
-            await updateLocations(PlayerColor.GREEN, store.getters.greenPawns)
+            await updateLocations(PlayerColor.BLUE, store.getters.bluePawns)
         }
     }
 }
