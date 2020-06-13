@@ -13,7 +13,7 @@
             <QuitGameMenuItem></QuitGameMenuItem>
             <CancelGameMenuItem></CancelGameMenuItem>
             <ClearGameMenuItem></ClearGameMenuItem>
-            <RunDemoGameMenuItem></RunDemoGameMenuItem>
+            <ToggleAutoplayMenuItem></ToggleAutoplayMenuItem>
         </b-dropdown>
     </div>
 </template>
@@ -25,7 +25,7 @@ import ClearGameMenuItem from './menu/ClearGameMenuItem.vue'
 import JoinGameMenuItem from './menu/JoinGameMenuItem.vue'
 import QuitGameMenuItem from './menu/QuitGameMenuItem.vue'
 import UnregisterMenuItem from './menu/UnregisterMenuItem.vue'
-import RunDemoGameMenuItem from './menu/RunDemoGameMenuItem.vue'
+import ToggleAutoplayMenuItem from './menu/ToggleAutoplayMenuItem.vue'
 
 export default {
     name: 'GameMenu',
@@ -36,7 +36,7 @@ export default {
         JoinGameMenuItem: JoinGameMenuItem,
         QuitGameMenuItem: QuitGameMenuItem,
         UnregisterMenuItem: UnregisterMenuItem,
-        RunDemoGameMenuItem: RunDemoGameMenuItem,
+        ToggleAutoplayMenuItem: ToggleAutoplayMenuItem,
     },
 }
 </script>

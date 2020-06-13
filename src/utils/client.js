@@ -299,12 +299,6 @@ async function handlePlayerMessageReceived(message) {
 async function handleGameAdvertised(message) {
     EventBus.$emit('client-toast', 'Your game has been advertised')
     store.dispatch('handleGameAdvertised', message.context)
-    if (store.getters.isDemoInProgress) {
-        logger.info(
-            'Demo game is in progress; starting advertised game immediately.'
-        )
-        await startGame()
-    }
 }
 
 /** Handle the GAME_INVITATION event. */
@@ -415,10 +409,8 @@ async function handleGameStateChange(message) {
 /** Handle the GAME_PLAYER_TURN event. */
 async function handleGamePlayerTurn(message) {
     store.dispatch('handleGamePlayerTurn', message.context)
-    if (store.getters.isDemoInProgress) {
-        logger.info(
-            'Demo game is in progress; server will execute optimal move'
-        )
+    if (store.getters.isAutoplayEnabled) {
+        logger.info('Autoplay is enabled; executing optimal move')
         await optimalMove()
         store.dispatch('handleMovePlayed')
     }

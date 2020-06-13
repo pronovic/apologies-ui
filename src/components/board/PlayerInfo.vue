@@ -79,18 +79,32 @@ export default {
             }
         },
         status() {
-            let status = this.opponent ? 'Computer Opponent' : 'Your Player'
-            if (this.player.isWinner) {
-                status = 'Game Winner'
-            } else if (this.player.isAdvertiser) {
-                status = 'Game Advertiser'
+            let status = ''
+
+            if (!this.opponent) {
+                status = 'Your Player'
+
+                if (this.player.isWinner) {
+                    status = 'Game Winner'
+                } else if (this.player.isAdvertiser) {
+                    status = 'Game Advertiser'
+                }
+
+                if (this.$store.getters.isAutoplayEnabled) {
+                    status = status + ' (Autoplay)'
+                }
             } else {
-                if (this.opponent && this.player.type === PlayerType.HUMAN) {
+                status = 'Computer Opponent'
+                if (this.player.isWinner) {
+                    status = 'Game Winner'
+                } else if (this.player.isAdvertiser) {
+                    status = 'Game Advertiser'
+                } else if (this.player.type === PlayerType.HUMAN) {
                     status = 'Human Opponent'
                     if (this.player.state === PlayerState.QUIT) {
-                        status = 'Quit Game (Computer Opponent)'
+                        status = 'Quit Game (Autoplay)'
                     } else if (this.player.state === PlayerState.DISCONNECTED) {
-                        status = 'Disconnected (Computer Opponent)'
+                        status = 'Disconnected (Autoplay)'
                     }
                 }
             }

@@ -35,7 +35,7 @@ const server = {
 /** Game state, tracked via events. */
 const game = {
     id: null,
-    demo: false,
+    autoplay: false,
     terminated: false,
     name: null,
     mode: null,
@@ -101,8 +101,8 @@ const store = new Vuex.Store({
         isUserRegistered: (state) => {
             return state.user.registered
         },
-        isDemoInProgress: (state) => {
-            return state.game.demo
+        isAutoplayEnabled: (state) => {
+            return state.game.autoplay
         },
         isGameTerminated: (state) => {
             return state.game.terminated
@@ -127,6 +127,13 @@ const store = new Vuex.Store({
                 default:
                     return false
             }
+        },
+        isPlayerTurn: (state) => {
+            // when it is a player's turn, there will always be at least one legal move (which might be a forfeit)
+            return (
+                state.game.playerMoves &&
+                Object.keys(state.game.playerMoves).length > 0
+            )
         },
         player: (state, getters) => {
             return getters.playerHandle in getters.players
@@ -319,8 +326,8 @@ const store = new Vuex.Store({
         trackGameInvitation(state, context) {
             state.server.invitations.push(context)
         },
-        trackGameDemo(state, value) {
-            state.game.demo = value
+        trackGameAutoplay(state, value) {
+            state.game.autoplay = value
         },
         trackGameTerminated(state, value) {
             state.game.terminated = value
@@ -361,7 +368,7 @@ const store = new Vuex.Store({
         clearGame(state) {
             state.server.advertisedGame = null
             state.game.id = null
-            state.game.demo = false
+            state.game.autoplay = false
             state.game.terminated = false
             state.game.name = null
             state.game.mode = null
@@ -382,8 +389,8 @@ const store = new Vuex.Store({
         },
     },
     actions: {
-        markDemoInProgress({ commit }) {
-            commit('trackGameDemo', true)
+        toggleAutoplay({ commit, getters }) {
+            commit('trackGameAutoplay', !getters.isAutoplayEnabled)
         },
         markGameTerminated({ commit }) {
             commit('trackGameTerminated', true)

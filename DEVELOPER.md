@@ -228,6 +228,17 @@ the [apologies-server](https://github.com/pronovic/apologies-server).  You will
 run the websockets server in one terminal window and the Parcel server in
 another terminal window.
 
+### Observing Game Play
+
+If you want to observe game play without having to choose moves for yourself,
+the easiest way to do this is using the autoplay feature.  Any player can
+toggle autoplay via the hamburger menu.  If you advertise a game, enable
+autoplay, and then start the game, the server will fill out your game with
+computer players, and all of your turns will get the optimal move.  This gives
+you a fully automated game.  You can observe any kind of game with any number
+of players in other browsers - simply enable autoplay for each player after
+joining the game.
+
 ### Websockets Server
 
 Here is usage information for the websockets server:

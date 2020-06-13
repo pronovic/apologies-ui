@@ -37,7 +37,7 @@ const GameMode = {
 /** Game visibilities. */
 const GameVisibility = {
     PUBLIC: 'PUBLIC',
-    PRIVATE: 'PRIVATE",',
+    PRIVATE: 'PRIVATE',
 }
 
 /** Player states. */
