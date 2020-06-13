@@ -23,6 +23,7 @@ This is a list of things I want to accomplish, in no particular order:
    - [x] Render the static portions of the board
    - [x] Render the game state, including moving pawns between locations ("teleporting" ok at this stage)
    - [x] Figure out a better mechanism to animate pawn movement, to make game play more intelligible
+   - [ ] Figure out a better way to indicate the last card played by a player, that stays visible longer
    - [ ] Render a hint or instructions for a card (hover?  tooltip?  new section?)
    - [ ] A way for a player to pick their card in adult mode
    - [ ] A way for a player to pick pick the pawns associated with a move
