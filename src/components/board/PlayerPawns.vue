@@ -46,10 +46,10 @@
 </template>
 
 <script>
-import Pawn from './Pawn.vue'
-import { registerPawns } from '../../utils/movement'
-import { Colors } from '../../utils/constants'
-import { logger } from '../../utils/util'
+import Pawn from 'Components/board/Pawn.vue'
+import { registerPawns } from 'Utils/movement'
+import { Colors } from 'Utils/constants'
+import { logger } from 'Utils/util'
 
 export default {
     name: 'PlayerPawns',

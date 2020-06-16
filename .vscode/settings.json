@@ -1,0 +1,10 @@
+{
+  "files.exclude": {
+    "node_modules/": true,
+    "dist/": true,
+    ".cache/": true,
+    ".github/": true,
+    ".vscode/": true,
+    "yarn.lock": true
+  }
+}

@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { logger } from '../../utils/util.js'
+import { logger } from 'Utils/util'
 
 export default {
     name: 'UnregisterMenuItem',

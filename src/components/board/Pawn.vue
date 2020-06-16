@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { Colors } from '../../utils/constants'
+import { Colors } from 'Utils/constants'
 
 export default {
     name: 'Pawn',

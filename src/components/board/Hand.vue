@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import Card from './Card.vue'
+import Card from 'Components/board/Card.vue'
 
 export default {
     name: 'Hand',

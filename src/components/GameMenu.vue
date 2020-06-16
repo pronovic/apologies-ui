@@ -19,13 +19,13 @@
 </template>
 
 <script>
-import AdvertiseGameMenuItem from './menu/AdvertiseGameMenuItem.vue'
-import CancelGameMenuItem from './menu/CancelGameMenuItem.vue'
-import ClearGameMenuItem from './menu/ClearGameMenuItem.vue'
-import JoinGameMenuItem from './menu/JoinGameMenuItem.vue'
-import QuitGameMenuItem from './menu/QuitGameMenuItem.vue'
-import UnregisterMenuItem from './menu/UnregisterMenuItem.vue'
-import ToggleAutoplayMenuItem from './menu/ToggleAutoplayMenuItem.vue'
+import AdvertiseGameMenuItem from 'Components/menu/AdvertiseGameMenuItem.vue'
+import CancelGameMenuItem from 'Components/menu/CancelGameMenuItem.vue'
+import ClearGameMenuItem from 'Components/menu/ClearGameMenuItem.vue'
+import JoinGameMenuItem from 'Components/menu/JoinGameMenuItem.vue'
+import QuitGameMenuItem from 'Components/menu/QuitGameMenuItem.vue'
+import UnregisterMenuItem from 'Components/menu/UnregisterMenuItem.vue'
+import ToggleAutoplayMenuItem from 'Components/menu/ToggleAutoplayMenuItem.vue'
 
 export default {
     name: 'GameMenu',

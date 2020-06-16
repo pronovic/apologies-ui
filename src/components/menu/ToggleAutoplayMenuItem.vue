@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import { logger } from '../../utils/util.js'
-import { optimalMove } from '../../utils/client.js'
+import { logger } from 'Utils/util'
+import { optimalMove } from 'Utils/client'
 
 export default {
     name: 'ToggleAutoplayMenuItem',

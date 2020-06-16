@@ -35,11 +35,11 @@
 </template>
 
 <script>
-import PlayerArea from './board/PlayerArea.vue'
-import GameBoardArea from './board/GameBoardArea.vue'
-import PlayerPawns from './board/PlayerPawns.vue'
-import PositionNumbers from './board/PositionNumbers.vue'
-import { PlayerColor } from '../utils/constants.js'
+import PlayerArea from 'Components/board/PlayerArea.vue'
+import GameBoardArea from 'Components/board/GameBoardArea.vue'
+import PlayerPawns from 'Components/board/PlayerPawns.vue'
+import PositionNumbers from 'Components/board/PositionNumbers.vue'
+import { PlayerColor } from 'Utils/constants'
 
 export default {
     name: 'GameBoard',

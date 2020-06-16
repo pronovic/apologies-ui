@@ -289,14 +289,14 @@
 </template>
 
 <script>
-import { Colors } from '../../utils/constants'
-import HorizontalBoxRow from './HorizontalBoxRow.vue'
-import VerticalBoxRow from './VerticalBoxRow.vue'
-import CircleArea from './CircleArea.vue'
-import RightSlide from './RightSlide.vue'
-import LeftSlide from './LeftSlide.vue'
-import DownSlide from './DownSlide.vue'
-import UpSlide from './UpSlide.vue'
+import { Colors } from 'Utils/constants'
+import HorizontalBoxRow from 'Components/board/HorizontalBoxRow.vue'
+import VerticalBoxRow from 'Components/board/VerticalBoxRow.vue'
+import CircleArea from 'Components/board/CircleArea.vue'
+import RightSlide from 'Components/board/RightSlide.vue'
+import LeftSlide from 'Components/board/LeftSlide.vue'
+import DownSlide from 'Components/board/DownSlide.vue'
+import UpSlide from 'Components/board/UpSlide.vue'
 
 export default {
     name: 'GameBoardArea',

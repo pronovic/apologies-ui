@@ -1,16 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import { logger, random } from '../utils/util.js'
-import { config } from './config.js'
-import { clearPlayer, persistPlayer } from '../utils/storage.js'
+import { logger, random } from 'Utils/util'
+import { config } from 'VStore/config'
+import { clearPlayer, persistPlayer } from 'Utils/storage'
 import {
     UserLoadStatus,
     ServerStatus,
     GameStatus,
     GameMode,
     PlayerColor,
-} from '../utils/constants.js'
+} from 'Utils/constants'
 
 Vue.use(Vuex)
 

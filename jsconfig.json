@@ -1,0 +1,35 @@
+{
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "Assets/*": [
+        "src/assets/*"
+      ],
+      "Components/*": [
+        "src/components/*"
+      ],
+      "Router": [
+        "src/router"
+      ],
+      "Router/*": [
+        "src/router/*"
+      ],
+      "VStore": [
+        "src/store"
+      ],
+      "VStore/*": [
+        "src/store/*"
+      ],
+      "Utils/*": [
+        "src/utils/*"
+      ],
+      "Views/*": [
+        "src/views/*"
+      ]
+    }
+  }
+}

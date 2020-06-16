@@ -62,9 +62,8 @@
                         size="sm"
                         @click="joinGame(row.item.game_id)"
                         class="mr-1"
+                        >Join Game</b-button
                     >
-                        Join Game
-                    </b-button>
                 </template>
             </b-table>
             <b-pagination
@@ -79,8 +78,8 @@
 </template>
 
 <script>
-import { logger } from '../../utils/util.js'
-import { joinGame, listAvailableGames } from '../../utils/client.js'
+import { logger } from 'Utils/util'
+import { joinGame, listAvailableGames } from 'Utils/client'
 
 export default {
     name: 'JoinGameMenuItem',

@@ -17,10 +17,10 @@
 <script>
 import { gsap } from 'gsap'
 
-import Pawn from './Pawn.vue'
-import Hand from './Hand.vue'
-import { PlayerState, PlayerType, Colors } from '../../utils/constants'
-import { logger } from '../../utils/util'
+import Pawn from 'Components/board/Pawn.vue'
+import Hand from 'Components/board/Hand.vue'
+import { PlayerState, PlayerType, Colors } from 'Utils/constants'
+import { logger } from 'Utils/util'
 
 export default {
     name: 'PlayerInfo',

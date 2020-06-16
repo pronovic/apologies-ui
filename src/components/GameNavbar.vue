@@ -11,9 +11,9 @@
                 <StartGameButton></StartGameButton>
                 <GameInProgressIndicator></GameInProgressIndicator>
                 <ClearGameButton></ClearGameButton>
-                <b-nav-text this.class="text-white"
-                    ><em>{{ playerHandle }}</em></b-nav-text
-                >
+                <b-nav-text this.class="text-white">
+                    <em>{{ playerHandle }}</em>
+                </b-nav-text>
                 <GameMenu></GameMenu>
             </b-navbar-nav>
         </b-navbar>
@@ -21,12 +21,12 @@
 </template>
 
 <script>
-import { logger } from '../utils/util.js'
+import { logger } from 'Utils/util'
 
-import ClearGameButton from '../components/ClearGameButton.vue'
-import GameMenu from '../components/GameMenu.vue'
-import GameInProgressIndicator from '../components/GameInProgressIndicator.vue'
-import StartGameButton from '../components/StartGameButton.vue'
+import ClearGameButton from 'Components/ClearGameButton.vue'
+import GameMenu from 'Components/GameMenu.vue'
+import GameInProgressIndicator from 'Components/GameInProgressIndicator.vue'
+import StartGameButton from 'Components/StartGameButton.vue'
 
 export default {
     name: 'GameNavbar',

@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import { logger } from '../utils/util.js'
-import { startGame } from '../utils/client.js'
+import { logger } from 'Utils/util'
+import { startGame } from 'Utils/client'
 
 export default {
     name: 'StartGameButton',

@@ -66,8 +66,8 @@
 </template>
 
 <script>
-import { advertiseGame } from '../../utils/client.js'
-import { GameMode, GameVisibility } from '../../utils/constants.js'
+import { advertiseGame } from 'Utils/client'
+import { GameMode, GameVisibility } from 'Utils/constants'
 
 export default {
     name: 'AdvertiseGameMenuItem',

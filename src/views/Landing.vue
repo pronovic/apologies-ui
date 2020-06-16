@@ -22,8 +22,8 @@
 
             <p>
                 All of the source code is released under the
-                <b-link :href="licenseUrl">Apache v2.0</b-link>
-                license. You can find the source code at GitHub. See
+                <b-link :href="licenseUrl">Apache v2.0</b-link>license. You can
+                find the source code at GitHub. See
                 <b-link :href="apologiesUrl">apologies</b-link>,
                 <b-link :href="apologiesServerUrl">apologies-server</b-link>,
                 and <b-link :href="apologiesUiUrl">apologies-ui</b-link>.
@@ -35,8 +35,8 @@
 </template>
 
 <script>
-import LandingNavbar from '../components/LandingNavbar.vue'
-import RegisterHandleButton from '../components/RegisterHandleButton.vue'
+import LandingNavbar from 'Components/LandingNavbar.vue'
+import RegisterHandleButton from 'Components/RegisterHandleButton.vue'
 
 export default {
     name: 'Landing',

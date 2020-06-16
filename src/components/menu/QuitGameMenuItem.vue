@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import { logger } from '../../utils/util.js'
-import { quitGame } from '../../utils/client.js'
+import { logger } from 'Utils/util'
+import { quitGame } from 'Utils/client'
 
 export default {
     name: 'QuitGameMenuItem',

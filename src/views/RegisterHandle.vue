@@ -5,25 +5,25 @@
         </b-navbar>
 
         <b-jumbotron class="w-50 mx-auto" bg-variant="white">
-            <template v-slot:header
-                >Please Wait
+            <template v-slot:header>
+                Please Wait
                 <b-icon
                     icon="arrow-clockwise"
                     animation="spin"
                     font-scale="1"
-                ></b-icon
-            ></template>
+                ></b-icon>
+            </template>
 
             <template v-slot:lead>
-                Please wait while your handle <em>{{ handle }}</em> is
-                registered.
+                Please wait while your handle
+                <em>{{ handle }}</em> is registered.
             </template>
         </b-jumbotron>
     </div>
 </template>
 
 <script>
-import { registerHandle } from '../utils/client.js'
+import { registerHandle } from 'Utils/client'
 
 export default {
     name: 'RegisterHandle',

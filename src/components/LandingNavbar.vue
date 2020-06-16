@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import { logger } from '../utils/util.js'
-import RegisterHandleButton from '../components/RegisterHandleButton.vue'
+import { logger } from 'Utils/util'
+import RegisterHandleButton from 'Components/RegisterHandleButton.vue'
 
 export default {
     name: 'LandingNavbar',

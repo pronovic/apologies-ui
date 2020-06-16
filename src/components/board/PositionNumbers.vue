@@ -28,8 +28,8 @@ import {
     lookupStart,
     lookupSafe,
     lookupSquare,
-} from '../../utils/movement'
-import { Colors, PlayerColor } from '../../utils/constants'
+} from 'Utils/movement'
+import { Colors, PlayerColor } from 'Utils/constants'
 
 export default {
     name: 'PositionNumbers',

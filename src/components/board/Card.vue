@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { Cards, Colors } from '../../utils/constants.js'
+import { Cards, Colors } from 'Utils/constants'
 
 export default {
     name: 'Card',

@@ -1,19 +1,19 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import store from '../store'
+import store from 'VStore'
 
-import { logger } from '../utils/util.js'
+import { logger } from 'Utils/util'
 
-const Landing = () => import('../views/Landing.vue')
-const Game = () => import('../views/Game.vue')
-const Error = () => import('../views/Error.vue')
-const Inactive = () => import('../views/Inactive.vue')
-const LoadUser = () => import('../views/LoadUser.vue')
-const RegisterHandle = () => import('../views/RegisterHandle.vue')
-const UnregisterHandle = () => import('../views/UnregisterHandle.vue')
-const HandleUnavailable = () => import('../views/HandleUnavailable.vue')
-const ServerShutdown = () => import('../views/ServerShutdown.vue')
-const NotFound = () => import('../views/NotFound.vue')
+const Landing = () => import('Views/Landing.vue')
+const Game = () => import('Views/Game.vue')
+const Error = () => import('Views/Error.vue')
+const Inactive = () => import('Views/Inactive.vue')
+const LoadUser = () => import('Views/LoadUser.vue')
+const RegisterHandle = () => import('Views/RegisterHandle.vue')
+const UnregisterHandle = () => import('Views/UnregisterHandle.vue')
+const HandleUnavailable = () => import('Views/HandleUnavailable.vue')
+const ServerShutdown = () => import('Views/ServerShutdown.vue')
+const NotFound = () => import('Views/NotFound.vue')
 
 Vue.use(VueRouter)
 

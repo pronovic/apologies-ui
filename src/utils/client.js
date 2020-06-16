@@ -1,11 +1,11 @@
-import store from '../store'
-import router from '../router'
+import store from 'VStore'
+import router from 'Router'
 import atmosphere from 'atmosphere.js'
 
-import { EventBus } from './eventbus.js'
-import { logger, sleep } from './util.js'
-import { PlayerColor } from './constants'
-import { updateLocations } from './movement'
+import { EventBus } from 'Utils/eventbus'
+import { logger, sleep } from 'Utils/util'
+import { PlayerColor } from 'Utils/constants'
+import { updateLocations } from 'Utils/movement'
 
 var socket = atmosphere
 var subsocket = null

@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import PlayerInfo from './PlayerInfo.vue'
+import PlayerInfo from 'Components/board/PlayerInfo.vue'
 
 export default {
     name: 'PlayerArea',

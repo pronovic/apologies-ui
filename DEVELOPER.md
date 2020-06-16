@@ -32,6 +32,17 @@ If necessary, you can temporarily disable a hook using Git's `--no-verify`
 switch.  However, keep in mind that the CI build on GitHub enforces these
 checks, so the build will fail.
 
+## Path Aliases
+
+Parcel is configured with aliases for common package locations.  For instance,
+to load code from `src/util/constants.js`, import from `Util/constants`.  See
+the `alias` key in [`package.json`](package.json).  There is equivalent
+configuration in [`jsconfig.json`](jsconfig.json) for VSCode (so code
+completion works as expected) and also for Jest under the
+`jest.moduleNameMapper` key in `package.json`.  I found 
+this [reference](https://medium.com/@justintulk/solve-module-import-aliasing-for-webpack-jest-and-vscode-74007ce4adc9) useful 
+when setting up aliases, even though it refers to Webpack instead of Parcel.
+
 ## Configuration
 
 Configuration is stored in the [`.env`](.env) file.  At build time, Parcel
@@ -373,6 +384,9 @@ I have been using [VSCode](https://code.visualstudio.com/) for my IDE.  I
 have limited experience with VSCode, so this section just documents how
 I'm using it.
 
+There are some project-specific VSCode settings in [`jsconfig.json`](jsconfig.json) and
+[`.vscode/settings.json`](.vscode/settings.json).
+
 I have the following plugins installed:
 
 - [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome)
@@ -389,8 +403,8 @@ show a lot of warnings that can usually be fixed automatically and don't seem
 to require my attention.  Right now, I have these plugins turned off.  Instead,
 I periodically run `yarn format` from the terminal to check and fix the code.
 
-There are no project-specific VSCode settings.  All of my settings are
-maintained globally.  For reference, here is my `settings.json`:
+My global `settings.json` looks like this, including the configuration needed
+to make Vetur and VSCode Snippets plugins play together nicely:
 
 ```json
 {

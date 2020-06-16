@@ -1,6 +1,6 @@
-import { PlayerColor } from './constants.js'
 import { gsap, Circ } from 'gsap'
-import { sleep } from './util.js'
+import { PlayerColor } from 'Utils/constants'
+import { sleep } from 'Utils/util'
 
 // These constants specify the (x,y) coordinates of various positions on the board.
 //

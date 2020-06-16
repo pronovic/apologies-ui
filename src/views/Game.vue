@@ -6,9 +6,9 @@
 </template>
 
 <script>
-import { EventBus } from '../utils/eventbus.js'
-import GameNavbar from '../components/GameNavbar.vue'
-import GameBoard from '../components/GameBoard.vue'
+import { EventBus } from 'Utils/eventbus'
+import GameNavbar from 'Components/GameNavbar.vue'
+import GameBoard from 'Components/GameBoard.vue'
 
 export default {
     name: 'Game',

@@ -1,4 +1,4 @@
-import store from '../store'
+import store from 'VStore'
 
 /** Available log levels for our customized logging implementation. */
 const LogLevel = {

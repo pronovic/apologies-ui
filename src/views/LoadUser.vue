@@ -5,26 +5,27 @@
         </b-navbar>
 
         <b-jumbotron class="w-50 mx-auto" bg-variant="white">
-            <template v-slot:header
-                >Please Wait
+            <template v-slot:header>
+                Please Wait
                 <b-icon
                     icon="arrow-clockwise"
                     animation="spin"
                     font-scale="1"
-                ></b-icon
-            ></template>
-
-            <template v-slot:lead>
-                Please wait while your existing user registration is loaded.
+                ></b-icon>
             </template>
+
+            <template v-slot:lead
+                >Please wait while your existing user registration is
+                loaded.</template
+            >
         </b-jumbotron>
     </div>
 </template>
 
 <script>
-import { logger } from '../utils/util.js'
-import { loadPlayer } from '../utils/storage.js'
-import { reregisterHandle } from '../utils/client.js'
+import { logger } from 'Utils/util'
+import { loadPlayer } from 'Utils/storage'
+import { reregisterHandle } from 'Utils/client'
 
 export default {
     name: 'LoadUser',
