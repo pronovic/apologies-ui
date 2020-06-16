@@ -11,9 +11,9 @@ const LogLevel = {
 
 /** Customized logger to replace console.log(). */
 class Logger {
-    log(level, message) {
+    log(level, fn, message) {
         if (this.isEnabled(level)) {
-            console.log(
+            fn(
                 '[' +
                     this.getTime() +
                     '] ' +
@@ -26,22 +26,24 @@ class Logger {
 
     /** Log an error message. */
     error(message) {
-        this.log(LogLevel.ERROR, message)
+        this.log(LogLevel.ERROR, console.error, message)
     }
 
     /** Log a warning message. */
     warn(message) {
-        this.log(LogLevel.WARN, message)
+        this.log(LogLevel.WARN, console.warn, message)
     }
 
     /** Log an informational message. */
     info(message) {
-        this.log(LogLevel.INFO, message)
+        // Might as well use console.log() here since we're using it for debug
+        this.log(LogLevel.INFO, console.log, message)
     }
 
     /** Log a debug message. */
     debug(message) {
-        this.log(LogLevel.DEBUG, message)
+        // Not sure why, but console.debug() doesn't work as expected here
+        this.log(LogLevel.DEBUG, console.log, message)
     }
 
     /** Whether a particular log level is currently enabled. */
