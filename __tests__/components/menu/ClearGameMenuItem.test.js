@@ -55,4 +55,10 @@ describe('Components/menu/ClearGameMenuItem.vue', () => {
         await Vue.nextTick()
         expect(wrapper.findComponent({ ref: 'dropdown' }).exists()).toBe(true)
     })
+
+    test('click clears game', async () => {
+        wrapper.findComponent({ ref: 'dropdown' }).find('a').trigger('click') // you have to click the embedded link
+        await Vue.nextTick()
+        expect(store.dispatch).toHaveBeenCalledWith('handleGameClear')
+    })
 })
