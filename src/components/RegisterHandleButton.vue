@@ -1,13 +1,15 @@
 <template>
     <div>
-        <b-button v-b-modal="id" variant="primary">Register</b-button>
+        <b-button ref="button" v-b-modal="id" variant="primary"
+            >Register</b-button
+        >
 
         <b-modal
             :id="id"
+            :static="true"
             ref="modal"
             title="Register Handle"
             @show="resetModal"
-            @hidden="resetModal"
             @ok="handleOk"
         >
             <form ref="form" @submit.stop.prevent="handleSubmit">
@@ -42,7 +44,6 @@ export default {
     methods: {
         checkFormValidity() {
             this.handleState =
-                this.$refs.form.checkValidity() &&
                 this.handle.length >= 2 &&
                 this.handle.length <= 20 &&
                 /^[a-zA-Z0-9_-]+$/.test(this.handle)

@@ -31,6 +31,7 @@
     "Views": "./src/views"
   },
   "jest": { 
+    "resetMocks": true,
     "setupFilesAfterEnv": [
       "./jest.setup.js"
     ],
