@@ -3,7 +3,7 @@
         <b-navbar toggleable="lg" type="dark" variant="secondary">
             <b-navbar-brand ref="brand" href="#">Apologies</b-navbar-brand>
             <b-navbar-nav class="ml-auto">
-                <RegisterHandleButton id="navbar-register" />
+                <RegisterHandleButton id="navbar-register-button" />
             </b-navbar-nav>
         </b-navbar>
     </div>

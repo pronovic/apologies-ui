@@ -14,7 +14,7 @@
             <p>
                 The server has disconnected you. If you want to continue
                 playing, you can try returning to the
-                <b-link @click="$router.push({ name: 'Landing' })"
+                <b-link ref="link" @click="$router.push({ name: 'Landing' })"
                     >landing page</b-link
                 >
                 to register your handle again.
