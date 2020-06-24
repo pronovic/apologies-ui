@@ -30,7 +30,10 @@
     "Utils": "./src/utils",
     "Views": "./src/views"
   },
-  "jest": {
+  "jest": { 
+    "setupFilesAfterEnv": [
+      "./jest.setup.js"
+    ],
     "collectCoverageFrom": [
       "src/**/*.{js,vue}"
     ],
@@ -63,6 +66,7 @@
     "@babel/core": "^7.9.6",
     "@babel/plugin-transform-runtime": "^7.10.3",
     "@babel/preset-env": "^7.9.6",
+    "@testing-library/jest-dom": "^5.10.1",
     "@types/jest": "^26.0.0",
     "@vue/component-compiler-utils": "^3.1.2",
     "@vue/eslint-config-prettier": "^6.0.0",

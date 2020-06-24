@@ -345,6 +345,13 @@ Changes to the source tree are picked up automatically.  This usually works ok,
 but sometimes things can get a little confused, depending on what changes you
 made.  If necessary, CTRL-C the server and restart it.
 
+### Running Jest Tests
+
+If you highlight the name of the test and press F5, that should run
+the selected test.  This is controlled by the VSCode launch configuration
+in [`.vscode/launch.json`](.vscode/launch.json).  See [StackOverflow](https://stackoverflow.com/a/55279902/2907667)
+for more details.
+
 ### Browser Testing
 
 Once the websockets server and the Parcel server are both running, you can
