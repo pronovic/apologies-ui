@@ -31,14 +31,6 @@ import PlayerInfo from 'Components/board/PlayerInfo.vue'
 export default {
     name: 'PlayerArea',
     components: { PlayerInfo: PlayerInfo },
-    props: {
-        config: {
-            type: Object,
-            default: function () {
-                return {}
-            },
-        },
-    },
     computed: {
         player() {
             return this.$store.getters.player

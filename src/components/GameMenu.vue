@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-dropdown size="sm" id="dropdown-1" no-caret right class="p-0">
+        <b-dropdown size="sm" id="game-menu" no-caret right class="p-0">
             <template v-slot:button-content>
                 <b-button size="md" variant="secondary" class="p-1">
                     <b-icon icon="list" aria-label="Menu"></b-icon>
