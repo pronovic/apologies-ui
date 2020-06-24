@@ -1,6 +1,7 @@
 <template>
     <div>
         <b-dropdown-item
+            ref="dropdown"
             @click="handleClick"
             v-b-tooltip.hover.left
             title="Unregister your handle, like logging off"

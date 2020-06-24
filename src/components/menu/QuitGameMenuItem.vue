@@ -1,6 +1,7 @@
 <template>
     <div>
         <b-dropdown-item
+            ref="dropdown"
             v-if="visible"
             v-b-tooltip.hover.left
             title="Quit the in-progress game"

@@ -2,6 +2,7 @@
     <div v-if="visible">
         <b-dropdown-divider></b-dropdown-divider>
         <b-dropdown-item
+            ref="dropdown"
             v-b-tooltip.hover.left
             title="Autoplay lets the game choose your move for you"
             @click="handleClick"
