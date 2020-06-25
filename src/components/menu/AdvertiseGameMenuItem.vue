@@ -16,7 +16,6 @@
             id="advertiseGameModal"
             title="Advertise Game"
             @show="resetModal"
-            @hidden="resetModal"
             @ok="handleOk"
         >
             <form ref="form" @submit.stop.prevent="handleSubmit">
@@ -105,10 +104,7 @@ export default {
     },
     methods: {
         checkFormValidity() {
-            this.nameState =
-                this.$refs.form.checkValidity() &&
-                this.name.length >= 2 &&
-                this.name.length <= 35
+            this.nameState = this.name.length >= 2 && this.name.length <= 35
             return this.nameState
         },
         resetModal() {

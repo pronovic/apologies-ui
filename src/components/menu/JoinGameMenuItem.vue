@@ -140,10 +140,14 @@ export default {
             return !this.$store.getters.isGameJoined
         },
         rows() {
-            return this.$store.getters.availableGames.length
+            return this.$store.getters.availableGames
+                ? this.$store.getters.availableGames.length
+                : 0
         },
         games() {
             return this.$store.getters.availableGames
+                ? this.$store.getters.availableGames
+                : []
         },
     },
     methods: {
