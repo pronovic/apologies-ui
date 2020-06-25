@@ -5,9 +5,14 @@ import BootstrapVue from 'bootstrap-vue'
 import { Store } from 'vuex-mock-store'
 
 import CancelGameMenuItem from 'Components/menu/CancelGameMenuItem.vue'
+import * as util from 'Utils/util'
+import * as client from 'Utils/client'
 
 const localVue = createLocalVue()
 localVue.use(BootstrapVue)
+
+jest.mock('Utils/util')
+jest.mock('Utils/client')
 
 const store = new Store({
     state: {},
@@ -20,8 +25,6 @@ const store = new Store({
 const mocks = {
     $store: store,
 }
-
-// Unfortunately, there does not seem to be any way to unit test this.$bvModal.msgBoxConfirm()
 
 describe('Components/menu/CancelGameMenuItem.vue', () => {
     let wrapper
@@ -56,5 +59,19 @@ describe('Components/menu/CancelGameMenuItem.vue', () => {
         store.getters.isGameCompleted = true
         await Vue.nextTick()
         expect(wrapper.findComponent({ ref: 'dropdown' }).exists()).toBe(false)
+    })
+
+    test('click action', async () => {
+        // we can't actually interact with the inline modal, but we can at least confirm it was generated properly
+
+        wrapper.findComponent({ ref: 'dropdown' }).find('a').trigger('click') // click the embedded link
+
+        var [context, message, okFunction] = util.confirmDialog.mock.calls[0]
+
+        expect(context === wrapper.vm).toBe(true)
+        expect(message).toBe('Are you sure you want to cancel the game?') // message
+
+        okFunction()
+        expect(client.cancelGame).toHaveBeenCalled()
     })
 })

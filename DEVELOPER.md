@@ -431,6 +431,6 @@ to make Vetur and VSCode Snippets plugins play together nicely:
   "files.autoSave": "afterDelay",
   "javascript.updateImportsOnFileMove.enabled": "always",
   "explorer.confirmDelete": false,
-  "files.autoSaveDelay": 2500
+  "files.autoSaveDelay": 1000
 }
 ```
