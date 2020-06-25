@@ -124,7 +124,7 @@ out of the box. For instance, I have implemented routing via [Vue
 Router](https://router.vuejs.org/) and central state state management via
 [Vuex](https://vuex.vuejs.org/).
 
-## Rendering the Game Canvas
+### Rendering the Game Canvas
 
 I am using [Vue Konva](https://konvajs.org/docs/vue/index.html) to render the
 game board.  [Konva](https://konvajs.org/) is a 2D library used to manage the
@@ -165,7 +165,7 @@ Vue.js has [good support](https://vuejs.org/v2/guide/unit-testing.html) for
 Jest, and also provides its own [Vue Test Utils](https://vue-test-utils.vuejs.org/) to 
 help with testing.
 
-#### Test Constructs
+#### Testing Hints
 
 I find myself commonly using a few Vue Test constructs, which I want to list
 here for reference.

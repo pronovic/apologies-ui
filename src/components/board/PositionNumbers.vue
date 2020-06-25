@@ -6,17 +6,29 @@
         <div v-if="visible">
             <div v-for="(c, ci) in this.colors" v-bind:key="'c' + ci">
                 <div v-for="(s, si) in 4" v-bind:key="'s' + si">
-                    <v-text :config="start(c, si)"></v-text>
+                    <v-text
+                        :id="id + '-start-' + c + '-' + si"
+                        :config="start(c, si)"
+                    ></v-text>
                 </div>
                 <div v-for="(h, hi) in 4" v-bind:key="'h' + hi">
-                    <v-text :config="home(c, hi)"></v-text>
+                    <v-text
+                        :id="id + '-home-' + c + '-' + hi"
+                        :config="home(c, hi)"
+                    ></v-text>
                 </div>
                 <div v-for="(f, fi) in 5" v-bind:key="'f' + fi">
-                    <v-text :config="safe(c, fi)"></v-text>
+                    <v-text
+                        :id="id + '-safe-' + c + '-' + fi"
+                        :config="safe(c, fi)"
+                    ></v-text>
                 </div>
             </div>
             <div v-for="(q, qi) in 60" v-bind:key="'q' + qi">
-                <v-text :config="square(qi)"></v-text>
+                <v-text
+                    :id="id + '-square-' + qi"
+                    :config="square(qi)"
+                ></v-text>
             </div>
         </div>
     </v-group>
@@ -64,7 +76,7 @@ export default {
         },
         square(square) {
             const position = lookupSquare(square)
-            return this.text(position, '' + square.toString())
+            return this.text(position, square.toString())
         },
         text(position, text) {
             return {

@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import BootstrapVue from 'bootstrap-vue'
 import VueKonva from 'vue-konva'
@@ -25,6 +26,10 @@ const mocks = {
     $store: store,
 }
 
+const props = {
+    id: 'testnumbers',
+}
+
 describe('Components/board/PositionNumbers.vue', () => {
     let wrapper
 
@@ -35,6 +40,7 @@ describe('Components/board/PositionNumbers.vue', () => {
             localVue,
             mocks,
             attachTo: div,
+            propsData: props,
         })
     })
 
@@ -43,9 +49,39 @@ describe('Components/board/PositionNumbers.vue', () => {
         wrapper.destroy()
     })
 
-    test('component renders', async () => {
-        expect(wrapper.exists()).toBe(true)
+    test('component not visible when not enabled', async () => {
+        store.state.config.SHOW_SQUARE_NUMBERS = false
+        await Vue.nextTick()
+
+        // the group should exist
+        expect(wrapper.find('#testnumbers').exists()).toBe(true)
+
+        // but none of the other items should exist (we'll just spot-check, it's too much effort to check all of them)
+        expect(wrapper.find('#testnumbers-start-RED-1').exists()).toBe(false)
+        expect(wrapper.find('#testnumbers-home-GREEN-2').exists()).toBe(false)
+        expect(wrapper.find('#testnumbers-safe-BLUE-3').exists()).toBe(false)
+        expect(wrapper.find('#testnumbers-safe-YELLOW-4').exists()).toBe(false)
+        expect(wrapper.find('#testnumbers-square-1').exists()).toBe(false)
+        expect(wrapper.find('#testnumbers-square-10').exists()).toBe(false)
+        expect(wrapper.find('#testnumbers-square-45').exists()).toBe(false)
     })
 
-    // TODO: stubbed test - implement remaining test cases
+    test('component visible when enabled', async () => {
+        store.state.config.SHOW_SQUARE_NUMBERS = true
+        await Vue.nextTick()
+
+        expect(wrapper.exists()).toBe(true)
+
+        // the group should exist
+        expect(wrapper.find('#testnumbers').exists()).toBe(true)
+
+        // and all of the other items should exist (we'll just spot-check, it's too much effort to check all of them)
+        expect(wrapper.find('#testnumbers-start-RED-1').exists()).toBe(true)
+        expect(wrapper.find('#testnumbers-home-GREEN-2').exists()).toBe(true)
+        expect(wrapper.find('#testnumbers-safe-BLUE-3').exists()).toBe(true)
+        expect(wrapper.find('#testnumbers-safe-YELLOW-4').exists()).toBe(true)
+        expect(wrapper.find('#testnumbers-square-1').exists()).toBe(true)
+        expect(wrapper.find('#testnumbers-square-10').exists()).toBe(true)
+        expect(wrapper.find('#testnumbers-square-45').exists()).toBe(true)
+    })
 })
