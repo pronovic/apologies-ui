@@ -234,7 +234,7 @@ class AnimationQueue {
                 onUpdate: () => {
                     position.x = parseInt(val.x)
                     position.y = parseInt(val.y)
-                    pawn.node.getLayer().draw() // this does not seem like a good idea, but it doesn't render otherwise
+                    pawn.redrawLayer() // this does not seem like a good idea, but it doesn't render otherwise
                 },
             })
 
