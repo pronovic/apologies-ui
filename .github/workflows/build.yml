@@ -30,5 +30,6 @@ jobs:
     - name: Run Checks
       run: |
         yarn install
-        yarn check
+        yarn checks
         yarn build
+        yarn testc
