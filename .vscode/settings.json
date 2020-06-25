@@ -5,6 +5,7 @@
     ".cache/": true,
     ".github/": true,
     ".vscode/": true,
+    "coverage/": true,
     "yarn.lock": true
   }
 }
