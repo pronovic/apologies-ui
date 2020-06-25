@@ -1,7 +1,8 @@
 <template>
-    <v-group :id="id" :x="x" :y="y">
+    <v-group ref="group" :id="id" :x="x" :y="y">
         <v-rect
-            :id="id + 'box'"
+            ref="box"
+            :id="id + '-box'"
             :x="0"
             :y="6"
             :height="20"
@@ -11,6 +12,7 @@
             :strokeWidth="2"
         ></v-rect>
         <v-circle
+            ref="circle"
             :id="id + '-circle'"
             :x="2"
             :y="17"
@@ -19,7 +21,11 @@
             :stroke="black"
             :strokeWidth="2"
         ></v-circle>
-        <v-shape :id="id + '-triangle'" :config="triangle"></v-shape>
+        <v-shape
+            ref="triangle"
+            :id="id + '-triangle'"
+            :config="triangle"
+        ></v-shape>
     </v-group>
 </template>
 
