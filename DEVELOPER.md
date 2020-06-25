@@ -143,30 +143,27 @@ the component resides in.
 
 ### Testing
 
-One of my major goals for this effort is to understand how to do testing in a
-Javascript application like this.  However, I've been focused so far mainly on
-learning the frameworks and the general application design paradigms.
+One of my major goals for this effort was to understand how to do testing in a
+Javascript application like this, so there is solid coverage.
 
-I need to cover three kinds of tests:
+There are 3 kinds of tests:
 
 - Unit tests (single component)
 - Integration tests (multi-component)
 - End to end (E2E) tests (functional or acceptance tests)
 
-Vue.js has [good support](https://vuejs.org/v2/guide/unit-testing.html) for
-several common frameworks and its own [Vue Test
-Utils](https://vue-test-utils.vuejs.org/) that help with testing.
+I am using [Jest](https://jestjs.io/en/) for unit and integration testing, and
+[Cypress](https://www.cypress.io/) for functional testing.
 
-My intent is to use [Cypress](https://www.cypress.io/) for functional testing
-and [Jest](https://jestjs.io/en/) for unit and integration testing.  There are
-other options in both cases, but the general recommendation seems be that these
-are the best fit for Vue.js as of today.  Both are popular and well supported
-and seem to work well.  Cypress only supports Chrome, but it seems like that's
-probably ok for my purposes.  (The articles [here](https://www.monterail.com/blog/end-to-end-testing-with-cypress) and
+There are other options in both cases, but the general recommendation seems be
+that these are the best fit for Vue.js as of today.  Both are popular and well
+supported and seem to work well.  Cypress only supports Chrome, but that is ok
+for my purposes.  (The articles [here](https://www.monterail.com/blog/end-to-end-testing-with-cypress) and
 [here](https://medium.com/welldone-software/an-overview-of-javascript-testing-7ce7298b9870) were helpful.)
 
-Since the Vue Konva library works much like the rest of Vue, my expectation is
-that I can unit test it the same way as everything else.
+Vue.js has [good support](https://vuejs.org/v2/guide/unit-testing.html) for
+Jest, and also provides its own [Vue Test Utils](https://vue-test-utils.vuejs.org/) to 
+help with testing.
 
 ## Developer Tasks
 
@@ -179,6 +176,17 @@ in [`package.json`](package.json).  The following scripts are available:
 - `yarn rmcache` - Remove the Parcel cache, which is sometimes needed if changes to `.env` are not picked up
 - `yarn build` - Build the production bundle in `dist/`
 - `yarn server` - Start the development server in hot module reloading mode
+- `yarn test` - Run the unit test suite
+- `yarn testc` - Run the unit test suite and gather coverage
+- `yarn testch` - Run the unit test suite and gather coverage, opening the HTML coverage report
+
+You can pass other arguments, and yarn will provide them to the underlying
+command.  For instance, this runs a single Jest test (based on the `describe`
+name), including verbose results about each test case:
+
+```
+$ yarn test --verbose -t 'Components/menu/UnregisterMenuItem.vue'
+```
 
 ## Prequisites
 
