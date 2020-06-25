@@ -1,16 +1,16 @@
 <template>
-    <v-group :id="id" :x="x" :y="y">
+    <v-group ref="group" :id="id" :x="x" :y="y">
         <Pawn
             ref="pawn"
-            :id="id + '-color'"
+            :id="id + '-pawn'"
             :position="position"
             :size="40"
             :color="color"
             :visible="true"
         ></Pawn>
-        <v-text :config="handle"></v-text>
-        <v-text :config="status"></v-text>
-        <Hand :id="id + '-hand'" :player="player"></Hand>
+        <v-text ref="handle" :id="id + '-handle'" :config="handle"></v-text>
+        <v-text ref="status" :id="id + '-status'" :config="status"></v-text>
+        <Hand ref="hand" :id="id + '-hand'" :player="player"></Hand>
     </v-group>
 </template>
 
@@ -54,7 +54,7 @@ export default {
             deep: true,
             handler(newValue, oldValue) {
                 logger.debug('Handling change to player')
-                if (newValue.isWinner) {
+                if (newValue && newValue.isWinner) {
                     logger.debug('This player is the winner')
                     this.bounce()
                 }
@@ -81,7 +81,7 @@ export default {
                 align: 'left',
             }
         },
-        status() {
+        statusText() {
             let status = ''
 
             if (!this.opponent) {
@@ -118,11 +118,14 @@ export default {
                 }
             }
 
+            return status
+        },
+        status() {
             return {
                 id: this.id + '-status',
                 x: 30,
                 y: 9,
-                text: status,
+                text: this.statusText,
                 fill: Colors.BLACK,
                 fontSize: 14,
                 align: 'left',

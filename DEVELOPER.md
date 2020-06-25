@@ -165,6 +165,35 @@ Vue.js has [good support](https://vuejs.org/v2/guide/unit-testing.html) for
 Jest, and also provides its own [Vue Test Utils](https://vue-test-utils.vuejs.org/) to 
 help with testing.
 
+#### Test Constructs
+
+I find myself commonly using a few Vue Test constructs, which I want to list
+here for reference.
+
+It can sometimes be useful to see the HTML content of the component you're testing.
+That's easy to get off the top-level wrapper, or anything other component that you
+retrieved via `find()` or `findComponent()`:
+
+```
+console.log("HTML: " + wrapper.html())
+```
+
+Similarly, it can sometimes be useful to look at properties for the component
+you're testing:
+
+```
+console.log("Props: " + JSON.stringify(wrapper.props(), null, 2))
+```
+
+or attributes for a component:
+
+```
+console.log("Attributes: " + JSON.stringify(card.attributes(), null, 2))
+```
+
+There are other ways to print an object, but `JSON.stringify()` seems to be
+the most convenient.
+
 ## Developer Tasks
 
 The most common developer tasks are managed with `yarn` via the `scripts` list

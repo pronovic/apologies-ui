@@ -38,8 +38,7 @@ describe('Components/board/GameBoardArea.vue', () => {
     })
 
     test('component renders', async () => {
+        // there's nothing variable in here, so we just want to know that it renders
         expect(wrapper.exists()).toBe(true)
     })
-
-    // TODO: stubbed test - implement remaining test cases
 })

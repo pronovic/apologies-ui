@@ -1,5 +1,5 @@
 <template>
-    <v-group :id="id">
+    <v-group ref="group" :id="id">
         <v-shape ref="pawn" :config="config"></v-shape>
     </v-group>
 </template>

@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import BootstrapVue from 'bootstrap-vue'
 import VueKonva from 'vue-konva'
@@ -5,6 +6,8 @@ import VueKonva from 'vue-konva'
 import { Store } from 'vuex-mock-store'
 
 import Hand from 'Components/board/Hand.vue'
+import Card from 'Components/board/Card.vue'
+import { Cards } from 'Utils/constants'
 
 const localVue = createLocalVue()
 localVue.use(BootstrapVue)
@@ -17,6 +20,13 @@ const store = new Store({
 
 const mocks = {
     $store: store,
+}
+
+const props = {
+    id: 'testhand',
+    x: 10,
+    y: 20,
+    player: null,
 }
 
 describe('Components/board/Hand.vue', () => {
@@ -33,9 +43,37 @@ describe('Components/board/Hand.vue', () => {
         wrapper.destroy()
     })
 
-    test('component renders', async () => {
+    test('component renders (no player)', async () => {
+        props.player = null
+        wrapper.setProps(props)
+        await Vue.nextTick()
         expect(wrapper.exists()).toBe(true)
+        expect(wrapper.findComponent(Card).exists()).toBe(false)
     })
 
-    // TODO: stubbed test - implement remaining test cases
+    test('component renders (no hand)', async () => {
+        props.player = { hand: null }
+        wrapper.setProps(props)
+        await Vue.nextTick()
+        expect(wrapper.exists()).toBe(true)
+        expect(wrapper.findComponent(Card).exists()).toBe(false)
+    })
+
+    test('component renders (empty hand)', async () => {
+        props.player = { hand: [] }
+        wrapper.setProps(props)
+        await Vue.nextTick()
+        expect(wrapper.exists()).toBe(true)
+        expect(wrapper.findComponent(Card).exists()).toBe(false)
+    })
+
+    test('component renders (non-empty hand)', async () => {
+        props.player = { hand: [Cards.CARD_1, Cards.CARD_APOLOGIES] }
+        wrapper.setProps(props)
+        await Vue.nextTick()
+        var card1 = wrapper.find('#testhand-card-0')
+        var card2 = wrapper.find('#testhand-card-1')
+        expect(card1.attributes().card).toBe(Cards.CARD_1)
+        expect(card2.attributes().card).toBe(Cards.CARD_APOLOGIES)
+    })
 })
