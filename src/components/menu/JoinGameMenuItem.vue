@@ -1,6 +1,7 @@
 <template>
     <div>
         <b-dropdown-item
+            ref="dropdown"
             v-if="visible"
             v-b-modal.joinGameModal
             v-b-tooltip.hover.left
@@ -8,9 +9,11 @@
             >Join Game</b-dropdown-item
         >
 
+        <!-- static is needed for tests to work, but doesn't work properly in live application -->
         <b-modal
-            id="joinGameModal"
             ref="modal"
+            id="joinGameModal"
+            :static="unittest"
             title="Join Game"
             ok-only
             size="xl"
@@ -83,6 +86,7 @@ import { joinGame, listAvailableGames } from 'Utils/client'
 
 export default {
     name: 'JoinGameMenuItem',
+    props: ['unittest'],
     data() {
         return {
             sortBy: 'game',
