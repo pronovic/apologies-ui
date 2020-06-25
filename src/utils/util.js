@@ -121,7 +121,13 @@ function confirmDialog(context, message, okFunction) {
         .catch((err) => {}) // eslint-disable-line handle-callback-err
 }
 
+/** Turn an object into a string. */
+function objectToString(obj) {
+    // Saw this in a StackOverflow suggestion; it's a convenient way to see what's in an object
+    return JSON.stringify(obj, null, 2)
+}
+
 /** Singleton logger that all components can use. */
 const logger = new Logger()
 
-export { logger, sleep, random, confirmDialog }
+export { logger, objectToString, sleep, random, confirmDialog }
