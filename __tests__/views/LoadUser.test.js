@@ -28,16 +28,15 @@ const mocks = {
     $router: router,
 }
 
-// These are split up because we need different initial conditions for the create() method
+// This looks a little different than the other tests because of initial conditions for the create() method
 
-describe('Views/LoadUser.vue (no player)', () => {
+describe('Views/LoadUser.vue', () => {
     let wrapper
+    let div
 
     beforeEach(() => {
-        const div = document.createElement('div')
+        div = document.createElement('div')
         document.body.appendChild(div)
-        storage.loadPlayer.mockReturnValueOnce(null) // no user in storage
-        wrapper = mount(LoadUser, { localVue, mocks, attachTo: div })
     })
 
     afterEach(() => {
@@ -46,29 +45,17 @@ describe('Views/LoadUser.vue (no player)', () => {
     })
 
     test('player not registered', async () => {
+        storage.loadPlayer.mockReturnValueOnce(null) // no user in storage
+        wrapper = mount(LoadUser, { localVue, mocks, attachTo: div })
         expect(wrapper.exists()).toBe(true)
         expect(store.dispatch).toHaveBeenCalledWith('handlePlayerNotRegistered')
         expect(router.push).toHaveBeenCalledWith({ name: 'Landing' })
         expect(client.reregisterHandle).toHaveBeenCalledTimes(0)
     })
-})
-
-describe('Views/LoadUser.vue (with player)', () => {
-    let wrapper
-
-    beforeEach(() => {
-        const div = document.createElement('div')
-        document.body.appendChild(div)
-        storage.loadPlayer.mockReturnValueOnce('player') // there is a user in storage
-        wrapper = mount(LoadUser, { localVue, mocks, attachTo: div })
-    })
-
-    afterEach(() => {
-        store.reset()
-        wrapper.destroy()
-    })
 
     test('player registered', async () => {
+        storage.loadPlayer.mockReturnValueOnce('player') // there is a user in storage
+        wrapper = mount(LoadUser, { localVue, mocks, attachTo: div })
         expect(store.dispatch).toHaveBeenCalledTimes(0)
         expect(router.push).toHaveBeenCalledTimes(0)
         expect(client.reregisterHandle).toHaveBeenCalledWith('player')
