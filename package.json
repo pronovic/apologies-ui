@@ -14,8 +14,10 @@
     "build": "yarn clean && parcel build src/index.html",
     "server": "parcel serve src/index.html",
     "test": "jest",
-    "testc": "jest --coverage",
-    "testch": "jest --coverage && open coverage/index.html"
+    "test:c": "jest --coverage",
+    "test:ch": "jest --coverage && open coverage/index.html",
+    "cypress:ui": "nohup cypress open >/dev/null 2>&1 &",
+    "cypress:test": "cypress run --browser chrome"
   },
   "husky": {
     "hooks": {
@@ -30,7 +32,7 @@
     "Utils": "./src/utils",
     "Views": "./src/views"
   },
-  "jest": { 
+  "jest": {
     "resetMocks": true,
     "setupFilesAfterEnv": [
       "./jest.setup.js"
@@ -77,10 +79,11 @@
     "babel-jest": "^26.0.1",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.7.0",
-    "cypress": "^4.6.0",
+    "cypress": "^4.9.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-cypress": "^2.11.1",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-jest": "^23.16.0",
     "eslint-plugin-node": "^11.1.0",
