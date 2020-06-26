@@ -1,7 +1,13 @@
 import getters from 'VStore/getters'
-import { UserLoadStatus, GameStatus } from 'Utils/constants'
 
-describe('store/getters.js', () => {
+import { UserLoadStatus, GameStatus, PlayerColor } from 'Utils/constants'
+
+describe('store/getters.js - simple getters', () => {
+    // Something to keep in mind with these tests is that getters are
+    // *defined* as functions, but are *invoked* as simple attributes.  So,
+    // to test a getter we call a function, but when we pass in stubbed
+    // getters, those are *not* functions.
+
     test('test displayHeight()', async () => {
         var state = {
             dimensions: { window: { height: 100 }, header: { height: 25 } },
@@ -210,33 +216,317 @@ describe('store/getters.js', () => {
         expect(result).toBe(true)
     })
 
-    test('test isPlayerTurn()', async () => {
-        // TODO: implement
+    test('test isPlayerTurn() with null moves', async () => {
+        var state = {
+            game: {
+                playerMoves: null,
+            },
+        }
+
+        var result = getters.isPlayerTurn(state)
+        expect(result).toBe(false)
     })
 
-    test('test player()', async () => {
-        // TODO: implement
+    test('test isPlayerTurn() with empty moves', async () => {
+        var state = {
+            game: {
+                playerMoves: {},
+            },
+        }
+
+        var result = getters.isPlayerTurn(state)
+        expect(result).toBe(false)
     })
 
-    test('test opponents()', async () => {
-        // TODO: implement
+    test('test isPlayerTurn() with moves', async () => {
+        // This is an odd-looking object, but comes directly from the webservice JSON
+        // in the GAME_PLAYER_TURN response, the moves attribute.
+        var state = {
+            game: {
+                playerMoves: {
+                    a9fff13fbe5e46feaeda87382bf4c3b8: {
+                        move_id: 'a9fff13fbe5e46feaeda87382bf4c3b8',
+                    },
+                    x9fff1116axe46feaeda873335f4c1ax: {
+                        move_id: 'x9fff1116axe46feaeda873335f4c1ax',
+                    },
+                },
+            },
+        }
+
+        var result = getters.isPlayerTurn(state)
+        expect(result).toBe(true)
     })
 
-    test('test redPawns()', async () => {
-        // TODO: implement
+    test('test player() with empty players', async () => {
+        var stubbed = {
+            playerHandle: 'handle',
+            players: {},
+        }
+
+        var result = getters.player(null, stubbed)
+        expect(result).toBeNull()
     })
 
-    test('test yellowPawns()', async () => {
-        // TODO: implement
+    test('test player() with no player handle', async () => {
+        var stubbed = {
+            playerHandle: null,
+            players: { handle: 'result' },
+        }
+
+        var result = getters.player(null, stubbed)
+        expect(result).toBeNull()
     })
 
-    test('test greenPawns()', async () => {
-        // TODO: implement
+    test('test player() with player handle not found', async () => {
+        var stubbed = {
+            playerHandle: 'bogus',
+            players: { handle: 'result' },
+        }
+
+        var result = getters.player(null, stubbed)
+        expect(result).toBeNull()
     })
 
-    test('test bluePawns()', async () => {
-        // TODO: implement
+    test('test player() with matching player handle', async () => {
+        var stubbed = {
+            playerHandle: 'handle',
+            players: { handle: 'result' },
+        }
+
+        var result = getters.player(null, stubbed)
+        expect(result).toBe('result')
     })
+
+    test('test opponents() with empty players', async () => {
+        var stubbed = {
+            players: {},
+        }
+
+        var result = getters.opponents(null, stubbed)
+        expect(result).toStrictEqual([])
+    })
+
+    test('test opponents() with no opponents', async () => {
+        var stubbed = {
+            players: {
+                p1: {
+                    handle: 'p1',
+                    isOpponent: false,
+                },
+            },
+        }
+
+        var result = getters.opponents(null, stubbed)
+        expect(result).toStrictEqual([])
+    })
+
+    test('test opponents() with some opponents', async () => {
+        var p1 = {
+            handle: 'p1',
+            isOpponent: false,
+        }
+
+        var p2 = {
+            handle: 'p2',
+            isOpponent: true,
+        }
+
+        var p3 = {
+            handle: 'p3',
+            isOpponent: true,
+        }
+
+        var stubbed = {
+            players: {
+                p1: p1,
+                p2: p2,
+                p3: p3,
+            },
+        }
+
+        var result = getters.opponents(null, stubbed)
+        expect(result).toStrictEqual([p2, p3]) // hmm, not sure order is guaranteed here?
+    })
+
+    test('test redPawns() with no players', async () => {
+        var stubbed = {
+            players: {},
+        }
+
+        var result = getters.redPawns(null, stubbed)
+        expect(result).toStrictEqual([])
+    })
+
+    test('test redPawns() with no red player', async () => {
+        var player = {
+            handle: 'p1',
+            color: 'bogus',
+            pawns: 'pawns',
+        }
+
+        var stubbed = {
+            players: {
+                p1: player,
+            },
+        }
+
+        var result = getters.redPawns(null, stubbed)
+        expect(result).toStrictEqual([])
+    })
+
+    test('test redPawns() with red player', async () => {
+        var player = {
+            handle: 'p1',
+            color: PlayerColor.RED,
+            pawns: 'pawns',
+        }
+
+        var stubbed = {
+            players: {
+                p1: player,
+            },
+        }
+
+        var result = getters.redPawns(null, stubbed)
+        expect(result).toBe('pawns')
+    })
+
+    test('test yellowPawns() with no players', async () => {
+        var stubbed = {
+            players: {},
+        }
+
+        var result = getters.yellowPawns(null, stubbed)
+        expect(result).toStrictEqual([])
+    })
+
+    test('test yellowPawns() with no yellow player', async () => {
+        var player = {
+            handle: 'p1',
+            color: 'bogus',
+            pawns: 'pawns',
+        }
+
+        var stubbed = {
+            players: {
+                p1: player,
+            },
+        }
+
+        var result = getters.yellowPawns(null, stubbed)
+        expect(result).toStrictEqual([])
+    })
+
+    test('test yellowPawns() with yellow player', async () => {
+        var player = {
+            handle: 'p1',
+            color: PlayerColor.YELLOW,
+            pawns: 'pawns',
+        }
+
+        var stubbed = {
+            players: {
+                p1: player,
+            },
+        }
+
+        var result = getters.yellowPawns(null, stubbed)
+        expect(result).toBe('pawns')
+    })
+
+    test('test greenPawns() with no players', async () => {
+        var stubbed = {
+            players: {},
+        }
+
+        var result = getters.greenPawns(null, stubbed)
+        expect(result).toStrictEqual([])
+    })
+
+    test('test greenPawns() with no green player', async () => {
+        var player = {
+            handle: 'p1',
+            color: 'bogus',
+            pawns: 'pawns',
+        }
+
+        var stubbed = {
+            players: {
+                p1: player,
+            },
+        }
+
+        var result = getters.greenPawns(null, stubbed)
+        expect(result).toStrictEqual([])
+    })
+
+    test('test greenPawns() with green player', async () => {
+        var player = {
+            handle: 'p1',
+            color: PlayerColor.GREEN,
+            pawns: 'pawns',
+        }
+
+        var stubbed = {
+            players: {
+                p1: player,
+            },
+        }
+
+        var result = getters.greenPawns(null, stubbed)
+        expect(result).toBe('pawns')
+    })
+
+    test('test bluePawns() with no players', async () => {
+        var stubbed = {
+            players: {},
+        }
+
+        var result = getters.bluePawns(null, stubbed)
+        expect(result).toStrictEqual([])
+    })
+
+    test('test bluePawns() with no blue player', async () => {
+        var player = {
+            handle: 'p1',
+            color: 'bogus',
+            pawns: 'pawns',
+        }
+
+        var stubbed = {
+            players: {
+                p1: player,
+            },
+        }
+
+        var result = getters.bluePawns(null, stubbed)
+        expect(result).toStrictEqual([])
+    })
+
+    test('test bluePawns() with blue player', async () => {
+        var player = {
+            handle: 'p1',
+            color: PlayerColor.BLUE,
+            pawns: 'pawns',
+        }
+
+        var stubbed = {
+            players: {
+                p1: player,
+            },
+        }
+
+        var result = getters.bluePawns(null, stubbed)
+        expect(result).toBe('pawns')
+    })
+})
+
+describe('store/getters.js - player state', () => {
+    // Player state is the most complicated getter-related functionality.
+    // It merges together information from several sources.  Because data
+    // setup is so complicated, and because there are so many test cases,
+    // I've split this out from the rest of the getters.
 
     test('test players()', async () => {
         // TODO: implement

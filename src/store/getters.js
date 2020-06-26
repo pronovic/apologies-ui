@@ -6,6 +6,103 @@ import {
     PlayerColor,
 } from 'Utils/constants'
 
+function derivePlayersFromGameState(game, playerHandle) {
+    // This merges information from several different events into a single
+    // cohesive state for each player, tracked as a map by player handle.
+    //
+    // Most of the information comes from the player change and game state events.
+    // Public information about each opponent's hand is augmented based on the
+    // previous turn information tracked via history.  For a standard mode game,
+    // the player's hand is augmented based on the game player turn event.
+    //
+    // Unfortunately, there's no handle in the game state, only a color.  And, we
+    // don't have any game state information or any color until after the game has
+    // been started and colors have been assigned.  So, we need to jump through
+    // some hoops to fill in only the information that is available at the current
+    // time.
+    //
+    // It's important that this always returns at least an empty object, so other
+    // getters don't need to do null-checking.
+
+    var players = {}
+
+    if (game.players) {
+        for (const player of game.players) {
+            players[player.handle] = {
+                handle: player.handle,
+                color: player.player_color,
+                type: player.player_type,
+                state: player.player_state,
+                isAdvertiser: false,
+                isOpponent: player.handle !== playerHandle,
+                isWinner: false,
+                turns: 0,
+                hand: [],
+                pawns: [],
+            }
+        }
+    }
+
+    if (game.playerState) {
+        players[playerHandle].turns = game.playerState.turns
+        players[playerHandle].hand = game.playerState.hand
+        players[playerHandle].pawns = game.playerState.pawns
+    }
+
+    if (game.opponentStates) {
+        const stateMap = Object.fromEntries(
+            game.opponentStates.map((e) => [e.color, e])
+        )
+
+        for (const player of Object.values(players)) {
+            if (player.color in stateMap) {
+                player.turns = stateMap[player.color].turns
+                player.pawns = stateMap[player.color].pawns
+            }
+        }
+    }
+
+    if (game.mode === GameMode.STANDARD && game.drawnCard) {
+        // In a standard mode game, the hand is always empty, so we fill it
+        // with the card they most recently played.
+        players[playerHandle].hand = [game.drawnCard]
+    }
+
+    if (game.previousTurn) {
+        for (const player of Object.values(players)) {
+            if (player.isOpponent) {
+                if (player.color === game.previousTurn.color) {
+                    if (game.mode === GameMode.STANDARD) {
+                        player.hand = [game.previousTurn.card]
+                    } else {
+                        // Here, we're being cute and pretending they pick from different parts of their hand
+                        const index = random(0, 4)
+                        const hand = [null, null, null, null, null]
+                        hand[index] = game.previousTurn.card
+                        player.hand = hand
+                    }
+                } else {
+                    if (game.mode === GameMode.STANDARD) {
+                        player.hand = []
+                    } else {
+                        player.hand = [null, null, null, null, null]
+                    }
+                }
+            }
+        }
+    }
+
+    if (game.winner && game.winner in players) {
+        players[game.winner].isWinner = true
+    }
+
+    if (game.advertiser && game.advertiser in players) {
+        players[game.advertiser].isAdvertiser = true
+    }
+
+    return players
+}
+
 const getters = {
     displayHeight: (state) => {
         return state.dimensions.window.height - state.dimensions.header.height
@@ -63,7 +160,7 @@ const getters = {
     },
     isPlayerTurn: (state) => {
         // when it is a player's turn, there will always be at least one legal move (which might be a forfeit)
-        return (
+        return !!(
             state.game.playerMoves &&
             Object.keys(state.game.playerMoves).length > 0
         )
@@ -115,97 +212,7 @@ const getters = {
         return [] // if we can't find the player, just return no pawns
     },
     players: (state, getters) => {
-        // This merges information from several different events into a single
-        // cohesive state for each player, tracked as a map by player handle.
-        //
-        // Most of the information comes from the player change and game state events.
-        // Public information about each opponent's hand is augmented based on the
-        // previous turn information tracked via history.  For a standard mode game,
-        // the player's hand is augmented based on the game player turn event.
-        //
-        // Unfortunately, there's no handle in the game state, only a color.  And, we
-        // don't have any game state information or any color until after the game has
-        // been started and colors have been assigned.  So, we need to jump through
-        // some hoops to fill in only the information that is available at the current
-        // time.
-
-        var players = {}
-
-        if (state.game.players) {
-            for (const player of state.game.players) {
-                players[player.handle] = {
-                    handle: player.handle,
-                    color: player.player_color,
-                    type: player.player_type,
-                    state: player.player_state,
-                    isAdvertiser: false,
-                    isOpponent: player.handle !== getters.playerHandle,
-                    isWinner: false,
-                    turns: 0,
-                    hand: [],
-                    pawns: [],
-                }
-            }
-        }
-
-        if (state.game.playerState) {
-            players[getters.playerHandle].turns = state.game.playerState.turns
-            players[getters.playerHandle].hand = state.game.playerState.hand
-            players[getters.playerHandle].pawns = state.game.playerState.pawns
-        }
-
-        if (state.game.opponentStates) {
-            const stateMap = Object.fromEntries(
-                state.game.opponentStates.map((e) => [e.color, e])
-            )
-
-            for (const player of Object.values(players)) {
-                if (player.color in stateMap) {
-                    player.turns = stateMap[player.color].turns
-                    player.pawns = stateMap[player.color].pawns
-                }
-            }
-        }
-
-        if (state.game.mode === GameMode.STANDARD && state.game.drawnCard) {
-            // In a standard mode game, the hand is always empty, so we fill it
-            // with the card they most recently played.
-            players[getters.playerHandle].hand = [state.game.drawnCard]
-        }
-
-        if (state.game.previousTurn) {
-            for (const player of Object.values(players)) {
-                if (player.isOpponent) {
-                    if (player.color === state.game.previousTurn.color) {
-                        if (state.game.mode === GameMode.STANDARD) {
-                            player.hand = [state.game.previousTurn.card]
-                        } else {
-                            // Here, we're being cute and pretending they pick from different parts of their hand
-                            const index = random(0, 4)
-                            const hand = [null, null, null, null, null]
-                            hand[index] = state.game.previousTurn.card
-                            player.hand = hand
-                        }
-                    } else {
-                        if (state.game.mode === GameMode.STANDARD) {
-                            player.hand = []
-                        } else {
-                            player.hand = [null, null, null, null, null]
-                        }
-                    }
-                }
-            }
-        }
-
-        if (state.game.winner && state.game.winner in players) {
-            players[state.game.winner].isWinner = true
-        }
-
-        if (state.game.advertiser && state.game.advertiser in players) {
-            players[state.game.advertiser].isAdvertiser = true
-        }
-
-        return players
+        return derivePlayersFromGameState(state.game, getters.playerHandle)
     },
 }
 
