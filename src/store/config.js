@@ -7,26 +7,28 @@
 // all environment variables, and that's considered a security risk.  We need to
 // list specific variables individually.
 
-function loadConfig(env) {
+function loadConfig() {
     return {
         // General configuration
-        LOG_LEVEL: env.LOG_LEVEL,
-        SHOW_SQUARE_NUMBERS: env.SHOW_SQUARE_NUMBERS === 'true',
+        LOG_LEVEL: process.env.LOG_LEVEL,
+        SHOW_SQUARE_NUMBERS: process.env.SHOW_SQUARE_NUMBERS === 'true',
 
         // Websocket configuration
-        WEBSOCKET_API: env.WEBSOCKET_API,
-        SERVER_TIMEOUT_MS: parseInt(env.SERVER_TIMEOUT_MS),
-        INITIAL_RECONNECT_DELAY_MS: parseInt(env.INITIAL_RECONNECT_DELAY_MS),
-        MAX_RECONNECT_DELAY_MS: parseInt(env.MAX_RECONNECT_DELAY_MS),
-        RECONNECT_DECAY_FACTOR: parseFloat(env.RECONNECT_DECAY_FACTOR),
+        WEBSOCKET_API: process.env.WEBSOCKET_API,
+        SERVER_TIMEOUT_MS: parseInt(process.env.SERVER_TIMEOUT_MS),
+        INITIAL_RECONNECT_DELAY_MS: parseInt(
+            process.env.INITIAL_RECONNECT_DELAY_MS
+        ),
+        MAX_RECONNECT_DELAY_MS: parseInt(process.env.MAX_RECONNECT_DELAY_MS),
+        RECONNECT_DECAY_FACTOR: parseFloat(process.env.RECONNECT_DECAY_FACTOR),
 
         // License URLs
-        LICENSE_APACHE_2: env.LICENSE_APACHE_2,
+        LICENSE_APACHE_2: process.env.LICENSE_APACHE_2,
 
         // GitHub URLs
-        GITHUB_APOLOGIES: env.GITHUB_APOLOGIES,
-        GITHUB_APOLOGIES_SERVER: env.GITHUB_APOLOGIES_SERVER,
-        GITHUB_APOLOGIES_UI: env.GITHUB_APOLOGIES_UI,
+        GITHUB_APOLOGIES: process.env.GITHUB_APOLOGIES,
+        GITHUB_APOLOGIES_SERVER: process.env.GITHUB_APOLOGIES_SERVER,
+        GITHUB_APOLOGIES_UI: process.env.GITHUB_APOLOGIES_UI,
     }
 }
 

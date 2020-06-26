@@ -51,7 +51,7 @@ const dimensions = {
 
 /** The overall tracked state */
 const state = {
-    config: loadConfig(process.env),
+    config: loadConfig(),
     user: user,
     server: server,
     game: game,
