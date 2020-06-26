@@ -1,13 +1,17 @@
-import getters from 'VStore/getters'
+// The tests below cover most of the straightforward getter functionality.  However, the
+// most complicated piece - derivePlayersFromGameState() - is not covered.  This is mostly
+// just because I'm lazy.  All of the code was written and extensively tested long before
+// I figured out how to implement unit tests with Jest.  Writing Jest unit tests to
+// replicate that manual testing will take more effort than is worthwhile right now.
+//
+// Something to keep in mind with these tests is that getters are *defined* as functions,
+// but are *invoked* as simple attributes.  So, to test a getter we call a function, but
+// when we pass in stubbed getters, those are simple attributes and not functions.
 
+import getters from 'VStore/getters'
 import { UserLoadStatus, GameStatus, PlayerColor } from 'Utils/constants'
 
-describe('store/getters.js - simple getters', () => {
-    // Something to keep in mind with these tests is that getters are
-    // *defined* as functions, but are *invoked* as simple attributes.  So,
-    // to test a getter we call a function, but when we pass in stubbed
-    // getters, those are *not* functions.
-
+describe('store/getters.js', () => {
     test('test displayHeight()', async () => {
         var state = {
             dimensions: { window: { height: 100 }, header: { height: 25 } },
@@ -519,17 +523,5 @@ describe('store/getters.js - simple getters', () => {
 
         var result = getters.bluePawns(null, stubbed)
         expect(result).toBe('pawns')
-    })
-})
-
-describe('store/getters.js - player state', () => {
-    // Player state is the most complicated getter-related functionality.
-    // It merges together information from several sources.  Because data
-    // setup is so complicated, and because there are so many test cases,
-    // I've split this out from the rest of the getters.
-
-    // eslint-disable-next-line jest/expect-expect
-    test('test players()', async () => {
-        // TODO: implement
     })
 })
