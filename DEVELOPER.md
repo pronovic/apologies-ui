@@ -32,10 +32,10 @@ in [`package.json`](package.json).  The following scripts are available:
 - `yarn build` - Build the production bundle in `dist/`
 - `yarn server` - Start the development server in hot module reloading mode
 - `yarn test` - Run the unit test suite
-- `yarn testc` - Run the unit test suite and gather coverage
-- `yarn testch` - Run the unit test suite and gather coverage, opening the HTML coverage report
+- `yarn test:c` - Run the unit test suite and gather coverage
+- `yarn test:ch` - Run the unit test suite and gather coverage, opening the HTML coverage report
 
-You can pass other arguments (i.e. `--verbose`), and yarn will provide them to
+You can pass other arguments (i.e. `--verbose`), and Yarn will provide them to
 the underlying command.  
 
 ## Prequisites
@@ -89,8 +89,6 @@ $ export $PATH="/usr/local/bin:$PATH"
 At this point, you have a working version of "classic" Yarn 1.22.x, which is
 what we're using right now.  In the future, we may upgrade to Yarn 2, and
 having yarn installed this way will support that transition.
-
-
 
 ## Pre-Commit Hooks
 
@@ -215,11 +213,6 @@ the component resides in.
 
 ## Automated Testing
 
-One of my major goals for this effort was to understand how to do testing in a
-Javascript application like this.  As a result, there is solid coverage.  However,
-because this was a learning effort for me, the unit tests were written long after the code was written and manually tested.  In some cases, I decided that the effort
-required to write complicated tests or refactor awkward code was not worthwhile.
-
 There are 3 kinds of tests:
 
 - Unit tests (single component)
@@ -227,17 +220,28 @@ There are 3 kinds of tests:
 - End to end (E2E) tests (functional or acceptance tests)
 
 I am using [Jest](https://jestjs.io/en/) for unit and integration testing, and
-I intend to use [Cypress](https://www.cypress.io/) for functional testing.
+I intend to use [Cypress](https://www.cypress.io/) for functional acceptance
+testing.
 
 There are other options in both cases, but the general recommendation seems be
 that these are the best fit for Vue.js as of today.  Both are popular and well
-supported and seem to work well.  Cypress only supports Chrome, but that is ok
-for my purposes.  (The articles [here](https://www.monterail.com/blog/end-to-end-testing-with-cypress) and
+supported and seem to work well.  (The articles [here](https://www.monterail.com/blog/end-to-end-testing-with-cypress) and
 [here](https://medium.com/welldone-software/an-overview-of-javascript-testing-7ce7298b9870) were helpful.)
 
 Vue.js has [good support](https://vuejs.org/v2/guide/unit-testing.html) for
 Jest, and also provides its own [Vue Test Utils](https://vue-test-utils.vuejs.org/) to 
 help with testing.
+
+### Test Limitations
+
+One of my major goals for this effort was to understand how to do testing in a
+modern Javascript application.  As a result, there is fairly good coverage.
+
+However, because this was a learning effort for me, the unit tests were written
+long after the code was originally written and manually tested.  In some cases,
+I decided that the effort required to write complicated tests or refactor
+awkward code was not worthwhile.  (If I had been writing the code and tests at
+the same time, things probably would have been different.)
 
 ### Jest Testing Hints
 
@@ -389,7 +393,6 @@ You can normally start the websockets server and leave it running forever.
 If something gets screwed up (like your handle is accidentally in use and
 you can't register for it again) just CTRL-C the server and restart it.  No
 state is maintained in between, so you'll start over fresh.
-
 
 ### Browser Testing
 
