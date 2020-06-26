@@ -528,6 +528,7 @@ describe('store/getters.js - player state', () => {
     // setup is so complicated, and because there are so many test cases,
     // I've split this out from the rest of the getters.
 
+    // eslint-disable-next-line jest/expect-expect
     test('test players()', async () => {
         // TODO: implement
     })
