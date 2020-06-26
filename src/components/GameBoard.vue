@@ -1,10 +1,10 @@
 <template>
     <v-stage ref="stage" v-if="visible" :config="stage">
         <v-layer>
-            <PlayerArea ref="player" :config="info"></PlayerArea>
+            <PlayerArea ref="player"></PlayerArea>
         </v-layer>
         <v-layer>
-            <GameBoardArea ref="board" :config="board"></GameBoardArea>
+            <GameBoardArea ref="board"></GameBoardArea>
         </v-layer>
         <v-layer>
             <PlayerPawns
@@ -87,22 +87,6 @@ export default {
             return {
                 height: this.height,
                 width: this.width,
-            }
-        },
-        info() {
-            return {
-                x: 15,
-                y: 15,
-                height: 960,
-                width: 310,
-            }
-        },
-        board() {
-            return {
-                x: 310 + 5,
-                y: 15,
-                height: 960,
-                width: 960,
             }
         },
     },

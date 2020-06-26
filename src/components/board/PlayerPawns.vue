@@ -85,9 +85,10 @@ export default {
         },
         htmlColor() {
             return this.pawns &&
-                this.pawns.length &&
-                this.pawns[0].color in Colors
-                ? Colors[this.pawns[0].color]
+                this.pawns.length > 0 &&
+                this.color &&
+                this.color in Colors
+                ? Colors[this.color]
                 : Colors.GREY
         },
     },

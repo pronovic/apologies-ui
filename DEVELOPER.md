@@ -20,6 +20,78 @@ works exactly the same, and some examples you find online may not translate
 directly.  For instance, Parcel does not allow the `@` alias that Vue usually
 uses for the `src` directory.
 
+## Developer Tasks
+
+The most common developer tasks are managed with `yarn` via the `scripts` list
+in [`package.json`](package.json).  The following scripts are available:
+
+- `yarn checks` - Run the StandardJS and Prettier source code checks (note: `checks`, not `check`)
+- `yarn format` - Reformat code based on the StandardJS and Prettier checks
+- `yarn clean` - Remove the production bundle in `dist/`
+- `yarn rmcache` - Remove the Parcel cache, which is sometimes needed if changes to `.env` are not picked up
+- `yarn build` - Build the production bundle in `dist/`
+- `yarn server` - Start the development server in hot module reloading mode
+- `yarn test` - Run the unit test suite
+- `yarn testc` - Run the unit test suite and gather coverage
+- `yarn testch` - Run the unit test suite and gather coverage, opening the HTML coverage report
+
+You can pass other arguments (i.e. `--verbose`), and yarn will provide them to
+the underlying command.  
+
+## Prequisites
+
+Nearly all prerequisites are managed by Yarn. All you need to do is make sure
+that you have Yarn itself installed (see below).  Once you have Yarn installed,
+set up your development environment like this:
+
+```
+$ yarn 
+$ yarn install
+```
+
+### MacOS
+
+On MacOS, it's easiest to use [Homebrew](https://brew.sh/) to install Yarn:
+
+```
+$ brew install yarn
+```
+
+This installs "classic" Yarn 1.22.x, which is what we're using right now.
+In the future, we may upgrade to Yarn 2, and having yarn installed this
+way will support that transition.
+
+
+### Debian
+
+On Debian, you have to jump through some hoops, because the packaged
+version of `yarn` (in `yarnpkg`) is not new enough to support the package
+format we use for this repo. 
+
+First, install `npm`:
+
+```
+$ sudo apt-get install npm
+```
+
+Then, install `yarn`:
+
+```
+$ sudo npm install -g yarn
+```
+
+Finally, add the `npm`-installed version of `yarn` to your `$PATH`:
+
+```
+$ export $PATH="/usr/local/bin:$PATH"
+```
+
+At this point, you have a working version of "classic" Yarn 1.22.x, which is
+what we're using right now.  In the future, we may upgrade to Yarn 2, and
+having yarn installed this way will support that transition.
+
+
+
 ## Pre-Commit Hooks
 
 We rely on pre-commit hooks to ensure that the code is properly-formatted and
@@ -99,7 +171,7 @@ found it strange that the console doesn't include a timestamp.)
 
 I am using the [Atmosphere](https://github.com/Atmosphere/atmosphere-javascript) Javascript
 library for websockets communication.  See the [API](https://github.com/Atmosphere/atmosphere/wiki/atmosphere.js-API) reference
-for more details.  This library seems to be one of the most common today.  
+for more details.  This library seems to be one of the most commonly-used today.  
 
 It's straightforward to use, but error-handling sometimes leaves a little to be
 desired.  For instance, it's hard to force the library to use _only_ websockets
@@ -124,7 +196,7 @@ out of the box. For instance, I have implemented routing via [Vue
 Router](https://router.vuejs.org/) and central state state management via
 [Vuex](https://vuex.vuejs.org/).
 
-## Rendering the Game Canvas
+### Rendering the Game Canvas
 
 I am using [Vue Konva](https://konvajs.org/docs/vue/index.html) to render the
 game board.  [Konva](https://konvajs.org/) is a 2D library used to manage the
@@ -141,98 +213,71 @@ shouldn't be necessary.  I can sometimes make animations work without that
 step, but it's not clear why - maybe something having to with which Konva layer
 the component resides in. 
 
-### Testing
+## Automated Testing
 
-One of my major goals for this effort is to understand how to do testing in a
-Javascript application like this.  However, I've been focused so far mainly on
-learning the frameworks and the general application design paradigms.
+One of my major goals for this effort was to understand how to do testing in a
+Javascript application like this.  As a result, there is solid coverage.  However,
+because this was a learning effort for me, the unit tests were written long after the code was written and manually tested.  In some cases, I decided that the effort
+required to write complicated tests or refactor awkward code was not worthwhile.
 
-I need to cover three kinds of tests:
+There are 3 kinds of tests:
 
 - Unit tests (single component)
 - Integration tests (multi-component)
 - End to end (E2E) tests (functional or acceptance tests)
 
-Vue.js has [good support](https://vuejs.org/v2/guide/unit-testing.html) for
-several common frameworks and its own [Vue Test
-Utils](https://vue-test-utils.vuejs.org/) that help with testing.
+I am using [Jest](https://jestjs.io/en/) for unit and integration testing, and
+I intend to use [Cypress](https://www.cypress.io/) for functional testing.
 
-My intent is to use [Cypress](https://www.cypress.io/) for functional testing
-and [Jest](https://jestjs.io/en/) for unit and integration testing.  There are
-other options in both cases, but the general recommendation seems be that these
-are the best fit for Vue.js as of today.  Both are popular and well supported
-and seem to work well.  Cypress only supports Chrome, but it seems like that's
-probably ok for my purposes.  (The articles [here](https://www.monterail.com/blog/end-to-end-testing-with-cypress) and
+There are other options in both cases, but the general recommendation seems be
+that these are the best fit for Vue.js as of today.  Both are popular and well
+supported and seem to work well.  Cypress only supports Chrome, but that is ok
+for my purposes.  (The articles [here](https://www.monterail.com/blog/end-to-end-testing-with-cypress) and
 [here](https://medium.com/welldone-software/an-overview-of-javascript-testing-7ce7298b9870) were helpful.)
 
-Since the Vue Konva library works much like the rest of Vue, my expectation is
-that I can unit test it the same way as everything else.
+Vue.js has [good support](https://vuejs.org/v2/guide/unit-testing.html) for
+Jest, and also provides its own [Vue Test Utils](https://vue-test-utils.vuejs.org/) to 
+help with testing.
 
-## Developer Tasks
+### Jest Testing Hints
 
-The most common developer tasks are managed with `yarn` via the `scripts` list
-in [`package.json`](package.json).  The following scripts are available:
+Jest unit tests are in the `__tests__` directory and are all named with the
+`.test.js` extension.  There are several standards for where to place tests,
+and this is the one I liked the best.
 
-- `yarn checks` - Run the StandardJS and Prettier source code checks (note: `checks`, not `check`)
-- `yarn format` - Reformat code based on the StandardJS and Prettier checks
-- `yarn clean` - Remove the production bundle in `dist/`
-- `yarn rmcache` - Remove the Parcel cache, which is sometimes needed if changes to `.env` are not picked up
-- `yarn build` - Build the production bundle in `dist/`
-- `yarn server` - Start the development server in hot module reloading mode
-
-## Prequisites
-
-Nearly all prerequisites are managed by Yarn. All you need to do is make sure
-that you have Yarn itself installed (see below).  Once you have Yarn installed,
-set up your development environment like this:
+To run a subset of the tests, you can pass arguments to `yarn test`.  For
+instance, this runs a single Jest test (based on the `describe` name),
+including verbose results about each test case:
 
 ```
-$ yarn 
-$ yarn install
+$ yarn test --verbose -t 'Components/menu/UnregisterMenuItem.vue'
 ```
 
-### MacOS
-
-On MacOS, it's easiest to use [Homebrew](https://brew.sh/) to install Yarn:
-
-```
-$ brew install yarn
-```
-
-This installs "classic" Yarn 1.22.x, which is what we're using right now.
-In the future, we may upgrade to Yarn 2, and having yarn installed this
-way will support that transition.
-
-
-### Debian
-
-On Debian, you have to jump through some hoops, because the packaged
-version of `yarn` (in `yarnpkg`) is not new enough to support the package
-format we use for this repo. 
-
-First, install `npm`:
+It can sometimes be useful to see the HTML content of the component you're testing.
+That's easy to get off the top-level wrapper, or anything other component that you
+retrieved via `find()` or `findComponent()`:
 
 ```
-$ sudo apt-get install npm
+console.log("HTML: " + wrapper.html())
 ```
 
-Then, install `yarn`:
+Similarly, it can sometimes be useful to look at properties for the component
+you're testing:
 
 ```
-$ sudo npm install -g yarn
+console.log("Props: " + JSON.stringify(wrapper.props(), null, 2))
 ```
 
-Finally, add the `npm`-installed version of `yarn` to your `$PATH`:
+or attributes for a component:
 
 ```
-$ export $PATH="/usr/local/bin:$PATH"
+console.log("Attributes: " + JSON.stringify(card.attributes(), null, 2))
 ```
 
-At this point, you have a working version of "classic" Yarn 1.22.x, which is
-what we're using right now.  In the future, we may upgrade to Yarn 2, and
-having yarn installed this way will support that transition.
+There are other ways to print an object, but `JSON.stringify()` seems to be
+the most convenient.
 
-## Local Testing
+## Local Browser Testing
 
 Local testing is straightforward.  In addition to this repository, you also need
 the [apologies-server](https://github.com/pronovic/apologies-server).  You will
@@ -249,6 +294,26 @@ computer players, and all of your turns will get the optimal move.  This gives
 you a fully automated game.  You can observe any kind of game with any number
 of players in other browsers - simply enable autoplay for each player after
 joining the game.
+
+### Parcel Javascript Server
+
+The Javascript application is served by Parcel in hot module reloading mode:
+
+```
+apologies-ui $ yarn server
+yarn run v1.22.4
+$ parcel serve src/index.html
+Server running at http://localhost:1234 
+✨  Built in 12.08s.
+```
+
+This example shows what happens with a fresh cache (a built time of around 12
+seconds on my MacBook).  The server starts much faster after the cache has been
+built.
+
+Changes to the source tree are picked up automatically.  This usually works ok,
+but sometimes things can get a little confused, depending on what changes you
+made.  If necessary, CTRL-C the server and restart it.
 
 ### Websockets Server
 
@@ -325,25 +390,6 @@ If something gets screwed up (like your handle is accidentally in use and
 you can't register for it again) just CTRL-C the server and restart it.  No
 state is maintained in between, so you'll start over fresh.
 
-### Parcel Server
-
-The Javascript application is served by Parcel in hot module reloading mode:
-
-```
-apologies-ui $ yarn server
-yarn run v1.22.4
-$ parcel serve src/index.html
-Server running at http://localhost:1234 
-✨  Built in 12.08s.
-```
-
-This example shows what happens with a fresh cache (a built time of around 12
-seconds on my MacBook).  The server starts much faster after the cache has been
-built.
-
-Changes to the source tree are picked up automatically.  This usually works ok,
-but sometimes things can get a little confused, depending on what changes you
-made.  If necessary, CTRL-C the server and restart it.
 
 ### Browser Testing
 
@@ -384,8 +430,14 @@ I have been using [VSCode](https://code.visualstudio.com/) for my IDE.  I
 have limited experience with VSCode, so this section just documents how
 I'm using it.
 
-There are some project-specific VSCode settings in [`jsconfig.json`](jsconfig.json) and
-[`.vscode/settings.json`](.vscode/settings.json).
+### Running Jest Tests in VSCode
+
+If you highlight the name of the test and press F5, that should run
+the selected test.  This is controlled by the VSCode launch configuration
+in [`.vscode/launch.json`](.vscode/launch.json).  See [StackOverflow](https://stackoverflow.com/a/55279902/2907667)
+for more details.
+
+### Recommended Plugins
 
 I have the following plugins installed:
 
@@ -402,6 +454,13 @@ I find the ESLint and Prettier plugins to be fairly distracting, because they
 show a lot of warnings that can usually be fixed automatically and don't seem
 to require my attention.  Right now, I have these plugins turned off.  Instead,
 I periodically run `yarn format` from the terminal to check and fix the code.
+
+### Project Settings
+
+There are some project-specific VSCode settings in [`jsconfig.json`](jsconfig.json) and
+[`.vscode/settings.json`](.vscode/settings.json).
+
+### Global Settings
 
 My global `settings.json` looks like this, including the configuration needed
 to make Vetur and VSCode Snippets plugins play together nicely:
@@ -424,6 +483,9 @@ to make Vetur and VSCode Snippets plugins play together nicely:
   "files.autoSave": "afterDelay",
   "javascript.updateImportsOnFileMove.enabled": "always",
   "explorer.confirmDelete": false,
-  "files.autoSaveDelay": 2500
+  "files.autoSaveDelay": 1000
 }
 ```
+
+
+

@@ -109,7 +109,25 @@ function random(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
+/** Pop up a confirm dialog, executing a function if ok is clicked. */
+function confirmDialog(context, message, okFunction) {
+    context.$bvModal
+        .msgBoxConfirm(message, { okVariant: 'danger' })
+        .then((value) => {
+            if (value) {
+                okFunction()
+            }
+        })
+        .catch((err) => {}) // eslint-disable-line handle-callback-err
+}
+
+/** Turn an object into a string. */
+function objectToString(obj) {
+    // Saw this in a StackOverflow suggestion; it's a convenient way to see what's in an object
+    return JSON.stringify(obj, null, 2)
+}
+
 /** Singleton logger that all components can use. */
 const logger = new Logger()
 
-export { logger, sleep, random }
+export { logger, objectToString, sleep, random, confirmDialog }

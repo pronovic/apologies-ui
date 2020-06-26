@@ -3,11 +3,14 @@
       env: {
         node: true
       },
+      "plugins": ["jest"],
       'extends': [
         'standard',
         'plugin:vue/essential',
         'plugin:prettier/recommended',
-        '@vue/prettier'
+        '@vue/prettier',
+        "plugin:jest/recommended",
+        "plugin:jest/style"
       ],
       parserOptions: {
         parser: 'babel-eslint'

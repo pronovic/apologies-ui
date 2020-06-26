@@ -1,6 +1,6 @@
 <template>
     <v-group :id="id" :x="x" :y="y">
-        <div v-for="(card, index) in player.hand" v-bind:key="index">
+        <div v-for="(card, index) in hand" v-bind:key="index">
             <Card
                 :id="id + '-card-' + index"
                 :x="index * 55 - 25"
@@ -19,5 +19,10 @@ export default {
     name: 'Hand',
     components: { Card: Card },
     props: ['id', 'x', 'y', 'player'],
+    computed: {
+        hand() {
+            return this.player && this.player.hand ? this.player.hand : []
+        },
+    },
 }
 </script>

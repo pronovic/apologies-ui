@@ -1,12 +1,12 @@
 <template>
-    <v-group :id="id" :config="group">
+    <v-group ref="group" :id="id" :config="group">
         <v-group :id="id + '-front'" v-if="card">
             <v-rect :config="rectFront"></v-rect>
-            <v-text :config="textFront"></v-text>
+            <v-text ref="front-text" :config="textFront"></v-text>
         </v-group>
         <v-group :id="id + '-back'" v-else>
             <v-rect :config="rectBack"></v-rect>
-            <v-text :config="textBack"></v-text>
+            <v-text ref="back-text" :config="textBack"></v-text>
         </v-group>
     </v-group>
 </template>
@@ -16,7 +16,7 @@ import { Cards, Colors } from 'Utils/constants'
 
 export default {
     name: 'Card',
-    props: ['id', 'x', 'y', 'size', 'color', 'card'],
+    props: ['id', 'x', 'y', 'card'],
     computed: {
         group() {
             return {

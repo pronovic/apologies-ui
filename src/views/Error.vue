@@ -13,7 +13,7 @@
 
             <p>
                 An unrecoverable error occurred. You can try returning to the
-                <b-link @click="$router.push({ name: 'Landing' })"
+                <b-link ref="link" @click="$router.push({ name: 'Landing' })"
                     >landing page</b-link
                 >. If that doesn't work, please try again later.
             </p>

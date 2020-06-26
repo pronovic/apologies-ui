@@ -1,5 +1,5 @@
 <template>
-    <v-group :id="id">
+    <v-group ref="group" :id="id">
         <v-shape ref="pawn" :config="config"></v-shape>
     </v-group>
 </template>
@@ -10,15 +10,11 @@ import { Colors } from 'Utils/constants'
 export default {
     name: 'Pawn',
     props: ['id', 'position', 'size', 'color', 'visible'],
-    data: function () {
-        return {
-            node: null,
-        }
-    },
-    mounted() {
-        this.$nextTick(() => {
-            this.node = this.$refs.pawn.getNode()
-        })
+    methods: {
+        redrawLayer() {
+            // This redraws the layer associated with the pawn
+            this.$refs.pawn.getNode().getLayer().draw()
+        },
     },
     computed: {
         config() {

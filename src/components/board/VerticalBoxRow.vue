@@ -1,8 +1,8 @@
 <template>
-    <v-group :id="id" :x="x" :y="y">
+    <v-group ref="group" :id="id" :x="x" :y="y">
         <div v-for="index in boxes" v-bind:key="index">
             <v-rect
-                :id="id + 'box-' + index"
+                :id="id + '-box-' + index"
                 :x="0"
                 :y="(index - 1) * 60"
                 :height="55"

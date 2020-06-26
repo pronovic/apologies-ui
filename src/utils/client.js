@@ -1,3 +1,25 @@
+// The code structure here is not ideal, but there's also not an easy fix.  Ideally, both
+// for legibility and for unit test purposes, I would prefer to split this code up into
+// public interface functions, event handlers, and the websocket client functionality
+// itself.  That way, we could test all of them independently.
+//
+// Unfortunately, there are cross-references betweeen each of those sections of code.  The
+// public interface functions need access to websockets client functions to open/close
+// connections and send data.  The event handlers need access to both public interface
+// functions (i.e. to trigger an optimal move) and websocket client functions (to close
+// connections for error handling).  And the websockets client functions need access to
+// the event handlers to dispatch messages that are received.  So, to avoid problematic
+// circular import references, they need to all be in the same module.
+//
+// I suspect that my lack of experience with Javascript applications like this is leading
+// me to miss some obvious solution.  But, until I see it, splitting the code up isn't
+// practical.  And, until I can split up the code, it's very difficult to unit test,
+// because every test needs to stub and validate the entire stack of functionality.  In
+// Python, I would solve this by partially mocking the module (i.e. mock the websocket
+// client functions when testing the public interface functions), but Jest does not seem
+// to support this sort of partial mocking.  So, I have heavily tested this code manually
+// through the browser, and that's the best I can do for now.
+
 import store from 'VStore'
 import router from 'Router'
 import atmosphere from 'atmosphere.js'

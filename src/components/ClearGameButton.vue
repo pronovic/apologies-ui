@@ -1,6 +1,7 @@
 <template>
     <div class="pt-1 pr-2">
         <b-button
+            ref="button"
             v-if="visible"
             size="md"
             variant="secondary"

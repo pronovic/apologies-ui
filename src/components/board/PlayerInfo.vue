@@ -1,16 +1,16 @@
 <template>
-    <v-group :id="id" :x="x" :y="y">
+    <v-group ref="group" :id="id" :x="x" :y="y">
         <Pawn
             ref="pawn"
-            :id="id + '-color'"
+            :id="id + '-pawn'"
             :position="position"
             :size="40"
             :color="color"
             :visible="true"
         ></Pawn>
-        <v-text :config="handle"></v-text>
-        <v-text :config="status"></v-text>
-        <Hand :id="id + '-hand'" :player="player"></Hand>
+        <v-text ref="handle" :id="id + '-handle'" :config="handle"></v-text>
+        <v-text ref="status" :id="id + '-status'" :config="status"></v-text>
+        <Hand ref="hand" :id="id + '-hand'" :player="player"></Hand>
     </v-group>
 </template>
 
@@ -43,7 +43,7 @@ export default {
                     this.position.x = parseInt(val.x)
                     this.position.y = parseInt(val.y)
                     if (this.$refs.pawn) {
-                        this.$refs.pawn.node.getLayer().draw() // this does not seem like a good idea, but it doesn't render otherwise
+                        this.$refs.pawn.redrawLayer() // this does not seem like a good idea, but it doesn't render otherwise
                     }
                 },
             })
@@ -54,7 +54,7 @@ export default {
             deep: true,
             handler(newValue, oldValue) {
                 logger.debug('Handling change to player')
-                if (newValue.isWinner) {
+                if (newValue && newValue.isWinner) {
                     logger.debug('This player is the winner')
                     this.bounce()
                 }
@@ -63,7 +63,9 @@ export default {
     },
     computed: {
         color() {
-            return this.player.color && this.player.color in Colors
+            return this.player &&
+                this.player.color &&
+                this.player.color in Colors
                 ? Colors[this.player.color]
                 : Colors.GREY
         },
@@ -72,21 +74,22 @@ export default {
                 id: this.id + '-handle',
                 x: 30,
                 y: -23,
-                text: this.player.handle,
+                text:
+                    this.player && this.player.handle ? this.player.handle : '',
                 fill: Colors.BLACK,
                 fontSize: 32,
                 align: 'left',
             }
         },
-        status() {
+        statusText() {
             let status = ''
 
             if (!this.opponent) {
                 status = 'Your Player'
 
-                if (this.player.isWinner) {
+                if (this.player && this.player.isWinner) {
                     status = 'Game Winner'
-                } else if (this.player.isAdvertiser) {
+                } else if (this.player && this.player.isAdvertiser) {
                     status = 'Game Advertiser'
                 }
 
@@ -95,25 +98,34 @@ export default {
                 }
             } else {
                 status = 'Computer Opponent'
-                if (this.player.isWinner) {
+                if (this.player && this.player.isWinner) {
                     status = 'Game Winner'
-                } else if (this.player.isAdvertiser) {
+                } else if (this.player && this.player.isAdvertiser) {
                     status = 'Game Advertiser'
-                } else if (this.player.type === PlayerType.HUMAN) {
+                } else if (
+                    this.player &&
+                    this.player.type === PlayerType.HUMAN
+                ) {
                     status = 'Human Opponent'
-                    if (this.player.state === PlayerState.QUIT) {
+                    if (this.player && this.player.state === PlayerState.QUIT) {
                         status = 'Quit Game (Autoplay)'
-                    } else if (this.player.state === PlayerState.DISCONNECTED) {
+                    } else if (
+                        this.player &&
+                        this.player.state === PlayerState.DISCONNECTED
+                    ) {
                         status = 'Disconnected (Autoplay)'
                     }
                 }
             }
 
+            return status
+        },
+        status() {
             return {
                 id: this.id + '-status',
                 x: 30,
                 y: 9,
-                text: status,
+                text: this.statusText,
                 fill: Colors.BLACK,
                 fontSize: 14,
                 align: 'left',

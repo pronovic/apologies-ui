@@ -6,13 +6,13 @@
             variant="secondary"
             id="gameNavbar"
         >
-            <b-navbar-brand>Apologies</b-navbar-brand>
+            <b-navbar-brand ref="brand">Apologies</b-navbar-brand>
             <b-navbar-nav class="ml-auto">
                 <StartGameButton></StartGameButton>
                 <GameInProgressIndicator></GameInProgressIndicator>
                 <ClearGameButton></ClearGameButton>
-                <b-nav-text this.class="text-white">
-                    <em>{{ playerHandle }}</em>
+                <b-nav-text ref="handle" class="text-white font-italic">
+                    {{ playerHandle }}
                 </b-nav-text>
                 <GameMenu></GameMenu>
             </b-navbar-nav>

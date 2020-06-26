@@ -14,7 +14,7 @@
             <p>
                 The page you requested was not found. You can try returning to
                 the
-                <b-link @click="$router.push({ name: 'Landing' })"
+                <b-link ref="link" @click="$router.push({ name: 'Landing' })"
                     >landing page</b-link
                 >.
             </p>

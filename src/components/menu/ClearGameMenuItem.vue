@@ -1,6 +1,7 @@
 <template>
     <div>
         <b-dropdown-item
+            ref="dropdown"
             v-if="visible"
             v-b-tooltip.hover.left
             title="Clear the game display, now that the game is complete"

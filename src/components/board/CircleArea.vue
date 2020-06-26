@@ -1,6 +1,7 @@
 <template>
-    <v-group :x="x" :y="y">
+    <v-group ref="group" :id="id" :x="x" :y="y">
         <v-circle
+            ref="circle"
             :id="id + '-circle'"
             :x="0"
             :y="0"

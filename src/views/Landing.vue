@@ -22,14 +22,20 @@
 
             <p>
                 All of the source code is released under the
-                <b-link :href="licenseUrl">Apache v2.0</b-link>license. You can
-                find the source code at GitHub. See
-                <b-link :href="apologiesUrl">apologies</b-link>,
-                <b-link :href="apologiesServerUrl">apologies-server</b-link>,
-                and <b-link :href="apologiesUiUrl">apologies-ui</b-link>.
+                <b-link ref="licenseLink" :href="licenseUrl">Apache v2.0</b-link
+                >license. You can find the source code at GitHub. See
+                <b-link ref="apologiesLink" :href="apologiesUrl"
+                    >apologies</b-link
+                >,
+                <b-link ref="apologiesServerLink" :href="apologiesServerUrl"
+                    >apologies-server</b-link
+                >, and
+                <b-link ref="apologiesUiLink" :href="apologiesUiUrl"
+                    >apologies-ui</b-link
+                >.
             </p>
 
-            <RegisterHandleButton id="register2" />
+            <RegisterHandleButton id="landing-register-button" />
         </b-jumbotron>
     </div>
 </template>

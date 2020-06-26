@@ -5,6 +5,8 @@
     ".cache/": true,
     ".github/": true,
     ".vscode/": true,
-    "yarn.lock": true
+    "coverage/": true,
+    "yarn.lock": true,
+    "jsconfig.json": true
   }
 }

@@ -1,6 +1,7 @@
 <template>
     <div>
         <b-dropdown-item
+            ref="dropdown"
             v-if="visible"
             v-b-modal.advertiseGameModal
             v-b-tooltip.hover.left
@@ -8,12 +9,13 @@
             >Advertise Game</b-dropdown-item
         >
 
+        <!-- static is needed for tests to work, but doesn't work properly in live application -->
         <b-modal
-            id="advertiseGameModal"
             ref="modal"
+            :static="unittest"
+            id="advertiseGameModal"
             title="Advertise Game"
             @show="resetModal"
-            @hidden="resetModal"
             @ok="handleOk"
         >
             <form ref="form" @submit.stop.prevent="handleSubmit">
@@ -71,6 +73,7 @@ import { GameMode, GameVisibility } from 'Utils/constants'
 
 export default {
     name: 'AdvertiseGameMenuItem',
+    props: ['unittest'],
     data() {
         return {
             name: '',
@@ -101,10 +104,7 @@ export default {
     },
     methods: {
         checkFormValidity() {
-            this.nameState =
-                this.$refs.form.checkValidity() &&
-                this.name.length >= 2 &&
-                this.name.length <= 35
+            this.nameState = this.name.length >= 2 && this.name.length <= 35
             return this.nameState
         },
         resetModal() {
