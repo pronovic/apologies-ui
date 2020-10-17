@@ -7,9 +7,7 @@
         <b-jumbotron class="w-50 mx-auto" bg-variant="white">
             <template v-slot:header>Not Found</template>
 
-            <template v-slot:lead>
-                Sorry, that page was not found.
-            </template>
+            <template v-slot:lead> Sorry, that page was not found. </template>
 
             <p>
                 The page you requested was not found. You can try returning to
