@@ -7,9 +7,7 @@
         <b-jumbotron class="w-50 mx-auto" bg-variant="white">
             <template v-slot:header>Inactive</template>
 
-            <template v-slot:lead>
-                You were inactive for too long.
-            </template>
+            <template v-slot:lead> You were inactive for too long. </template>
 
             <p>
                 The server has disconnected you. If you want to continue

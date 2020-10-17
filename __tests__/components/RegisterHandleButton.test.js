@@ -88,6 +88,7 @@ describe('Components/RegisterHandleButton.vue', () => {
         wrapper.vm.handle = 'foo'
         wrapper.vm.handleState = true
 
+        // eslint-disable-next-line vue/custom-event-name-casing
         wrapper.vm.$root.$emit('bv::show::modal', 'testmodal') // shows the modal
         await Vue.nextTick()
 

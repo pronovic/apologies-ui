@@ -20,6 +20,34 @@ works exactly the same, and some examples you find online may not translate
 directly.  For instance, Parcel does not allow the `@` alias that Vue usually
 uses for the `src` directory.
 
+## Dependabot Security Updates
+
+Peridically, GitHub's [Dependabot](https://github.com/dependabot) issues
+warnings about out-of-date node package dependencies.  
+
+If these are direct dependencies, I update the `dependencies` section of
+[`package.json`](package.json).  If the problem is with a transitive
+dependency, then the solution is to add a line to the `resolutions` section
+instead, like this:
+
+```json
+ "resolutions": {
+    "**/**/node-forge": "^0.10.0"
+  }
+```
+
+After running `yarn install`, we get something like this in `yarn.lock`:
+
+```
+node-forge@^0.10.0, node-forge@^0.7.1:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.10.0.tgz#32dea2afb3e9926f02ee5ce8794902691a676bf3"
+  integrity sha512-PPmu8eEeG9saEUvI97fm4OYxXVB6bFvyNTyiUOBichBpFG8A1Ljw3bY62+5oOjDEMHRnd0Y7HQ+x7uzxOzC6JA==
+```
+
+Yarn still recognizes the original dependency as the (vulnerable) v0.7.1, but
+overrides it to v0.10.0.
+
 ## Developer Tasks
 
 The most common developer tasks are managed with `yarn` via the `scripts` list

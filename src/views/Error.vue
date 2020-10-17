@@ -7,9 +7,7 @@
         <b-jumbotron class="w-50 mx-auto" bg-variant="white">
             <template v-slot:header>Error Occurred</template>
 
-            <template v-slot:lead>
-                Sorry, an error occurred.
-            </template>
+            <template v-slot:lead> Sorry, an error occurred. </template>
 
             <p>
                 An unrecoverable error occurred. You can try returning to the
