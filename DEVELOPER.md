@@ -62,9 +62,15 @@ in [`package.json`](package.json).  The following scripts are available:
 - `yarn test` - Run the unit test suite
 - `yarn test:c` - Run the unit test suite and gather coverage
 - `yarn test:ch` - Run the unit test suite and gather coverage, opening the HTML coverage report
+- `yarn cypress:ui` - Open the Cypress developer UI to write acceptance tests
+- `yarn cypress:test` - Run the Cypress acceptance test suite using a Chome browser
 
-You can pass other arguments (i.e. `--verbose`), and Yarn will provide them to
-the underlying command.  
+You can pass other arguments (i.e. `--verbose` or `--headless`), and Yarn will
+provide them to the underlying command.  
+
+_Note:_ The Cypress acceptance tests are only partially automated.  You need to
+manually start the Parcel server and websocket server (as described below under
+**Local Browser Testing**) before running the acceptance test suite.
 
 ## Prequisites
 
@@ -248,17 +254,23 @@ There are 3 kinds of tests:
 - End to end (E2E) tests (functional or acceptance tests)
 
 I am using [Jest](https://jestjs.io/en/) for unit and integration testing, and
-I intend to use [Cypress](https://www.cypress.io/) for functional acceptance
-testing.
+[Cypress](https://www.cypress.io/) for functional acceptance testing.
 
 There are other options in both cases, but the general recommendation seems be
 that these are the best fit for Vue.js as of today.  Both are popular and well
-supported and seem to work well.  (The articles [here](https://www.monterail.com/blog/end-to-end-testing-with-cypress) and
+supported and seem to work well.  Cypress supports Chrome and Firefox, but I'm
+using only Chome for now.  (The articles [here](https://www.monterail.com/blog/end-to-end-testing-with-cypress) and
 [here](https://medium.com/welldone-software/an-overview-of-javascript-testing-7ce7298b9870) were helpful.)
 
 Vue.js has [good support](https://vuejs.org/v2/guide/unit-testing.html) for
 Jest, and also provides its own [Vue Test Utils](https://vue-test-utils.vuejs.org/) to 
 help with testing.
+
+Note that the Cypress acceptance tests are intended primarily for local testing
+on a developer workstation.  They are not run as a part of the CI/CD pipeline
+on GitHub, and are only partially automated.  You need to manually start the
+Parcel server and websocket server (as described below under **Local Browser
+Testing**) before running the acceptance tests with `yarn cypress:test`.
 
 ### Test Limitations
 
@@ -270,6 +282,22 @@ long after the code was originally written and manually tested.  In some cases,
 I decided that the effort required to write complicated tests or refactor
 awkward code was not worthwhile.  (If I had been writing the code and tests at
 the same time, things probably would have been different.)
+
+Similarly, the Cypress test suite is focused on the happy path and doesn't
+spend much time on error handling.  My goal was to understand how to write
+Cypress tests.  However, in a hobby project like this, the effort required to
+test complicated error scenarios paths just isn't worth it.  You should think
+of the Cypress suite as more of a smoke test (to prove the application is
+basically working) rather than a real acceptance test suite.
+
+### Cypress Testing Hints
+
+Cypress tests are in the `cypress/integration` directory and are named with the
+`_spec.js` extension.  The `cypress` directory contains other subdirectories,
+but those are mostly unused as of this writing.
+
+You write Cypress tests manually (in the `_spec.js` files), with the Cypress UI
+open to see what's going on. Start the Cypress UI using `yarn cypress:ui`.
 
 ### Jest Testing Hints
 

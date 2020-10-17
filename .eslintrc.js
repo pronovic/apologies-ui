@@ -10,7 +10,8 @@
         'plugin:prettier/recommended',
         '@vue/prettier',
         "plugin:jest/recommended",
-        "plugin:jest/style"
+        "plugin:jest/style",
+        "plugin:cypress/recommended"
       ],
       parserOptions: {
         parser: 'babel-eslint'
