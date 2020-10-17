@@ -103,6 +103,7 @@ describe('Components/menu/AdvertiseGameMenuItem.vue', () => {
         wrapper.vm.visibility = 'xxx'
         wrapper.vm.invitedHandles = 'xxx'
 
+        // eslint-disable-next-line vue/custom-event-name-casing
         wrapper.vm.$root.$emit('bv::show::modal', 'advertiseGameModal') // shows the modal
         await Vue.nextTick()
 
@@ -117,6 +118,7 @@ describe('Components/menu/AdvertiseGameMenuItem.vue', () => {
     test('confirm form submit for valid data', async () => {
         // confirms that form validation works as expected; but unfortunately doesn't prove that the modal is wired up properly
 
+        // eslint-disable-next-line vue/custom-event-name-casing
         wrapper.vm.$root.$emit('bv::show::modal', 'advertiseGameModal') // shows the modal
         await Vue.nextTick()
 
@@ -149,6 +151,7 @@ describe('Components/menu/AdvertiseGameMenuItem.vue', () => {
     test('confirm form submit for invalid data', async () => {
         // confirms that form validation works as expected; but unfortunately doesn't prove that the modal is wired up properly
 
+        // eslint-disable-next-line vue/custom-event-name-casing
         wrapper.vm.$root.$emit('bv::show::modal', 'advertiseGameModal') // shows the modal
         await Vue.nextTick()
 
