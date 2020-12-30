@@ -2,12 +2,12 @@
 
 ## Development Environment
 
-My primary development environment MacOS, and that is the only environment I
-test with regularly.  The code should be portable, and I sometimes spot-check
-using my Debian buster development environment.  However, the backend
-websockets server does not run on Windows.  I do not do any software
-development on Windows, and the development process (code checks & formatting,
-etc.) may or may not work as expected there.
+My primary development when writing this code was MacOS.  I also regularly
+tested in my Debian Linux development environment.  I've since moved (mostly
+against my will) to a Windows development environment for day-to-day work, so
+I've also gone through the effort to support that platform.  On all platforms,
+I use VSCode as my editor.  On Windows, I always use a Git Bash prompt, so I
+probably won't notice if something is different/broken in some other shell.  
 
 ## Packaging and Dependencies
 
@@ -89,7 +89,6 @@ This installs "classic" Yarn 1.22.x, which is what we're using right now.
 In the future, we may upgrade to Yarn 2, and having yarn installed this
 way will support that transition.
 
-
 ### Debian
 
 On Debian, you have to jump through some hoops, because the packaged
@@ -117,6 +116,12 @@ $ export $PATH="/usr/local/bin:$PATH"
 At this point, you have a working version of "classic" Yarn 1.22.x, which is
 what we're using right now.  In the future, we may upgrade to Yarn 2, and
 having yarn installed this way will support that transition.
+
+### Windows
+
+On Windows, I have installed yarn using [Chocolatey](https://chocolatey.org/packages/yarn), but
+you can use any mechanism you like.  As of today, Chocolately installs
+"classic" Yarn 1.22.x, which is what we're using right now.
 
 ## Pre-Commit Hooks
 
@@ -213,14 +218,13 @@ worked around most of the warts.
 I am using [Vue.js v2](https://vuejs.org/) for the frontend layout, along with
 the [BootstrapVue](https://bootstrap-vue.org/) library for styling and widgets.
 
-I chose Vue.js based on their
-[comparison](https://vuejs.org/v2/guide/comparison.html) document, under the
-assumption that it would be easier to learn and deal with for a relatively
-small application like this.  Vue.js has relatively good documentation and a
-good getting started guide.  I also liked how Vue came with everything I needed
-out of the box. For instance, I have implemented routing via [Vue
-Router](https://router.vuejs.org/) and central state state management via
-[Vuex](https://vuex.vuejs.org/).
+I chose Vue.js based on their [comparison](https://vuejs.org/v2/guide/comparison.html) document, 
+under the assumption that it would be easier to learn and deal with for a
+relatively small application like this.  Vue.js has relatively good
+documentation and a good getting started guide.  I also liked how Vue came with
+everything I needed out of the box. For instance, I have implemented routing
+via [Vue Router](https://router.vuejs.org/) and central state state management 
+via [Vuex](https://vuex.vuejs.org/).
 
 ### Rendering the Game Canvas
 
