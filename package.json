@@ -103,7 +103,7 @@
     "bootstrap-vue": "^2.15.0",
     "components": "^0.1.0",
     "core-js": "^3.6.5",
-    "gsap": "^3.3.1",
+    "gsap": "^3.6.0",
     "konva": "^6.0.0",
     "vue": "^2.6.11",
     "vue-hot-reload-api": "^2.3.4",
