@@ -28,3 +28,24 @@ choose which move they would like to play when it is their turn.  There is a
 Developer documentation is found in [DEVELOPER.md](DEVELOPER.md). See that file
 for notes about how the code is structured, how to set up a development
 environment, etc.
+
+# Not Maintained
+
+Javascript moves really fast, which is part of the reason I enjoy backend code
+more than frontend code these days.
+
+When I wrote this in mid-2020 during COVID-enforced downtime, all the tools and
+dependencies I chose to use were current and at their recommended version.  By
+March of 2021, that had all changed.  Parcel v1 was (already!) deprecated
+in favor of Parcel v2 and was no longer receiving security updates, various
+Babel modules (such as polyfill) had been deprecated, and there were problems
+and/or deprecations in a whole bunch of transitive dependencies.  And, even
+before trying to upgrade any of the dependencies, the rendered board no longer
+fits properly in a Chrome window unless you scale the browser to 90%.  WTF.  
+
+I don't have the time, or frankly the interest, to address any of this right
+now.  So, it's best to treat this code as a snapshot of what worked for a very
+brief period of time in 2020.  It still mostly functions, but there are
+security vulnerabilities in some of the dependencies, and there are almost
+certainly UI bugs that I haven't noticed.  As time goes on, it will become
+less and less relevant.
